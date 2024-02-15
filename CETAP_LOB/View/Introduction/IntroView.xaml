@@ -1,0 +1,31 @@
+﻿<UserControl x:Class="CETAP_LOB.View.Introduction.IntroView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View.Introduction"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             DataContext="{Binding Introduction,
+                                   Source={StaticResource Locator}}"
+             BorderThickness="1" >
+    <UserControl.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+    </UserControl.BorderBrush>
+
+    <Grid Style="{StaticResource ContentRoot}">
+        <ScrollViewer>
+            <StackPanel>
+                <TextBlock Margin="0,0,0,8" Style="{StaticResource Heading1}" Text="Line of Business Application for CETAP"/>
+                <mui:BBCodeBlock Margin="0,0,0,32"
+                         BBCode="[b]CETAP LOB[/b], is an application made up of modules for processing the NBT data from Logistics section, scoring up to research section. The application was created using WPF, MVVM and ModernUI WPF for the visuals. 
+ 
+This project is a spin-off of [url=http://nbt.uct.ac.za]NBT website[/url], ..... 
+ 
+See the [url=https://nbt.uct.ac.za]online documentation[/url] to learn more about how to incorporate [b]NBT data[/b] into your application."/>
+                <TextBlock Style="{StaticResource Heading2}" Text="APPEARANCE"/>
+                <mui:BBCodeBlock Margin="0,0,0,32"
+                         BBCode="The appearance of CETAP LOB styled windows can be changed on the fly. Make sure you visit the [url=/View/SettingsView.xaml]settings[/url] to adapt the appearance to your preference."/>
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</UserControl>

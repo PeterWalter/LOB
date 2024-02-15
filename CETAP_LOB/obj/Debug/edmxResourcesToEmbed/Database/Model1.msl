@@ -1,0 +1,469 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+  <EntityContainerMapping StorageEntityContainer="NBT_ProductionModelStoreContainer" CdmEntityContainer="CETAPEntities">
+    <EntitySetMapping Name="TestNames">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.TestName">
+        <MappingFragment StoreEntitySet="TestName">
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="TestName1" ColumnName="TestName" />
+          <ScalarProperty Name="TestCode" ColumnName="TestCode" />
+          <ScalarProperty Name="Section7" ColumnName="Section7" />
+          <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="rowguid" ColumnName="rowguid" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Logs">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Log">
+        <MappingFragment StoreEntitySet="Logs">
+          <ScalarProperty Name="id" ColumnName="id" />
+          <ScalarProperty Name="Date" ColumnName="Date" />
+          <ScalarProperty Name="Thread" ColumnName="Thread" />
+          <ScalarProperty Name="Level" ColumnName="Level" />
+          <ScalarProperty Name="Logger" ColumnName="Logger" />
+          <ScalarProperty Name="Message" ColumnName="Message" />
+          <ScalarProperty Name="UserName" ColumnName="UserName" />
+          <ScalarProperty Name="Location" ColumnName="Location" />
+          <ScalarProperty Name="Method" ColumnName="Method" />
+          <ScalarProperty Name="exception" ColumnName="exception" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EasyPayFiles">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.EasyPayFile">
+        <MappingFragment StoreEntitySet="EasyPayFile">
+          <ScalarProperty Name="FileGenerationNumber" ColumnName="FileGenerationNumber" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="DateWritten" ColumnName="DateWritten" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="NumberOfPayments" ColumnName="NumberOfPayments" />
+          <ScalarProperty Name="NumberOfTenders" ColumnName="NumberOfTenders" />
+          <ScalarProperty Name="TotalFees" ColumnName="TotalFees" />
+          <ScalarProperty Name="TotalBankFees" ColumnName="TotalBankFees" />
+          <ScalarProperty Name="TotalPayment" ColumnName="TotalPayment" />
+          <ScalarProperty Name="CalculatedAmountCollected" ColumnName="CalculatedAmountCollected" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="EasyPayRecords">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.EasyPayRecord">
+        <MappingFragment StoreEntitySet="EasyPayRecord">
+          <ScalarProperty Name="PayNumber" ColumnName="PayNumber" />
+          <ScalarProperty Name="FileGenerationNumber" ColumnName="FileGenerationNumber" />
+          <ScalarProperty Name="PayTag" ColumnName="PayTag" />
+          <ScalarProperty Name="CollectorID" ColumnName="CollectorID" />
+          <ScalarProperty Name="date" ColumnName="date" />
+          <ScalarProperty Name="Time" ColumnName="Time" />
+          <ScalarProperty Name="Fee" ColumnName="Fee" />
+          <ScalarProperty Name="BankCost" ColumnName="BankCost" />
+          <ScalarProperty Name="NumOfTrans" ColumnName="NumOfTrans" />
+          <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+          <ScalarProperty Name="Trace" ColumnName="Trace" />
+          <ScalarProperty Name="TenderType_PAN" ColumnName="TenderType_PAN" />
+          <ScalarProperty Name="PointOfService" ColumnName="PointOfService" />
+          <ScalarProperty Name="Original" ColumnName="Original" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Batches">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Batch">
+        <MappingFragment StoreEntitySet="Batch">
+          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+          <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+          <ScalarProperty Name="TestCombination" ColumnName="TestCombination" />
+          <ScalarProperty Name="BatchedBy" ColumnName="BatchedBy" />
+          <ScalarProperty Name="BatchDate" ColumnName="BatchDate" />
+          <ScalarProperty Name="RandTestNumber" ColumnName="RandTestNumber" />
+          <ScalarProperty Name="Count" ColumnName="Count" />
+          <ScalarProperty Name="TestVenueID" ColumnName="TestVenueID" />
+          <ScalarProperty Name="TestProfileID" ColumnName="TestProfileID" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="BenchmarkLevels">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.BenchmarkLevel">
+        <MappingFragment StoreEntitySet="BenchmarkLevels">
+          <ScalarProperty Name="yearID" ColumnName="yearID" />
+          <ScalarProperty Name="YearSet" ColumnName="YearSet" />
+          <ScalarProperty Name="StartIntakeYear" ColumnName="StartIntakeYear" />
+          <ScalarProperty Name="EndIntakeYear" ColumnName="EndIntakeYear" />
+          <ScalarProperty Name="AL_PU" ColumnName="AL_PU" />
+          <ScalarProperty Name="AL_PL" ColumnName="AL_PL" />
+          <ScalarProperty Name="AL_IU" ColumnName="AL_IU" />
+          <ScalarProperty Name="AL_IL" ColumnName="AL_IL" />
+          <ScalarProperty Name="AL_BU" ColumnName="AL_BU" />
+          <ScalarProperty Name="AL_BL" ColumnName="AL_BL" />
+          <ScalarProperty Name="QL_PU" ColumnName="QL_PU" />
+          <ScalarProperty Name="QL_PL" ColumnName="QL_PL" />
+          <ScalarProperty Name="QL_IU" ColumnName="QL_IU" />
+          <ScalarProperty Name="QL_IL" ColumnName="QL_IL" />
+          <ScalarProperty Name="QL_BU" ColumnName="QL_BU" />
+          <ScalarProperty Name="QL_BL" ColumnName="QL_BL" />
+          <ScalarProperty Name="MAT_PU" ColumnName="MAT_PU" />
+          <ScalarProperty Name="MAT_PL" ColumnName="MAT_PL" />
+          <ScalarProperty Name="MAT_IU" ColumnName="MAT_IU" />
+          <ScalarProperty Name="MAT_IL" ColumnName="MAT_IL" />
+          <ScalarProperty Name="MAT_BU" ColumnName="MAT_BU" />
+          <ScalarProperty Name="MAT_BL" ColumnName="MAT_BL" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="Type" ColumnName="Type" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Composits">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Composit">
+        <MappingFragment StoreEntitySet="Composit">
+          <ScalarProperty Name="RefNo" ColumnName="RefNo" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="ID_Type" ColumnName="ID_Type" />
+          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+          <ScalarProperty Name="DOT" ColumnName="DOT" />
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+          <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+          <ScalarProperty Name="GR12Language" ColumnName="GR12Language" />
+          <ScalarProperty Name="AQLLanguage" ColumnName="AQLLanguage" />
+          <ScalarProperty Name="AQLCode" ColumnName="AQLCode" />
+          <ScalarProperty Name="MatLanguage" ColumnName="MatLanguage" />
+          <ScalarProperty Name="MatCode" ColumnName="MatCode" />
+          <ScalarProperty Name="ALScore" ColumnName="ALScore" />
+          <ScalarProperty Name="ALLevel" ColumnName="ALLevel" />
+          <ScalarProperty Name="QLScore" ColumnName="QLScore" />
+          <ScalarProperty Name="QLLevel" ColumnName="QLLevel" />
+          <ScalarProperty Name="MATScore" ColumnName="MATScore" />
+          <ScalarProperty Name="MATLevel" ColumnName="MATLevel" />
+          <ScalarProperty Name="WroteAL" ColumnName="WroteAL" />
+          <ScalarProperty Name="WroteQL" ColumnName="WroteQL" />
+          <ScalarProperty Name="WroteMat" ColumnName="WroteMat" />
+          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+          <ScalarProperty Name="Batch" ColumnName="Batch" />
+          <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="FirstNames">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.FirstName">
+        <MappingFragment StoreEntitySet="FirstName">
+          <ScalarProperty Name="NameID" ColumnName="NameID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Institutions">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Institution">
+        <MappingFragment StoreEntitySet="Institution">
+          <ScalarProperty Name="InstID" ColumnName="InstID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="Logo" ColumnName="Logo" />
+          <ScalarProperty Name="GUID" ColumnName="GUID" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="InstitutionMatches">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.InstitutionMatch">
+        <MappingFragment StoreEntitySet="InstitutionMatch">
+          <ScalarProperty Name="RequestNumber" ColumnName="RequestNumber" />
+          <ScalarProperty Name="InstID" ColumnName="InstID" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+          <ScalarProperty Name="Programme" ColumnName="Programme" />
+          <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+          <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="IntakeYears">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.IntakeYear">
+        <MappingFragment StoreEntitySet="IntakeYear">
+          <ScalarProperty Name="yearID" ColumnName="yearID" />
+          <ScalarProperty Name="Year" ColumnName="Year" />
+          <ScalarProperty Name="yearStart" ColumnName="yearStart" />
+          <ScalarProperty Name="yearEnd" ColumnName="yearEnd" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="NewNBTNumbers">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.NewNBTNumber">
+        <MappingFragment StoreEntitySet="NewNBTNumbers">
+          <ScalarProperty Name="NewNBT" ColumnName="NewNBT" />
+          <ScalarProperty Name="OriginalNBT" ColumnName="OriginalNBT" />
+          <ScalarProperty Name="Used" ColumnName="Used" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="WriterListID" ColumnName="WriterListID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Provinces">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Province">
+        <MappingFragment StoreEntitySet="Provinces">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Code" ColumnName="Code" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QAs">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
+        <MappingFragment StoreEntitySet="QA">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
+          <ScalarProperty Name="CSX" ColumnName="CSX" />
+          <ScalarProperty Name="NBT" ColumnName="NBT" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="IDType" ColumnName="IDType" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+          <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
+          <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
+          <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
+          <ScalarProperty Name="Section1" ColumnName="Section1" />
+          <ScalarProperty Name="Section2" ColumnName="Section2" />
+          <ScalarProperty Name="Section3" ColumnName="Section3" />
+          <ScalarProperty Name="Section4" ColumnName="Section4" />
+          <ScalarProperty Name="Section5" ColumnName="Section5" />
+          <ScalarProperty Name="Section6" ColumnName="Section6" />
+          <ScalarProperty Name="Section7" ColumnName="Section7" />
+          <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
+          <ScalarProperty Name="MathCode" ColumnName="MathCode" />
+          <ScalarProperty Name="MatSection" ColumnName="MatSection" />
+          <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+          <ScalarProperty Name="EndOfFile" ColumnName="EndOfFile" />
+          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="RecordsInQueues">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.RecordsInQueue">
+        <MappingFragment StoreEntitySet="RecordsInQueue">
+          <ScalarProperty Name="RecID" ColumnName="RecID" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="NBT" ColumnName="NBT" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="FID" ColumnName="FID" />
+          <ScalarProperty Name="Reason" ColumnName="Reason" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ScannedFiles">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.ScannedFile">
+        <MappingFragment StoreEntitySet="ScannedFile">
+          <ScalarProperty Name="FileID" ColumnName="FileID" />
+          <ScalarProperty Name="Filename" ColumnName="Filename" />
+          <ScalarProperty Name="Datescanned" ColumnName="Datescanned" />
+          <ScalarProperty Name="FileData" ColumnName="FileData" />
+          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+          <ScalarProperty Name="Client" ColumnName="Client" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="ScanTrackers">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.ScanTracker">
+        <MappingFragment StoreEntitySet="ScanTrackers">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="BatchedBy" ColumnName="BatchedBy" />
+          <ScalarProperty Name="DateBatched" ColumnName="DateBatched" />
+          <ScalarProperty Name="Records" ColumnName="Records" />
+          <ScalarProperty Name="DateScanned" ColumnName="DateScanned" />
+          <ScalarProperty Name="ScanRecords" ColumnName="ScanRecords" />
+          <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
+          <ScalarProperty Name="EditRecords" ColumnName="EditRecords" />
+          <ScalarProperty Name="DateQA" ColumnName="DateQA" />
+          <ScalarProperty Name="QARecords" ColumnName="QARecords" />
+          <ScalarProperty Name="DateSentForScoring" ColumnName="DateSentForScoring" />
+          <ScalarProperty Name="SentCount" ColumnName="SentCount" />
+          <ScalarProperty Name="DateScored" ColumnName="DateScored" />
+          <ScalarProperty Name="ScoredRecords" ColumnName="ScoredRecords" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+          <ScalarProperty Name="FileName" ColumnName="FileName" />
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Surnames">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Surname">
+        <MappingFragment StoreEntitySet="Surname">
+          <ScalarProperty Name="SurnameID" ColumnName="SurnameID" />
+          <ScalarProperty Name="Surname1" ColumnName="Surname" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestAllocations">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.TestAllocation">
+        <MappingFragment StoreEntitySet="TestAllocation">
+          <ScalarProperty Name="ID" ColumnName="ID" />
+          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+          <ScalarProperty Name="ClientType" ColumnName="ClientType" />
+          <ScalarProperty Name="TestID" ColumnName="TestID" />
+          <ScalarProperty Name="Client" ColumnName="Client" />
+          <ScalarProperty Name="Estimated" ColumnName="Estimated" />
+          <ScalarProperty Name="ActualUsed" ColumnName="ActualUsed" />
+          <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestProfiles">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.TestProfile">
+        <MappingFragment StoreEntitySet="TestProfile">
+          <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+          <ScalarProperty Name="Profile" ColumnName="Profile" />
+          <ScalarProperty Name="AllocationID" ColumnName="AllocationID" />
+          <ScalarProperty Name="Intake" ColumnName="Intake" />
+          <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+          <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestVenues">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.TestVenue">
+        <MappingFragment StoreEntitySet="TestVenues">
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+          <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+          <ScalarProperty Name="WebsiteName" ColumnName="WebsiteName" />
+          <ScalarProperty Name="Room" ColumnName="Room" />
+          <ScalarProperty Name="VenueType" ColumnName="VenueType" />
+          <ScalarProperty Name="ProvinceID" ColumnName="ProvinceID" />
+          <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+          <ScalarProperty Name="Comments" ColumnName="Comments" />
+          <ScalarProperty Name="Available" ColumnName="Available" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+          <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="Place" ColumnName="Place" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WriterLists">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.WriterList">
+        <MappingFragment StoreEntitySet="WriterList">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="NBT" ColumnName="NBT" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="TestLanguage" ColumnName="TestLanguage" />
+          <ScalarProperty Name="TestType" ColumnName="TestType" />
+          <ScalarProperty Name="VenueID" ColumnName="VenueID" />
+          <ScalarProperty Name="DOT" ColumnName="DOT" />
+          <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+          <ScalarProperty Name="HomeTelephone" ColumnName="HomeTelephone" />
+          <ScalarProperty Name="EMail" ColumnName="EMail" />
+          <ScalarProperty Name="Paid" ColumnName="Paid" />
+          <ScalarProperty Name="AccountCreation" ColumnName="AccountCreation" />
+          <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+          <ScalarProperty Name="Wrote" ColumnName="Wrote" />
+          <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="WritersPayments">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.WritersPayment">
+        <MappingFragment StoreEntitySet="WritersPayments">
+          <ScalarProperty Name="EasyPayPayNumber" ColumnName="EasyPayPayNumber" />
+          <ScalarProperty Name="CurrentNBT" ColumnName="CurrentNBT" />
+          <ScalarProperty Name="OldNBT" ColumnName="OldNBT" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Users">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.User">
+        <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="StaffID" ColumnName="StaffID" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Areas" ColumnName="Areas" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="TestRooms">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.TestRoom">
+        <MappingFragment StoreEntitySet="TestRooms">
+          <ScalarProperty Name="Id" ColumnName="Id" />
+          <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+          <ScalarProperty Name="RoomType" ColumnName="RoomType" />
+          <ScalarProperty Name="HireCost" ColumnName="HireCost" />
+          <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+          <ScalarProperty Name="Comment" ColumnName="Comment" />
+          <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+          <ScalarProperty Name="TestRoom_TestVenue" ColumnName="TestRoom_TestVenue" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Vw_EasyPayRecords">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Vw_EasyPayRecords">
+        <MappingFragment StoreEntitySet="Vw_EasyPayRecords">
+          <ScalarProperty Name="File_Number" ColumnName="File Number" />
+          <ScalarProperty Name="NBT_Ref" ColumnName="NBT Ref" />
+          <ScalarProperty Name="EasyPay_Code" ColumnName="EasyPay Code" />
+          <ScalarProperty Name="Source_File_Date" ColumnName="Source File Date" />
+          <ScalarProperty Name="Payment_Date" ColumnName="Payment Date" />
+          <ScalarProperty Name="Fee" ColumnName="Fee" />
+          <ScalarProperty Name="Processing_Fee" ColumnName="Processing Fee" />
+          <ScalarProperty Name="Transaction_Fee" ColumnName="Transaction Fee" />
+          <ScalarProperty Name="Paid_Amount" ColumnName="Paid Amount" />
+          <ScalarProperty Name="Pay_Code" ColumnName="Pay Code" />
+          <ScalarProperty Name="Payee_Name" ColumnName="Payee Name" />
+          <ScalarProperty Name="Payment_Method" ColumnName="Payment Method" />
+          <ScalarProperty Name="Bank_Reference" ColumnName="Bank Reference" />
+          <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+          <ScalarProperty Name="Expenses" ColumnName="Expenses" />
+          <ScalarProperty Name="Net" ColumnName="Net" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+  </EntityContainerMapping>
+</Mapping>

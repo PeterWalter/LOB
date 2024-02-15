@@ -1,0 +1,1858 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+      <Schema Namespace="NBT_ProductionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="TestName">
+          <Key>
+            <PropertyRef Name="TestID" />
+          </Key>
+          <Property Name="TestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestName" Type="nchar" MaxLength="14" Nullable="false" />
+          <Property Name="TestCode" Type="int" Nullable="false" />
+          <Property Name="Section7" Type="smallint" Nullable="false" />
+          <Property Name="HasErrors" Type="bit" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="rowguid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Logs">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+          <Property Name="Thread" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Level" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="Logger" Type="varchar" MaxLength="255" Nullable="false" />
+          <Property Name="Message" Type="varchar" MaxLength="4000" Nullable="false" />
+          <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+          <Property Name="Location" Type="nvarchar" MaxLength="200" Nullable="false" />
+          <Property Name="Method" Type="varchar" MaxLength="50" Nullable="false" />
+          <Property Name="exception" Type="varchar" MaxLength="4000" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Users">
+          <Key>
+            <PropertyRef Name="StaffID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Areas" />
+          </Key>
+          <Property Name="StaffID" Type="nchar" MaxLength="8" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Areas" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EasyPayFile">
+          <Key>
+            <PropertyRef Name="FileGenerationNumber" />
+          </Key>
+          <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
+          <Property Name="FileName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="DateWritten" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="NumberOfPayments" Type="int" />
+          <Property Name="NumberOfTenders" Type="int" />
+          <Property Name="TotalFees" Type="money" />
+          <Property Name="TotalBankFees" Type="money" />
+          <Property Name="TotalPayment" Type="money" Nullable="false" />
+          <Property Name="CalculatedAmountCollected" Type="money" Nullable="false" />
+        </EntityType>
+        <EntityType Name="EasyPayRecord">
+          <Key>
+            <PropertyRef Name="PayNumber" />
+          </Key>
+          <Property Name="PayNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
+          <Property Name="PayTag" Type="bigint" Nullable="false" />
+          <Property Name="CollectorID" Type="bigint" />
+          <Property Name="date" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fee" Type="money" />
+          <Property Name="BankCost" Type="money" />
+          <Property Name="NumOfTrans" Type="smallint" Nullable="false" />
+          <Property Name="AmountPaid" Type="money" Nullable="false" />
+          <Property Name="Trace" Type="nvarchar" MaxLength="50" />
+          <Property Name="TenderType_PAN" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="PointOfService" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Original" Type="smallint" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BatchName" Type="nchar" MaxLength="22" Nullable="false" />
+          <Property Name="TestDate" Type="date" Nullable="false" />
+          <Property Name="TestCombination" Type="nchar" MaxLength="4" Nullable="false" />
+          <Property Name="BatchedBy" Type="nchar" MaxLength="15" Nullable="false" />
+          <Property Name="BatchDate" Type="datetime" Nullable="false" />
+          <Property Name="RandTestNumber" Type="int" Nullable="false" />
+          <Property Name="Count" Type="int" Nullable="false" />
+          <Property Name="TestVenueID" Type="int" Nullable="false" />
+          <Property Name="TestProfileID" Type="int" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="BenchmarkLevels">
+          <Key>
+            <PropertyRef Name="yearID" />
+          </Key>
+          <Property Name="yearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="YearSet" Type="int" Nullable="false" />
+          <Property Name="StartIntakeYear" Type="int" Nullable="false" />
+          <Property Name="EndIntakeYear" Type="int" Nullable="false" />
+          <Property Name="AL_PU" Type="int" Nullable="false" />
+          <Property Name="AL_PL" Type="int" Nullable="false" />
+          <Property Name="AL_IU" Type="int" Nullable="false" />
+          <Property Name="AL_IL" Type="int" Nullable="false" />
+          <Property Name="AL_BU" Type="int" Nullable="false" />
+          <Property Name="AL_BL" Type="int" Nullable="false" />
+          <Property Name="QL_PU" Type="int" Nullable="false" />
+          <Property Name="QL_PL" Type="int" Nullable="false" />
+          <Property Name="QL_IU" Type="int" Nullable="false" />
+          <Property Name="QL_IL" Type="int" Nullable="false" />
+          <Property Name="QL_BU" Type="int" Nullable="false" />
+          <Property Name="QL_BL" Type="int" Nullable="false" />
+          <Property Name="MAT_PU" Type="int" Nullable="false" />
+          <Property Name="MAT_PL" Type="int" Nullable="false" />
+          <Property Name="MAT_IU" Type="int" Nullable="false" />
+          <Property Name="MAT_IL" Type="int" Nullable="false" />
+          <Property Name="MAT_BU" Type="int" Nullable="false" />
+          <Property Name="MAT_BL" Type="int" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="Type" Type="nchar" MaxLength="10" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Composit">
+          <Key>
+            <PropertyRef Name="Barcode" />
+          </Key>
+          <Property Name="RefNo" Type="bigint" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="Surname" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Initials" Type="nchar" MaxLength="3" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="ForeignID" Type="nvarchar" MaxLength="20" />
+          <Property Name="DOB" Type="date" Nullable="false" />
+          <Property Name="ID_Type" Type="nchar" MaxLength="1" />
+          <Property Name="Citizenship" Type="int" />
+          <Property Name="Classification" Type="nchar" MaxLength="1" />
+          <Property Name="Gender" Type="nchar" MaxLength="1" />
+          <Property Name="Faculty" Type="nchar" MaxLength="50" />
+          <Property Name="DOT" Type="date" Nullable="false" />
+          <Property Name="VenueCode" Type="int" Nullable="false" />
+          <Property Name="VenueName" Type="nchar" MaxLength="100" />
+          <Property Name="HomeLanguage" Type="nchar" MaxLength="2" />
+          <Property Name="GR12Language" Type="nchar" MaxLength="1" />
+          <Property Name="AQLLanguage" Type="nchar" MaxLength="1" />
+          <Property Name="AQLCode" Type="int" />
+          <Property Name="MatLanguage" Type="nchar" MaxLength="1" />
+          <Property Name="MatCode" Type="int" />
+          <Property Name="ALScore" Type="int" />
+          <Property Name="ALLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="QLScore" Type="int" />
+          <Property Name="QLLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="MATScore" Type="int" />
+          <Property Name="MATLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="WroteAL" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="WroteQL" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="WroteMat" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="Faculty2" Type="nchar" MaxLength="50" />
+          <Property Name="Faculty3" Type="nchar" MaxLength="50" />
+          <Property Name="Batch" Type="nchar" MaxLength="22" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="FirstName">
+          <Key>
+            <PropertyRef Name="NameID" />
+          </Key>
+          <Property Name="NameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Institution">
+          <Key>
+            <PropertyRef Name="InstID" />
+          </Key>
+          <Property Name="InstID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="Description" Type="nchar" MaxLength="500" />
+          <Property Name="Logo" Type="varbinary(max)" />
+          <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="InstitutionMatch">
+          <Key>
+            <PropertyRef Name="RequestNumber" />
+          </Key>
+          <Property Name="RequestNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="InstID" Type="int" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="StudentID" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Programme" Type="nchar" MaxLength="20" />
+          <Property Name="Faculty" Type="nchar" MaxLength="20" />
+          <Property Name="RequestDate" Type="date" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="IntakeYear">
+          <Key>
+            <PropertyRef Name="yearID" />
+          </Key>
+          <Property Name="yearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Year" Type="int" Nullable="false" />
+          <Property Name="yearStart" Type="date" Nullable="false" />
+          <Property Name="yearEnd" Type="date" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="NewNBTNumbers">
+          <Key>
+            <PropertyRef Name="NewNBT" />
+          </Key>
+          <Property Name="NewNBT" Type="bigint" Nullable="false" />
+          <Property Name="OriginalNBT" Type="bigint" />
+          <Property Name="Used" Type="bit" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="WriterListID" Type="int" />
+        </EntityType>
+        <EntityType Name="Provinces">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Code" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="QA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="CSX_Number" Type="int" Nullable="false" />
+          <Property Name="CSX" Type="nchar" MaxLength="37" Nullable="false" />
+          <Property Name="NBT" Type="bigint" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="ForeignID" Type="nchar" MaxLength="15" />
+          <Property Name="IDType" Type="int" />
+          <Property Name="Gender" Type="nchar" MaxLength="1" />
+          <Property Name="Citizenship" Type="int" />
+          <Property Name="DateOfBirth" Type="date" Nullable="false" />
+          <Property Name="Surname" Type="nchar" MaxLength="20" />
+          <Property Name="Name" Type="nchar" MaxLength="18" />
+          <Property Name="Initials" Type="nchar" MaxLength="3" />
+          <Property Name="VenueCode" Type="int" Nullable="false" />
+          <Property Name="TestDate" Type="date" Nullable="false" />
+          <Property Name="HLanguage" Type="int" />
+          <Property Name="SchoolLanguage" Type="int" />
+          <Property Name="Classification" Type="int" />
+          <Property Name="AQL_Language" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="AQL_Code" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="Section1" Type="nchar" MaxLength="20" />
+          <Property Name="Section2" Type="nchar" MaxLength="20" />
+          <Property Name="Section3" Type="nchar" MaxLength="25" />
+          <Property Name="Section4" Type="nchar" MaxLength="25" />
+          <Property Name="Section5" Type="nchar" MaxLength="20" />
+          <Property Name="Section6" Type="nchar" MaxLength="25" />
+          <Property Name="Section7" Type="nchar" MaxLength="25" />
+          <Property Name="MAT_Language" Type="nchar" MaxLength="1" />
+          <Property Name="MathCode" Type="nchar" MaxLength="3" />
+          <Property Name="MatSection" Type="nchar" MaxLength="60" />
+          <Property Name="Faculty1" Type="nchar" MaxLength="10" />
+          <Property Name="Faculty2" Type="nchar" MaxLength="10" />
+          <Property Name="Faculty3" Type="nchar" MaxLength="10" />
+          <Property Name="EndOfFile" Type="nchar" MaxLength="1" Nullable="false" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="RecordsInQueue">
+          <Key>
+            <PropertyRef Name="RecID" />
+          </Key>
+          <Property Name="RecID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="NBT" Type="bigint" Nullable="false" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="FID" Type="nvarchar" MaxLength="20" />
+          <Property Name="Reason" Type="nchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="ScannedFile">
+          <Key>
+            <PropertyRef Name="Filename" />
+          </Key>
+          <Property Name="FileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Filename" Type="varchar" MaxLength="30" Nullable="false" />
+          <Property Name="Datescanned" Type="datetime" Nullable="false" />
+          <Property Name="FileData" Type="varbinary(max)" Nullable="false" />
+          <Property Name="BatchID" Type="int" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="Client" Type="nchar" MaxLength="15" />
+        </EntityType>
+        <EntityType Name="ScanTrackers">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="BatchedBy" Type="nchar" MaxLength="20" />
+          <Property Name="DateBatched" Type="datetime" />
+          <Property Name="Records" Type="int" />
+          <Property Name="DateScanned" Type="datetime" />
+          <Property Name="ScanRecords" Type="int" />
+          <Property Name="DateEdited" Type="datetime" />
+          <Property Name="EditRecords" Type="int" />
+          <Property Name="DateQA" Type="datetime" />
+          <Property Name="QARecords" Type="int" />
+          <Property Name="DateSentForScoring" Type="datetime" />
+          <Property Name="SentCount" Type="int" />
+          <Property Name="DateScored" Type="datetime" />
+          <Property Name="ScoredRecords" Type="int" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="TestDate" Type="date" />
+          <Property Name="FileName" Type="varchar" MaxLength="22" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="255" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Surname">
+          <Key>
+            <PropertyRef Name="SurnameID" />
+          </Key>
+          <Property Name="SurnameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="100" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestAllocation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="TestDate" Type="date" Nullable="false" />
+          <Property Name="ClientType" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TestID" Type="int" Nullable="false" />
+          <Property Name="Client" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Estimated" Type="int" Nullable="false" />
+          <Property Name="ActualUsed" Type="int" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestProfile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="Profile" Type="int" Nullable="false" />
+          <Property Name="AllocationID" Type="int" Nullable="false" />
+          <Property Name="Intake" Type="int" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="TestRooms">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="RowVersion" />
+            <PropertyRef Name="RoomName" />
+            <PropertyRef Name="TestRoom_TestVenue" />
+          </Key>
+          <Property Name="Id" Type="int" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="RoomType" Type="nvarchar" MaxLength="255" />
+          <Property Name="HireCost" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="Capacity" Type="int" />
+          <Property Name="Comment" Type="nvarchar" MaxLength="255" />
+          <Property Name="RoomName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="TestRoom_TestVenue" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestVenues">
+          <Key>
+            <PropertyRef Name="VenueCode" />
+          </Key>
+          <Property Name="VenueCode" Type="int" Nullable="false" />
+          <Property Name="VenueName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="ShortName" Type="nvarchar" MaxLength="255" Nullable="false" />
+          <Property Name="WebsiteName" Type="nvarchar" MaxLength="255" />
+          <Property Name="Room" Type="nvarchar" MaxLength="255" />
+          <Property Name="VenueType" Type="nvarchar" MaxLength="255" />
+          <Property Name="ProvinceID" Type="int" Nullable="false" />
+          <Property Name="Capacity" Type="int" />
+          <Property Name="Comments" Type="nvarchar" MaxLength="255" />
+          <Property Name="Available" Type="bit" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="Place" Type="geography" />
+        </EntityType>
+        <EntityType Name="WriterList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="NBT" Type="bigint" Nullable="false" />
+          <Property Name="Surname" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+          <Property Name="Initials" Type="nchar" MaxLength="3" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="ForeignID" Type="nchar" MaxLength="15" />
+          <Property Name="Gender" Type="nchar" MaxLength="10" />
+          <Property Name="DOB" Type="date" Nullable="false" />
+          <Property Name="Classification" Type="nchar" MaxLength="10" />
+          <Property Name="TestLanguage" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="TestType" Type="nchar" MaxLength="10" Nullable="false" />
+          <Property Name="VenueID" Type="int" Nullable="false" />
+          <Property Name="DOT" Type="date" Nullable="false" />
+          <Property Name="Mobile" Type="nchar" MaxLength="15" />
+          <Property Name="HomeTelephone" Type="nchar" MaxLength="15" />
+          <Property Name="EMail" Type="nchar" MaxLength="50" />
+          <Property Name="Paid" Type="money" Nullable="false" />
+          <Property Name="AccountCreation" Type="datetime" Nullable="false" />
+          <Property Name="RegistrationDate" Type="datetime" Nullable="false" />
+          <Property Name="Wrote" Type="bit" Nullable="false" />
+          <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <EntityType Name="WritersPayments">
+          <Key>
+            <PropertyRef Name="EasyPayPayNumber" />
+          </Key>
+          <Property Name="EasyPayPayNumber" Type="bigint" Nullable="false" />
+          <Property Name="CurrentNBT" Type="bigint" Nullable="false" />
+          <Property Name="OldNBT" Type="bigint" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Vw_EasyPayRecords">
+          <Key>
+            <PropertyRef Name="File Number" />
+            <PropertyRef Name="NBT Ref" />
+            <PropertyRef Name="Source File Date" />
+            <PropertyRef Name="Payment Date" />
+            <PropertyRef Name="Fee" />
+            <PropertyRef Name="Paid Amount" />
+            <PropertyRef Name="Pay Code" />
+            <PropertyRef Name="Payment Method" />
+            <PropertyRef Name="Bank Reference" />
+          </Key>
+          <Property Name="File Number" Type="int" Nullable="false" />
+          <Property Name="NBT Ref" Type="bigint" Nullable="false" />
+          <Property Name="EasyPay Code" Type="bigint" />
+          <Property Name="Source File Date" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Payment Date" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="Fee" Type="money" Nullable="false" />
+          <Property Name="Processing Fee" Type="money" />
+          <Property Name="Transaction Fee" Type="money" />
+          <Property Name="Paid Amount" Type="varchar" MaxLength="1" Nullable="false" />
+          <Property Name="Pay Code" Type="bigint" Nullable="false" />
+          <Property Name="Payee Name" Type="nvarchar" MaxLength="50" />
+          <Property Name="Payment Method" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Bank Reference" Type="nchar" MaxLength="20" Nullable="false" />
+          <Property Name="Revenue" Type="money" />
+          <Property Name="Expenses" Type="money" />
+          <Property Name="Net" Type="money" />
+        </EntityType>
+        <Association Name="FK_EasyPayRecord_EasyPayFile">
+          <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
+          <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EasyPayFile">
+              <PropertyRef Name="FileGenerationNumber" />
+            </Principal>
+            <Dependent Role="EasyPayRecord">
+              <PropertyRef Name="FileGenerationNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstitutionMatch_Composit">
+          <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
+          <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Composit">
+              <PropertyRef Name="Barcode" />
+            </Principal>
+            <Dependent Role="InstitutionMatch">
+              <PropertyRef Name="Barcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstitutionMatch_Institution">
+          <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+          <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Institution">
+              <PropertyRef Name="InstID" />
+            </Principal>
+            <Dependent Role="InstitutionMatch">
+              <PropertyRef Name="InstID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QA_Batch">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="QA" Type="Self.QA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="QA">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScannedFile_Batch">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScannedFile" Type="Self.ScannedFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="ScannedFile">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestAllocation_TestName">
+          <End Role="TestName" Type="Self.TestName" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestName">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="TestAllocation">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestProfile_TestAllocation">
+          <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestProfile" Type="Self.TestProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestAllocation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TestProfile">
+              <PropertyRef Name="AllocationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestVenues_Provinces">
+          <End Role="Provinces" Type="Self.Provinces" Multiplicity="1" />
+          <End Role="TestVenues" Type="Self.TestVenues" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Provinces">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestVenues">
+              <PropertyRef Name="ProvinceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriterList_TestVenues">
+          <End Role="TestVenues" Type="Self.TestVenues" Multiplicity="1" />
+          <End Role="WriterList" Type="Self.WriterList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestVenues">
+              <PropertyRef Name="VenueCode" />
+            </Principal>
+            <Dependent Role="WriterList">
+              <PropertyRef Name="VenueID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WritersPayments_EasyPayRecord">
+          <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="1" />
+          <End Role="WritersPayments" Type="Self.WritersPayments" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EasyPayRecord">
+              <PropertyRef Name="PayNumber" />
+            </Principal>
+            <Dependent Role="WritersPayments">
+              <PropertyRef Name="EasyPayPayNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="NBT_ProductionModelStoreContainer">
+          <EntitySet Name="TestName" EntityType="Self.TestName" Schema="ClusterAnalysis" store:Type="Tables" />
+          <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="EasyPayFile" EntityType="Self.EasyPayFile" Schema="Easypay" store:Type="Tables" />
+          <EntitySet Name="EasyPayRecord" EntityType="Self.EasyPayRecord" Schema="Easypay" store:Type="Tables" />
+          <EntitySet Name="Batch" EntityType="Self.Batch" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="BenchmarkLevels" EntityType="Self.BenchmarkLevels" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Composit" EntityType="Self.Composit" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="FirstName" EntityType="Self.FirstName" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Institution" EntityType="Self.Institution" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="InstitutionMatch" EntityType="Self.InstitutionMatch" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="IntakeYear" EntityType="Self.IntakeYear" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="NewNBTNumbers" EntityType="Self.NewNBTNumbers" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Provinces" EntityType="Self.Provinces" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="QA" EntityType="Self.QA" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="RecordsInQueue" EntityType="Self.RecordsInQueue" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="ScannedFile" EntityType="Self.ScannedFile" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="ScanTrackers" EntityType="Self.ScanTrackers" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Surname" EntityType="Self.Surname" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="TestAllocation" EntityType="Self.TestAllocation" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="TestProfile" EntityType="Self.TestProfile" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="TestVenues" EntityType="Self.TestVenues" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="WriterList" EntityType="Self.WriterList" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="WritersPayments" EntityType="Self.WritersPayments" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Users].[StaffID] AS [StaffID], 
+    [Users].[Name] AS [Name], 
+    [Users].[Areas] AS [Areas]
+    FROM [dbo].[Users] AS [Users]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="TestRooms" EntityType="Self.TestRooms" store:Type="Tables" store:Schema="Process">
+            <DefiningQuery>SELECT 
+    [TestRooms].[Id] AS [Id], 
+    [TestRooms].[RowVersion] AS [RowVersion], 
+    [TestRooms].[RoomType] AS [RoomType], 
+    [TestRooms].[HireCost] AS [HireCost], 
+    [TestRooms].[Capacity] AS [Capacity], 
+    [TestRooms].[Comment] AS [Comment], 
+    [TestRooms].[RoomName] AS [RoomName], 
+    [TestRooms].[TestRoom_TestVenue] AS [TestRoom_TestVenue]
+    FROM [Process].[TestRooms] AS [TestRooms]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" store:Type="Views" store:Schema="dbo">
+            <DefiningQuery>SELECT 
+    [Vw_EasyPayRecords].[File Number] AS [File Number], 
+    [Vw_EasyPayRecords].[NBT Ref] AS [NBT Ref], 
+    [Vw_EasyPayRecords].[EasyPay Code] AS [EasyPay Code], 
+    [Vw_EasyPayRecords].[Source File Date] AS [Source File Date], 
+    [Vw_EasyPayRecords].[Payment Date] AS [Payment Date], 
+    [Vw_EasyPayRecords].[Fee] AS [Fee], 
+    [Vw_EasyPayRecords].[Processing Fee] AS [Processing Fee], 
+    [Vw_EasyPayRecords].[Transaction Fee] AS [Transaction Fee], 
+    [Vw_EasyPayRecords].[Paid Amount] AS [Paid Amount], 
+    [Vw_EasyPayRecords].[Pay Code] AS [Pay Code], 
+    [Vw_EasyPayRecords].[Payee Name] AS [Payee Name], 
+    [Vw_EasyPayRecords].[Payment Method] AS [Payment Method], 
+    [Vw_EasyPayRecords].[Bank Reference] AS [Bank Reference], 
+    [Vw_EasyPayRecords].[Revenue] AS [Revenue], 
+    [Vw_EasyPayRecords].[Expenses] AS [Expenses], 
+    [Vw_EasyPayRecords].[Net] AS [Net]
+    FROM [dbo].[Vw_EasyPayRecords] AS [Vw_EasyPayRecords]</DefiningQuery>
+          </EntitySet>
+          <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
+            <End Role="EasyPayFile" EntitySet="EasyPayFile" />
+            <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
+            <End Role="Composit" EntitySet="Composit" />
+            <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstitutionMatch_Institution" Association="Self.FK_InstitutionMatch_Institution">
+            <End Role="Institution" EntitySet="Institution" />
+            <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QA_Batch" Association="Self.FK_QA_Batch">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="QA" EntitySet="QA" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScannedFile_Batch" Association="Self.FK_ScannedFile_Batch">
+            <End Role="Batch" EntitySet="Batch" />
+            <End Role="ScannedFile" EntitySet="ScannedFile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestAllocation_TestName" Association="Self.FK_TestAllocation_TestName">
+            <End Role="TestName" EntitySet="TestName" />
+            <End Role="TestAllocation" EntitySet="TestAllocation" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestProfile_TestAllocation" Association="Self.FK_TestProfile_TestAllocation">
+            <End Role="TestAllocation" EntitySet="TestAllocation" />
+            <End Role="TestProfile" EntitySet="TestProfile" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestVenues_Provinces" Association="Self.FK_TestVenues_Provinces">
+            <End Role="Provinces" EntitySet="Provinces" />
+            <End Role="TestVenues" EntitySet="TestVenues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriterList_TestVenues" Association="Self.FK_WriterList_TestVenues">
+            <End Role="TestVenues" EntitySet="TestVenues" />
+            <End Role="WriterList" EntitySet="WriterList" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WritersPayments_EasyPayRecord" Association="Self.FK_WritersPayments_EasyPayRecord">
+            <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
+            <End Role="WritersPayments" EntitySet="WritersPayments" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="NBT_ProductionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="TestName">
+          <Key>
+            <PropertyRef Name="TestID" />
+          </Key>
+          <Property Name="TestID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestName1" Type="String" MaxLength="14" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TestCode" Type="Int32" Nullable="false" />
+          <Property Name="Section7" Type="Int16" Nullable="false" />
+          <Property Name="HasErrors" Type="Boolean" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="rowguid" Type="Guid" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="TestAllocations" Relationship="Self.FK_TestAllocation_TestName" FromRole="TestName" ToRole="TestAllocation" />
+        </EntityType>
+        <EntityType Name="Log">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+          <Property Name="Thread" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Level" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Logger" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Message" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Location" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="exception" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+        </EntityType>
+        <EntityType Name="EasyPayFile">
+          <Key>
+            <PropertyRef Name="FileGenerationNumber" />
+          </Key>
+          <Property Name="FileGenerationNumber" Type="Int32" Nullable="false" />
+          <Property Name="FileName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateWritten" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="NumberOfPayments" Type="Int32" />
+          <Property Name="NumberOfTenders" Type="Int32" />
+          <Property Name="TotalFees" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TotalBankFees" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="TotalPayment" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="CalculatedAmountCollected" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <NavigationProperty Name="EasyPayRecords" Relationship="Self.FK_EasyPayRecord_EasyPayFile" FromRole="EasyPayFile" ToRole="EasyPayRecord" />
+        </EntityType>
+        <EntityType Name="EasyPayRecord">
+          <Key>
+            <PropertyRef Name="PayNumber" />
+          </Key>
+          <Property Name="PayNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="FileGenerationNumber" Type="Int32" Nullable="false" />
+          <Property Name="PayTag" Type="Int64" Nullable="false" />
+          <Property Name="CollectorID" Type="Int64" />
+          <Property Name="date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fee" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="BankCost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="NumOfTrans" Type="Int16" Nullable="false" />
+          <Property Name="AmountPaid" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Trace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="TenderType_PAN" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="PointOfService" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Original" Type="Int16" Nullable="false" />
+          <NavigationProperty Name="EasyPayFile" Relationship="Self.FK_EasyPayRecord_EasyPayFile" FromRole="EasyPayRecord" ToRole="EasyPayFile" />
+          <NavigationProperty Name="WritersPayment" Relationship="Self.FK_WritersPayments_EasyPayRecord" FromRole="EasyPayRecord" ToRole="WritersPayments" />
+        </EntityType>
+        <EntityType Name="Batch">
+          <Key>
+            <PropertyRef Name="BatchID" />
+          </Key>
+          <Property Name="BatchID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BatchName" Type="String" MaxLength="22" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="TestCombination" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BatchedBy" Type="String" MaxLength="15" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BatchDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RandTestNumber" Type="Int32" Nullable="false" />
+          <Property Name="Count" Type="Int32" Nullable="false" />
+          <Property Name="TestVenueID" Type="Int32" Nullable="false" />
+          <Property Name="TestProfileID" Type="Int32" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="QAs" Relationship="Self.FK_QA_Batch" FromRole="Batch" ToRole="QA" />
+          <NavigationProperty Name="ScannedFiles" Relationship="Self.FK_ScannedFile_Batch" FromRole="Batch" ToRole="ScannedFile" />
+        </EntityType>
+        <EntityType Name="BenchmarkLevel">
+          <Key>
+            <PropertyRef Name="yearID" />
+          </Key>
+          <Property Name="yearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="YearSet" Type="Int32" Nullable="false" />
+          <Property Name="StartIntakeYear" Type="Int32" Nullable="false" />
+          <Property Name="EndIntakeYear" Type="Int32" Nullable="false" />
+          <Property Name="AL_PU" Type="Int32" Nullable="false" />
+          <Property Name="AL_PL" Type="Int32" Nullable="false" />
+          <Property Name="AL_IU" Type="Int32" Nullable="false" />
+          <Property Name="AL_IL" Type="Int32" Nullable="false" />
+          <Property Name="AL_BU" Type="Int32" Nullable="false" />
+          <Property Name="AL_BL" Type="Int32" Nullable="false" />
+          <Property Name="QL_PU" Type="Int32" Nullable="false" />
+          <Property Name="QL_PL" Type="Int32" Nullable="false" />
+          <Property Name="QL_IU" Type="Int32" Nullable="false" />
+          <Property Name="QL_IL" Type="Int32" Nullable="false" />
+          <Property Name="QL_BU" Type="Int32" Nullable="false" />
+          <Property Name="QL_BL" Type="Int32" Nullable="false" />
+          <Property Name="MAT_PU" Type="Int32" Nullable="false" />
+          <Property Name="MAT_PL" Type="Int32" Nullable="false" />
+          <Property Name="MAT_IU" Type="Int32" Nullable="false" />
+          <Property Name="MAT_IL" Type="Int32" Nullable="false" />
+          <Property Name="MAT_BU" Type="Int32" Nullable="false" />
+          <Property Name="MAT_BL" Type="Int32" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Composit">
+          <Key>
+            <PropertyRef Name="Barcode" />
+          </Key>
+          <Property Name="RefNo" Type="Int64" Nullable="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ID_Type" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Citizenship" Type="Int32" />
+          <Property Name="Classification" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="VenueCode" Type="Int32" Nullable="false" />
+          <Property Name="VenueName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="HomeLanguage" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="GR12Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="AQLLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="AQLCode" Type="Int32" />
+          <Property Name="MatLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="MatCode" Type="Int32" />
+          <Property Name="ALScore" Type="Int32" />
+          <Property Name="ALLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="QLScore" Type="Int32" />
+          <Property Name="QLLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MATScore" Type="Int32" />
+          <Property Name="MATLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="WroteAL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="WroteQL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="WroteMat" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Faculty2" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty3" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Batch" Type="String" MaxLength="22" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="RowGuid" Type="Guid" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="InstitutionMatches" Relationship="Self.FK_InstitutionMatch_Composit" FromRole="Composit" ToRole="InstitutionMatch" />
+        </EntityType>
+        <EntityType Name="FirstName">
+          <Key>
+            <PropertyRef Name="NameID" />
+          </Key>
+          <Property Name="NameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="Institution">
+          <Key>
+            <PropertyRef Name="InstID" />
+          </Key>
+          <Property Name="InstID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+          <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+          <Property Name="GUID" Type="Guid" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="InstitutionMatches" Relationship="Self.FK_InstitutionMatch_Institution" FromRole="Institution" ToRole="InstitutionMatch" />
+        </EntityType>
+        <EntityType Name="InstitutionMatch">
+          <Key>
+            <PropertyRef Name="RequestNumber" />
+          </Key>
+          <Property Name="RequestNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="InstID" Type="Int32" Nullable="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="StudentID" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Programme" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="RequestDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Composit" Relationship="Self.FK_InstitutionMatch_Composit" FromRole="InstitutionMatch" ToRole="Composit" />
+          <NavigationProperty Name="Institution" Relationship="Self.FK_InstitutionMatch_Institution" FromRole="InstitutionMatch" ToRole="Institution" />
+        </EntityType>
+        <EntityType Name="IntakeYear">
+          <Key>
+            <PropertyRef Name="yearID" />
+          </Key>
+          <Property Name="yearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Year" Type="Int32" Nullable="false" />
+          <Property Name="yearStart" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="yearEnd" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="NewNBTNumber">
+          <Key>
+            <PropertyRef Name="NewNBT" />
+          </Key>
+          <Property Name="NewNBT" Type="Int64" Nullable="false" />
+          <Property Name="OriginalNBT" Type="Int64" />
+          <Property Name="Used" Type="Boolean" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="WriterListID" Type="Int32" />
+        </EntityType>
+        <EntityType Name="Province">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Code" Type="Int32" Nullable="false" />
+          <NavigationProperty Name="TestVenues" Relationship="Self.FK_TestVenues_Provinces" FromRole="Provinces" ToRole="TestVenues" />
+        </EntityType>
+        <EntityType Name="QA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" />
+          <Property Name="CSX_Number" Type="Int32" Nullable="false" />
+          <Property Name="CSX" Type="String" MaxLength="37" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="NBT" Type="Int64" Nullable="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="IDType" Type="Int32" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Citizenship" Type="Int32" />
+          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Surname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="VenueCode" Type="Int32" Nullable="false" />
+          <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="HLanguage" Type="Int32" />
+          <Property Name="SchoolLanguage" Type="Int32" />
+          <Property Name="Classification" Type="Int32" />
+          <Property Name="AQL_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="AQL_Code" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Section1" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section2" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section3" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section4" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section5" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section6" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section7" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="MAT_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="MathCode" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="MatSection" Type="String" MaxLength="60" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty2" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty3" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="EndOfFile" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="BatchID" Type="Int32" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Batch" Relationship="Self.FK_QA_Batch" FromRole="QA" ToRole="Batch" />
+        </EntityType>
+        <EntityType Name="RecordsInQueue">
+          <Key>
+            <PropertyRef Name="RecID" />
+          </Key>
+          <Property Name="RecID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="NBT" Type="Int64" Nullable="false" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="FID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="Reason" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="ScannedFile">
+          <Key>
+            <PropertyRef Name="Filename" />
+          </Key>
+          <Property Name="FileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Filename" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Datescanned" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="FileData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+          <Property Name="BatchID" Type="Int32" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="Client" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <NavigationProperty Name="Batch" Relationship="Self.FK_ScannedFile_Batch" FromRole="ScannedFile" ToRole="Batch" />
+        </EntityType>
+        <EntityType Name="ScanTracker">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="BatchedBy" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="DateBatched" Type="DateTime" Precision="3" />
+          <Property Name="Records" Type="Int32" />
+          <Property Name="DateScanned" Type="DateTime" Precision="3" />
+          <Property Name="ScanRecords" Type="Int32" />
+          <Property Name="DateEdited" Type="DateTime" Precision="3" />
+          <Property Name="EditRecords" Type="Int32" />
+          <Property Name="DateQA" Type="DateTime" Precision="3" />
+          <Property Name="QARecords" Type="Int32" />
+          <Property Name="DateSentForScoring" Type="DateTime" Precision="3" />
+          <Property Name="SentCount" Type="Int32" />
+          <Property Name="DateScored" Type="DateTime" Precision="3" />
+          <Property Name="ScoredRecords" Type="Int32" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="TestDate" Type="DateTime" Precision="0" />
+          <Property Name="FileName" Type="String" MaxLength="22" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+        </EntityType>
+        <EntityType Name="Surname">
+          <Key>
+            <PropertyRef Name="SurnameID" />
+          </Key>
+          <Property Name="SurnameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Surname1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="TestAllocation">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ClientType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TestID" Type="Int32" Nullable="false" />
+          <Property Name="Client" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Estimated" Type="Int32" Nullable="false" />
+          <Property Name="ActualUsed" Type="Int32" Nullable="false" />
+          <Property Name="RowGuid" Type="Guid" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="TestName" Relationship="Self.FK_TestAllocation_TestName" FromRole="TestAllocation" ToRole="TestName" />
+          <NavigationProperty Name="TestProfiles" Relationship="Self.FK_TestProfile_TestAllocation" FromRole="TestAllocation" ToRole="TestProfile" />
+        </EntityType>
+        <EntityType Name="TestProfile">
+          <Key>
+            <PropertyRef Name="ProfileID" />
+          </Key>
+          <Property Name="ProfileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="Profile" Type="Int32" Nullable="false" />
+          <Property Name="AllocationID" Type="Int32" Nullable="false" />
+          <Property Name="Intake" Type="Int32" Nullable="false" />
+          <Property Name="RowGuid" Type="Guid" Nullable="false" />
+          <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="TestAllocation" Relationship="Self.FK_TestProfile_TestAllocation" FromRole="TestProfile" ToRole="TestAllocation" />
+        </EntityType>
+        <EntityType Name="TestVenue">
+          <Key>
+            <PropertyRef Name="VenueCode" />
+          </Key>
+          <Property Name="VenueCode" Type="Int32" Nullable="false" />
+          <Property Name="VenueName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="ShortName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="WebsiteName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="VenueType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="ProvinceID" Type="Int32" Nullable="false" />
+          <Property Name="Capacity" Type="Int32" />
+          <Property Name="Comments" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Available" Type="Boolean" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RowGuid" Type="Guid" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Place" Type="Geography" />
+          <NavigationProperty Name="Province" Relationship="Self.FK_TestVenues_Provinces" FromRole="TestVenues" ToRole="Provinces" />
+          <NavigationProperty Name="WriterLists" Relationship="Self.FK_WriterList_TestVenues" FromRole="TestVenues" ToRole="WriterList" />
+        </EntityType>
+        <EntityType Name="WriterList">
+          <Key>
+            <PropertyRef Name="Id" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="NBT" Type="Int64" Nullable="false" />
+          <Property Name="Surname" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Classification" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="TestLanguage" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="TestType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="VenueID" Type="Int32" Nullable="false" />
+          <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Mobile" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="HomeTelephone" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="EMail" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Paid" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="AccountCreation" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RegistrationDate" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Wrote" Type="Boolean" Nullable="false" />
+          <Property Name="RowGuid" Type="Guid" Nullable="false" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <NavigationProperty Name="TestVenue" Relationship="Self.FK_WriterList_TestVenues" FromRole="WriterList" ToRole="TestVenues" />
+        </EntityType>
+        <EntityType Name="WritersPayment">
+          <Key>
+            <PropertyRef Name="EasyPayPayNumber" />
+          </Key>
+          <Property Name="EasyPayPayNumber" Type="Int64" Nullable="false" />
+          <Property Name="CurrentNBT" Type="Int64" Nullable="false" />
+          <Property Name="OldNBT" Type="Int64" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="EasyPayRecord" Relationship="Self.FK_WritersPayments_EasyPayRecord" FromRole="WritersPayments" ToRole="EasyPayRecord" />
+        </EntityType>
+        <EntityType Name="User">
+          <Key>
+            <PropertyRef Name="StaffID" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="Areas" />
+          </Key>
+          <Property Name="StaffID" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Areas" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+        </EntityType>
+        <EntityType Name="TestRoom">
+          <Key>
+            <PropertyRef Name="Id" />
+            <PropertyRef Name="RowVersion" />
+            <PropertyRef Name="RoomName" />
+            <PropertyRef Name="TestRoom_TestVenue" />
+          </Key>
+          <Property Name="Id" Type="Int32" Nullable="false" />
+          <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+          <Property Name="RoomType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="HireCost" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="Capacity" Type="Int32" />
+          <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="RoomName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="TestRoom_TestVenue" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Vw_EasyPayRecords">
+          <Key>
+            <PropertyRef Name="File_Number" />
+            <PropertyRef Name="NBT_Ref" />
+            <PropertyRef Name="Source_File_Date" />
+            <PropertyRef Name="Payment_Date" />
+            <PropertyRef Name="Fee" />
+            <PropertyRef Name="Paid_Amount" />
+            <PropertyRef Name="Pay_Code" />
+            <PropertyRef Name="Payment_Method" />
+            <PropertyRef Name="Bank_Reference" />
+          </Key>
+          <Property Name="File_Number" Type="Int32" Nullable="false" />
+          <Property Name="NBT_Ref" Type="Int64" Nullable="false" />
+          <Property Name="EasyPay_Code" Type="Int64" />
+          <Property Name="Source_File_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Payment_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="Fee" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="Processing_Fee" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Transaction_Fee" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Paid_Amount" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+          <Property Name="Pay_Code" Type="Int64" Nullable="false" />
+          <Property Name="Payee_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="Payment_Method" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Bank_Reference" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+          <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Expenses" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Net" Type="Decimal" Precision="19" Scale="4" />
+        </EntityType>
+        <Association Name="FK_TestAllocation_TestName">
+          <End Role="TestName" Type="Self.TestName" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestName">
+              <PropertyRef Name="TestID" />
+            </Principal>
+            <Dependent Role="TestAllocation">
+              <PropertyRef Name="TestID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_EasyPayRecord_EasyPayFile">
+          <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
+          <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="EasyPayFile">
+              <PropertyRef Name="FileGenerationNumber" />
+            </Principal>
+            <Dependent Role="EasyPayRecord">
+              <PropertyRef Name="FileGenerationNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WritersPayments_EasyPayRecord">
+          <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="1" />
+          <End Role="WritersPayments" Type="Self.WritersPayment" Multiplicity="0..1" />
+          <ReferentialConstraint>
+            <Principal Role="EasyPayRecord">
+              <PropertyRef Name="PayNumber" />
+            </Principal>
+            <Dependent Role="WritersPayments">
+              <PropertyRef Name="EasyPayPayNumber" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_QA_Batch">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="QA" Type="Self.QA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="QA">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_ScannedFile_Batch">
+          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="ScannedFile" Type="Self.ScannedFile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="ScannedFile">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstitutionMatch_Composit">
+          <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
+          <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Composit">
+              <PropertyRef Name="Barcode" />
+            </Principal>
+            <Dependent Role="InstitutionMatch">
+              <PropertyRef Name="Barcode" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_InstitutionMatch_Institution">
+          <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+          <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Institution">
+              <PropertyRef Name="InstID" />
+            </Principal>
+            <Dependent Role="InstitutionMatch">
+              <PropertyRef Name="InstID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestVenues_Provinces">
+          <End Role="Provinces" Type="Self.Province" Multiplicity="1" />
+          <End Role="TestVenues" Type="Self.TestVenue" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Provinces">
+              <PropertyRef Name="Id" />
+            </Principal>
+            <Dependent Role="TestVenues">
+              <PropertyRef Name="ProvinceID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_TestProfile_TestAllocation">
+          <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="1">
+            <OnDelete Action="Cascade" />
+          </End>
+          <End Role="TestProfile" Type="Self.TestProfile" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestAllocation">
+              <PropertyRef Name="ID" />
+            </Principal>
+            <Dependent Role="TestProfile">
+              <PropertyRef Name="AllocationID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <Association Name="FK_WriterList_TestVenues">
+          <End Role="TestVenues" Type="Self.TestVenue" Multiplicity="1" />
+          <End Role="WriterList" Type="Self.WriterList" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="TestVenues">
+              <PropertyRef Name="VenueCode" />
+            </Principal>
+            <Dependent Role="WriterList">
+              <PropertyRef Name="VenueID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityContainer Name="CETAPEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="TestNames" EntityType="Self.TestName" />
+          <EntitySet Name="Logs" EntityType="Self.Log" />
+          <EntitySet Name="EasyPayFiles" EntityType="Self.EasyPayFile" />
+          <EntitySet Name="EasyPayRecords" EntityType="Self.EasyPayRecord" />
+          <EntitySet Name="Batches" EntityType="Self.Batch" />
+          <EntitySet Name="BenchmarkLevels" EntityType="Self.BenchmarkLevel" />
+          <EntitySet Name="Composits" EntityType="Self.Composit" />
+          <EntitySet Name="FirstNames" EntityType="Self.FirstName" />
+          <EntitySet Name="Institutions" EntityType="Self.Institution" />
+          <EntitySet Name="InstitutionMatches" EntityType="Self.InstitutionMatch" />
+          <EntitySet Name="IntakeYears" EntityType="Self.IntakeYear" />
+          <EntitySet Name="NewNBTNumbers" EntityType="Self.NewNBTNumber" />
+          <EntitySet Name="Provinces" EntityType="Self.Province" />
+          <EntitySet Name="QAs" EntityType="Self.QA" />
+          <EntitySet Name="RecordsInQueues" EntityType="Self.RecordsInQueue" />
+          <EntitySet Name="ScannedFiles" EntityType="Self.ScannedFile" />
+          <EntitySet Name="ScanTrackers" EntityType="Self.ScanTracker" />
+          <EntitySet Name="Surnames" EntityType="Self.Surname" />
+          <EntitySet Name="TestAllocations" EntityType="Self.TestAllocation" />
+          <EntitySet Name="TestProfiles" EntityType="Self.TestProfile" />
+          <EntitySet Name="TestVenues" EntityType="Self.TestVenue" />
+          <EntitySet Name="WriterLists" EntityType="Self.WriterList" />
+          <EntitySet Name="WritersPayments" EntityType="Self.WritersPayment" />
+          <EntitySet Name="Users" EntityType="Self.User" />
+          <EntitySet Name="TestRooms" EntityType="Self.TestRoom" />
+          <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" />
+          <AssociationSet Name="FK_TestAllocation_TestName" Association="Self.FK_TestAllocation_TestName">
+            <End Role="TestName" EntitySet="TestNames" />
+            <End Role="TestAllocation" EntitySet="TestAllocations" />
+          </AssociationSet>
+          <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
+            <End Role="EasyPayFile" EntitySet="EasyPayFiles" />
+            <End Role="EasyPayRecord" EntitySet="EasyPayRecords" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WritersPayments_EasyPayRecord" Association="Self.FK_WritersPayments_EasyPayRecord">
+            <End Role="EasyPayRecord" EntitySet="EasyPayRecords" />
+            <End Role="WritersPayments" EntitySet="WritersPayments" />
+          </AssociationSet>
+          <AssociationSet Name="FK_QA_Batch" Association="Self.FK_QA_Batch">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="QA" EntitySet="QAs" />
+          </AssociationSet>
+          <AssociationSet Name="FK_ScannedFile_Batch" Association="Self.FK_ScannedFile_Batch">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="ScannedFile" EntitySet="ScannedFiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
+            <End Role="Composit" EntitySet="Composits" />
+            <End Role="InstitutionMatch" EntitySet="InstitutionMatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_InstitutionMatch_Institution" Association="Self.FK_InstitutionMatch_Institution">
+            <End Role="Institution" EntitySet="Institutions" />
+            <End Role="InstitutionMatch" EntitySet="InstitutionMatches" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestVenues_Provinces" Association="Self.FK_TestVenues_Provinces">
+            <End Role="Provinces" EntitySet="Provinces" />
+            <End Role="TestVenues" EntitySet="TestVenues" />
+          </AssociationSet>
+          <AssociationSet Name="FK_TestProfile_TestAllocation" Association="Self.FK_TestProfile_TestAllocation">
+            <End Role="TestAllocation" EntitySet="TestAllocations" />
+            <End Role="TestProfile" EntitySet="TestProfiles" />
+          </AssociationSet>
+          <AssociationSet Name="FK_WriterList_TestVenues" Association="Self.FK_WriterList_TestVenues">
+            <End Role="TestVenues" EntitySet="TestVenues" />
+            <End Role="WriterList" EntitySet="WriterLists" />
+          </AssociationSet>
+        </EntityContainer>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="NBT_ProductionModelStoreContainer" CdmEntityContainer="CETAPEntities">
+          <EntitySetMapping Name="TestNames">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.TestName">
+              <MappingFragment StoreEntitySet="TestName">
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="TestName1" ColumnName="TestName" />
+                <ScalarProperty Name="TestCode" ColumnName="TestCode" />
+                <ScalarProperty Name="Section7" ColumnName="Section7" />
+                <ScalarProperty Name="HasErrors" ColumnName="HasErrors" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="rowguid" ColumnName="rowguid" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Logs">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Log">
+              <MappingFragment StoreEntitySet="Logs">
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="Date" ColumnName="Date" />
+                <ScalarProperty Name="Thread" ColumnName="Thread" />
+                <ScalarProperty Name="Level" ColumnName="Level" />
+                <ScalarProperty Name="Logger" ColumnName="Logger" />
+                <ScalarProperty Name="Message" ColumnName="Message" />
+                <ScalarProperty Name="UserName" ColumnName="UserName" />
+                <ScalarProperty Name="Location" ColumnName="Location" />
+                <ScalarProperty Name="Method" ColumnName="Method" />
+                <ScalarProperty Name="exception" ColumnName="exception" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EasyPayFiles">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.EasyPayFile">
+              <MappingFragment StoreEntitySet="EasyPayFile">
+                <ScalarProperty Name="FileGenerationNumber" ColumnName="FileGenerationNumber" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="DateWritten" ColumnName="DateWritten" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="NumberOfPayments" ColumnName="NumberOfPayments" />
+                <ScalarProperty Name="NumberOfTenders" ColumnName="NumberOfTenders" />
+                <ScalarProperty Name="TotalFees" ColumnName="TotalFees" />
+                <ScalarProperty Name="TotalBankFees" ColumnName="TotalBankFees" />
+                <ScalarProperty Name="TotalPayment" ColumnName="TotalPayment" />
+                <ScalarProperty Name="CalculatedAmountCollected" ColumnName="CalculatedAmountCollected" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="EasyPayRecords">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.EasyPayRecord">
+              <MappingFragment StoreEntitySet="EasyPayRecord">
+                <ScalarProperty Name="PayNumber" ColumnName="PayNumber" />
+                <ScalarProperty Name="FileGenerationNumber" ColumnName="FileGenerationNumber" />
+                <ScalarProperty Name="PayTag" ColumnName="PayTag" />
+                <ScalarProperty Name="CollectorID" ColumnName="CollectorID" />
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="Time" ColumnName="Time" />
+                <ScalarProperty Name="Fee" ColumnName="Fee" />
+                <ScalarProperty Name="BankCost" ColumnName="BankCost" />
+                <ScalarProperty Name="NumOfTrans" ColumnName="NumOfTrans" />
+                <ScalarProperty Name="AmountPaid" ColumnName="AmountPaid" />
+                <ScalarProperty Name="Trace" ColumnName="Trace" />
+                <ScalarProperty Name="TenderType_PAN" ColumnName="TenderType_PAN" />
+                <ScalarProperty Name="PointOfService" ColumnName="PointOfService" />
+                <ScalarProperty Name="Original" ColumnName="Original" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Batches">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Batch">
+              <MappingFragment StoreEntitySet="Batch">
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="BatchName" ColumnName="BatchName" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="TestCombination" ColumnName="TestCombination" />
+                <ScalarProperty Name="BatchedBy" ColumnName="BatchedBy" />
+                <ScalarProperty Name="BatchDate" ColumnName="BatchDate" />
+                <ScalarProperty Name="RandTestNumber" ColumnName="RandTestNumber" />
+                <ScalarProperty Name="Count" ColumnName="Count" />
+                <ScalarProperty Name="TestVenueID" ColumnName="TestVenueID" />
+                <ScalarProperty Name="TestProfileID" ColumnName="TestProfileID" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="BenchmarkLevels">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.BenchmarkLevel">
+              <MappingFragment StoreEntitySet="BenchmarkLevels">
+                <ScalarProperty Name="yearID" ColumnName="yearID" />
+                <ScalarProperty Name="YearSet" ColumnName="YearSet" />
+                <ScalarProperty Name="StartIntakeYear" ColumnName="StartIntakeYear" />
+                <ScalarProperty Name="EndIntakeYear" ColumnName="EndIntakeYear" />
+                <ScalarProperty Name="AL_PU" ColumnName="AL_PU" />
+                <ScalarProperty Name="AL_PL" ColumnName="AL_PL" />
+                <ScalarProperty Name="AL_IU" ColumnName="AL_IU" />
+                <ScalarProperty Name="AL_IL" ColumnName="AL_IL" />
+                <ScalarProperty Name="AL_BU" ColumnName="AL_BU" />
+                <ScalarProperty Name="AL_BL" ColumnName="AL_BL" />
+                <ScalarProperty Name="QL_PU" ColumnName="QL_PU" />
+                <ScalarProperty Name="QL_PL" ColumnName="QL_PL" />
+                <ScalarProperty Name="QL_IU" ColumnName="QL_IU" />
+                <ScalarProperty Name="QL_IL" ColumnName="QL_IL" />
+                <ScalarProperty Name="QL_BU" ColumnName="QL_BU" />
+                <ScalarProperty Name="QL_BL" ColumnName="QL_BL" />
+                <ScalarProperty Name="MAT_PU" ColumnName="MAT_PU" />
+                <ScalarProperty Name="MAT_PL" ColumnName="MAT_PL" />
+                <ScalarProperty Name="MAT_IU" ColumnName="MAT_IU" />
+                <ScalarProperty Name="MAT_IL" ColumnName="MAT_IL" />
+                <ScalarProperty Name="MAT_BU" ColumnName="MAT_BU" />
+                <ScalarProperty Name="MAT_BL" ColumnName="MAT_BL" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Type" ColumnName="Type" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Composits">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Composit">
+              <MappingFragment StoreEntitySet="Composit">
+                <ScalarProperty Name="RefNo" ColumnName="RefNo" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="ID_Type" ColumnName="ID_Type" />
+                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+                <ScalarProperty Name="DOT" ColumnName="DOT" />
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+                <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+                <ScalarProperty Name="GR12Language" ColumnName="GR12Language" />
+                <ScalarProperty Name="AQLLanguage" ColumnName="AQLLanguage" />
+                <ScalarProperty Name="AQLCode" ColumnName="AQLCode" />
+                <ScalarProperty Name="MatLanguage" ColumnName="MatLanguage" />
+                <ScalarProperty Name="MatCode" ColumnName="MatCode" />
+                <ScalarProperty Name="ALScore" ColumnName="ALScore" />
+                <ScalarProperty Name="ALLevel" ColumnName="ALLevel" />
+                <ScalarProperty Name="QLScore" ColumnName="QLScore" />
+                <ScalarProperty Name="QLLevel" ColumnName="QLLevel" />
+                <ScalarProperty Name="MATScore" ColumnName="MATScore" />
+                <ScalarProperty Name="MATLevel" ColumnName="MATLevel" />
+                <ScalarProperty Name="WroteAL" ColumnName="WroteAL" />
+                <ScalarProperty Name="WroteQL" ColumnName="WroteQL" />
+                <ScalarProperty Name="WroteMat" ColumnName="WroteMat" />
+                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+                <ScalarProperty Name="Batch" ColumnName="Batch" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="FirstNames">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.FirstName">
+              <MappingFragment StoreEntitySet="FirstName">
+                <ScalarProperty Name="NameID" ColumnName="NameID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Institutions">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Institution">
+              <MappingFragment StoreEntitySet="Institution">
+                <ScalarProperty Name="InstID" ColumnName="InstID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="Logo" ColumnName="Logo" />
+                <ScalarProperty Name="GUID" ColumnName="GUID" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="InstitutionMatches">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.InstitutionMatch">
+              <MappingFragment StoreEntitySet="InstitutionMatch">
+                <ScalarProperty Name="RequestNumber" ColumnName="RequestNumber" />
+                <ScalarProperty Name="InstID" ColumnName="InstID" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="StudentID" ColumnName="StudentID" />
+                <ScalarProperty Name="Programme" ColumnName="Programme" />
+                <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+                <ScalarProperty Name="RequestDate" ColumnName="RequestDate" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="IntakeYears">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.IntakeYear">
+              <MappingFragment StoreEntitySet="IntakeYear">
+                <ScalarProperty Name="yearID" ColumnName="yearID" />
+                <ScalarProperty Name="Year" ColumnName="Year" />
+                <ScalarProperty Name="yearStart" ColumnName="yearStart" />
+                <ScalarProperty Name="yearEnd" ColumnName="yearEnd" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="NewNBTNumbers">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.NewNBTNumber">
+              <MappingFragment StoreEntitySet="NewNBTNumbers">
+                <ScalarProperty Name="NewNBT" ColumnName="NewNBT" />
+                <ScalarProperty Name="OriginalNBT" ColumnName="OriginalNBT" />
+                <ScalarProperty Name="Used" ColumnName="Used" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="WriterListID" ColumnName="WriterListID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Provinces">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Province">
+              <MappingFragment StoreEntitySet="Provinces">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Code" ColumnName="Code" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QAs">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
+              <MappingFragment StoreEntitySet="QA">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
+                <ScalarProperty Name="CSX" ColumnName="CSX" />
+                <ScalarProperty Name="NBT" ColumnName="NBT" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="IDType" ColumnName="IDType" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
+                <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
+                <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
+                <ScalarProperty Name="Section1" ColumnName="Section1" />
+                <ScalarProperty Name="Section2" ColumnName="Section2" />
+                <ScalarProperty Name="Section3" ColumnName="Section3" />
+                <ScalarProperty Name="Section4" ColumnName="Section4" />
+                <ScalarProperty Name="Section5" ColumnName="Section5" />
+                <ScalarProperty Name="Section6" ColumnName="Section6" />
+                <ScalarProperty Name="Section7" ColumnName="Section7" />
+                <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
+                <ScalarProperty Name="MathCode" ColumnName="MathCode" />
+                <ScalarProperty Name="MatSection" ColumnName="MatSection" />
+                <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+                <ScalarProperty Name="EndOfFile" ColumnName="EndOfFile" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="RecordsInQueues">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.RecordsInQueue">
+              <MappingFragment StoreEntitySet="RecordsInQueue">
+                <ScalarProperty Name="RecID" ColumnName="RecID" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="NBT" ColumnName="NBT" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="FID" ColumnName="FID" />
+                <ScalarProperty Name="Reason" ColumnName="Reason" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScannedFiles">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.ScannedFile">
+              <MappingFragment StoreEntitySet="ScannedFile">
+                <ScalarProperty Name="FileID" ColumnName="FileID" />
+                <ScalarProperty Name="Filename" ColumnName="Filename" />
+                <ScalarProperty Name="Datescanned" ColumnName="Datescanned" />
+                <ScalarProperty Name="FileData" ColumnName="FileData" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="Client" ColumnName="Client" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="ScanTrackers">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.ScanTracker">
+              <MappingFragment StoreEntitySet="ScanTrackers">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="BatchedBy" ColumnName="BatchedBy" />
+                <ScalarProperty Name="DateBatched" ColumnName="DateBatched" />
+                <ScalarProperty Name="Records" ColumnName="Records" />
+                <ScalarProperty Name="DateScanned" ColumnName="DateScanned" />
+                <ScalarProperty Name="ScanRecords" ColumnName="ScanRecords" />
+                <ScalarProperty Name="DateEdited" ColumnName="DateEdited" />
+                <ScalarProperty Name="EditRecords" ColumnName="EditRecords" />
+                <ScalarProperty Name="DateQA" ColumnName="DateQA" />
+                <ScalarProperty Name="QARecords" ColumnName="QARecords" />
+                <ScalarProperty Name="DateSentForScoring" ColumnName="DateSentForScoring" />
+                <ScalarProperty Name="SentCount" ColumnName="SentCount" />
+                <ScalarProperty Name="DateScored" ColumnName="DateScored" />
+                <ScalarProperty Name="ScoredRecords" ColumnName="ScoredRecords" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="FileName" ColumnName="FileName" />
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Surnames">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Surname">
+              <MappingFragment StoreEntitySet="Surname">
+                <ScalarProperty Name="SurnameID" ColumnName="SurnameID" />
+                <ScalarProperty Name="Surname1" ColumnName="Surname" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestAllocations">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.TestAllocation">
+              <MappingFragment StoreEntitySet="TestAllocation">
+                <ScalarProperty Name="ID" ColumnName="ID" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="ClientType" ColumnName="ClientType" />
+                <ScalarProperty Name="TestID" ColumnName="TestID" />
+                <ScalarProperty Name="Client" ColumnName="Client" />
+                <ScalarProperty Name="Estimated" ColumnName="Estimated" />
+                <ScalarProperty Name="ActualUsed" ColumnName="ActualUsed" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestProfiles">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.TestProfile">
+              <MappingFragment StoreEntitySet="TestProfile">
+                <ScalarProperty Name="ProfileID" ColumnName="ProfileID" />
+                <ScalarProperty Name="Profile" ColumnName="Profile" />
+                <ScalarProperty Name="AllocationID" ColumnName="AllocationID" />
+                <ScalarProperty Name="Intake" ColumnName="Intake" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="ModifiedDate" ColumnName="ModifiedDate" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestVenues">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.TestVenue">
+              <MappingFragment StoreEntitySet="TestVenues">
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+                <ScalarProperty Name="ShortName" ColumnName="ShortName" />
+                <ScalarProperty Name="WebsiteName" ColumnName="WebsiteName" />
+                <ScalarProperty Name="Room" ColumnName="Room" />
+                <ScalarProperty Name="VenueType" ColumnName="VenueType" />
+                <ScalarProperty Name="ProvinceID" ColumnName="ProvinceID" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="Comments" ColumnName="Comments" />
+                <ScalarProperty Name="Available" ColumnName="Available" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Place" ColumnName="Place" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WriterLists">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.WriterList">
+              <MappingFragment StoreEntitySet="WriterList">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="NBT" ColumnName="NBT" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="TestLanguage" ColumnName="TestLanguage" />
+                <ScalarProperty Name="TestType" ColumnName="TestType" />
+                <ScalarProperty Name="VenueID" ColumnName="VenueID" />
+                <ScalarProperty Name="DOT" ColumnName="DOT" />
+                <ScalarProperty Name="Mobile" ColumnName="Mobile" />
+                <ScalarProperty Name="HomeTelephone" ColumnName="HomeTelephone" />
+                <ScalarProperty Name="EMail" ColumnName="EMail" />
+                <ScalarProperty Name="Paid" ColumnName="Paid" />
+                <ScalarProperty Name="AccountCreation" ColumnName="AccountCreation" />
+                <ScalarProperty Name="RegistrationDate" ColumnName="RegistrationDate" />
+                <ScalarProperty Name="Wrote" ColumnName="Wrote" />
+                <ScalarProperty Name="RowGuid" ColumnName="RowGuid" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="WritersPayments">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.WritersPayment">
+              <MappingFragment StoreEntitySet="WritersPayments">
+                <ScalarProperty Name="EasyPayPayNumber" ColumnName="EasyPayPayNumber" />
+                <ScalarProperty Name="CurrentNBT" ColumnName="CurrentNBT" />
+                <ScalarProperty Name="OldNBT" ColumnName="OldNBT" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Users">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.User">
+              <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="StaffID" ColumnName="StaffID" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Areas" ColumnName="Areas" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="TestRooms">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.TestRoom">
+              <MappingFragment StoreEntitySet="TestRooms">
+                <ScalarProperty Name="Id" ColumnName="Id" />
+                <ScalarProperty Name="RowVersion" ColumnName="RowVersion" />
+                <ScalarProperty Name="RoomType" ColumnName="RoomType" />
+                <ScalarProperty Name="HireCost" ColumnName="HireCost" />
+                <ScalarProperty Name="Capacity" ColumnName="Capacity" />
+                <ScalarProperty Name="Comment" ColumnName="Comment" />
+                <ScalarProperty Name="RoomName" ColumnName="RoomName" />
+                <ScalarProperty Name="TestRoom_TestVenue" ColumnName="TestRoom_TestVenue" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Vw_EasyPayRecords">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Vw_EasyPayRecords">
+              <MappingFragment StoreEntitySet="Vw_EasyPayRecords">
+                <ScalarProperty Name="File_Number" ColumnName="File Number" />
+                <ScalarProperty Name="NBT_Ref" ColumnName="NBT Ref" />
+                <ScalarProperty Name="EasyPay_Code" ColumnName="EasyPay Code" />
+                <ScalarProperty Name="Source_File_Date" ColumnName="Source File Date" />
+                <ScalarProperty Name="Payment_Date" ColumnName="Payment Date" />
+                <ScalarProperty Name="Fee" ColumnName="Fee" />
+                <ScalarProperty Name="Processing_Fee" ColumnName="Processing Fee" />
+                <ScalarProperty Name="Transaction_Fee" ColumnName="Transaction Fee" />
+                <ScalarProperty Name="Paid_Amount" ColumnName="Paid Amount" />
+                <ScalarProperty Name="Pay_Code" ColumnName="Pay Code" />
+                <ScalarProperty Name="Payee_Name" ColumnName="Payee Name" />
+                <ScalarProperty Name="Payment_Method" ColumnName="Payment Method" />
+                <ScalarProperty Name="Bank_Reference" ColumnName="Bank Reference" />
+                <ScalarProperty Name="Revenue" ColumnName="Revenue" />
+                <ScalarProperty Name="Expenses" ColumnName="Expenses" />
+                <ScalarProperty Name="Net" ColumnName="Net" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="true" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

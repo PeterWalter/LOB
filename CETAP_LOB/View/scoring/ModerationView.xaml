@@ -1,0 +1,222 @@
+﻿<UserControl x:Class="CETAP_LOB.View.scoring.ModerationView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View.scoring"
+             mc:Ignorable="d" 
+              BorderThickness="0,1,0,0"
+             DataContext="{Binding Moderation,
+                                   Source={StaticResource Locator}}"
+             d:DesignHeight="300" d:DesignWidth="300">
+    <UserControl.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+    </UserControl.BorderBrush>
+
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="564*" />
+            <ColumnDefinition Width="316*" />
+            <ColumnDefinition Width="243*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="60*" />
+            <RowDefinition Height="319*" />
+            <RowDefinition Height="259*" />
+            <RowDefinition Height="10*" />
+            <RowDefinition Height="149*" />
+        </Grid.RowDefinitions>
+        <StackPanel>
+            <TextBlock Grid.Column="0"
+                       Width="426"
+                       Margin="124,0,14,0"
+                       HorizontalAlignment="Center"
+                       Style="{StaticResource Heading2}"
+                       Text="MAIN SCORES" />
+            <Label Width="545"
+                   Height="25"
+                   Margin="20,7,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="{Binding Moderation.ScoreFolder,
+                                     Source={StaticResource Locator}}" />
+
+        </StackPanel>
+
+        <Label Grid.Column="1"
+               Grid.ColumnSpan="2"
+               Width="539"
+               Height="25"
+               Margin="21,27,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="{Binding Moderation.ScoreModerationFolder,
+                                 Source={StaticResource Locator}}" />
+        <TextBlock Grid.Column="1"
+                   Grid.ColumnSpan="2"
+                   Width="108"
+                   Margin="226,0,225,0"
+                   HorizontalAlignment="Center"
+                   Style="{StaticResource Heading2}"
+                   Text="MODERATION" />
+        <DataGrid Grid.Row="1"
+                  Grid.Column="0"
+                  Margin="0,0,5,9"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  AutoGenerateColumns="False"
+                  BorderBrush="#FF9E9B9B"
+                  BorderThickness="1"
+                  CanUserDeleteRows="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  EnableColumnVirtualization="True"
+                  EnableRowVirtualization="True"
+                  ItemsSource="{Binding Moderation.Scores,
+                                        Source={StaticResource Locator}}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Barcode" SortMemberPath="Barcode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Barcode}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="AL" SortMemberPath="ALScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ALScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="QL" SortMemberPath="QLScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding QLScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="MatScore" SortMemberPath="MATScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding MATScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Batch" SortMemberPath="Batch">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Batch}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <DataGrid Grid.Row="1"
+                  Grid.Column="1"
+                  Grid.ColumnSpan="2"
+                  Margin="5,0,0,9"
+                  HorizontalAlignment="Stretch"
+                  VerticalAlignment="Stretch"
+                  AutoGenerateColumns="False"
+                  BorderBrush="#FF9E9B9B"
+                  BorderThickness="1"
+                  CanUserDeleteRows="True"
+                  CanUserResizeColumns="True"
+                  CanUserSortColumns="True"
+                  EnableColumnVirtualization="True"
+                  EnableRowVirtualization="True"
+                  ItemsSource="{Binding Moderation.ModeratedScores,
+                                        Source={StaticResource Locator}}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Barcode" SortMemberPath="Barcode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Barcode}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="AL" SortMemberPath="ALScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding ALScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="QL" SortMemberPath="QLScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding QLScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="MatScore" SortMemberPath="MATScore">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding MATScore}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Batch" SortMemberPath="Batch">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Batch}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+
+        </DataGrid>
+        <StackPanel Grid.Row="2"
+                    Grid.ColumnSpan="3"
+                    Margin="0,0,3,0"
+                    Orientation="Horizontal">
+            <DataGrid Grid.ColumnSpan="2"
+                      Width="1040"
+                      Margin="0,5"
+                      VerticalAlignment="Stretch"
+                      HorizontalContentAlignment="Stretch"
+                      BorderBrush="#FFB0B5B9"
+                      BorderThickness="1"
+                      ItemsSource="{Binding Moderation.DiffScores,
+                                            Mode=TwoWay,
+                                            Source={StaticResource Locator}}" />
+            <StackPanel Margin="5,0,0,0">
+                <Button BorderThickness="1,10,1,1"
+                        Command="{Binding Moderation.SaveModCommand,
+                                          Mode=OneWay,
+                                          Source={StaticResource Locator}}"
+                        Content="Save Comparison" />
+            </StackPanel>
+        </StackPanel>
+        <GridSplitter Grid.Row="3"
+                      Grid.ColumnSpan="3"
+                      Height="5"
+                      Margin="10,5,5,0"
+                      HorizontalAlignment="Stretch"
+                      VerticalAlignment="Top"
+                      ResizeDirection="Rows"
+                      ShowsPreview="True" />
+    </Grid>
+</UserControl>

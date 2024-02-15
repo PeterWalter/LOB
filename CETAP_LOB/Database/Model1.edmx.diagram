@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="376edbc6f6544f379f6a5fd2748e74c7" Name="Diagram1" ZoomLevel="92">
+        <EntityTypeShape EntityType="NBT_ProductionModel.TestName" Width="1.5" PointX="7.75" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Log" Width="1.5" PointX="12.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.EasyPayFile" Width="1.5" PointX="12.75" PointY="5.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.EasyPayRecord" Width="1.5" PointX="15" PointY="5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Batch" Width="1.5" PointX="7.75" PointY="10.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.BenchmarkLevel" Width="1.5" PointX="2.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Composit" Width="1.5" PointX="0.75" PointY="8.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.FirstName" Width="1.5" PointX="2.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Institution" Width="1.5" PointX="0.75" PointY="18.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.InstitutionMatch" Width="3.125" PointX="3" PointY="10.875" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.IntakeYear" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.NewNBTNumber" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Province" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.QA" Width="1.5" PointX="10" PointY="6.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.RecordsInQueue" Width="1.5" PointX="4.75" PointY="14.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.ScannedFile" Width="1.5" PointX="10" PointY="15.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.ScanTracker" Width="1.5" PointX="14.75" PointY="10.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Surname" Width="1.5" PointX="6.75" PointY="7.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.TestAllocation" Width="1.5" PointX="10" PointY="1" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.TestProfile" Width="1.5" PointX="12.25" PointY="1.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.TestVenue" Width="1.5" PointX="3" PointY="2" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.WriterList" Width="1.5" PointX="5.25" PointY="1.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.WritersPayment" Width="1.5" PointX="17.25" PointY="6.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.User" Width="1.5" PointX="6.75" PointY="15.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.TestRoom" Width="1.5" PointX="16.75" PointY="0.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Vw_EasyPayRecords" Width="1.5" PointX="16.75" PointY="10.75" IsExpanded="true" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_TestAllocation_TestName" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_EasyPayRecord_EasyPayFile" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_WritersPayments_EasyPayRecord" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_QA_Batch" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_ScannedFile_Batch" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_InstitutionMatch_Composit" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_InstitutionMatch_Institution" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_TestVenues_Provinces" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_TestProfile_TestAllocation" ManuallyRouted="false" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_WriterList_TestVenues" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

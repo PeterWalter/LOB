@@ -1,0 +1,136 @@
+﻿<UserControl x:Class="CETAP_LOB.View.easypay.EasyPayView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:ignore="http://www.ignore.com"
+             xmlns:local="clr-namespace:CETAP_LOB.View.writers"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             x:Name="userControl" Margin="1,1,1,1" BorderThickness="1"
+             DataContext="{Binding EasyPay, Source={StaticResource Locator}}">
+    <FrameworkElement.Resources>
+        <mui:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+    </FrameworkElement.Resources>
+    <Control.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+    </Control.BorderBrush>
+    <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="165*"/>
+            <ColumnDefinition Width="1033*"/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="65*"/>
+            <RowDefinition Height="633*"/>
+        </Grid.RowDefinitions>
+        <Border BorderThickness="0,0,0,1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Grid.Row="0"
+            Grid.ColumnSpan="2">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+            </Border.BorderBrush>
+            <StackPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Orientation="Horizontal">
+                <Label Width="180" Margin="0,0,0,0" HorizontalContentAlignment="Center" VerticalContentAlignment="Bottom"
+               BorderThickness="0,0,1,0" Content="Easy Pay FTP Files" FontSize="18" FontWeight="Bold">
+                    <Control.BorderBrush>
+                        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                    </Control.BorderBrush>
+                </Label>
+                <mui:ModernButton Margin="15,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" EllipseDiameter="50"
+                          IconData="M 547.942,420.726 L 547.942,611.614 849.592,611.614 849.592,420.726 M 63.7023,55.8918 L 63.7023,246.817 365.352,246.817 365.352,55.8918 M 0,0 L 429.013,0 429.013,164.97 641.314,164.97 698.724,164.97 698.724,364.798 913.294,364.798 913.294,667.505 756.818,667.505 756.777,705.331 820.394,705.331 820.394,748 577.183,748 577.183,705.331 640.714,705.331 640.757,667.505 484.281,667.505 484.281,364.798 641.314,364.798 641.314,215.416 429.013,215.416 429.013,302.708 272.579,302.708 272.537,340.495 336.111,340.495 336.111,383.202 92.8568,383.202 92.8568,340.495 156.476,340.495 156.517,302.708 0,302.708 Z"
+                          IconHeight="30" IconWidth="30" ToolTip="Download selected files"
+                          Command="{Binding EasyPay.ListCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="25,5,20,0" HorizontalAlignment="Left" VerticalAlignment="Top" EllipseDiameter="50"
+                          IconData="M 2.880352,35.504997 L 25.563028,35.504997 25.461889,35.77055 C 24.680614,37.90033 24.254,40.199783 24.254,42.596951 24.254,44.994007 24.680614,47.293259 25.461889,49.422794 L 25.562908,49.688 2.880352,49.688 C 1.290522,49.688 3.8410201E-07,48.396416 0,46.807915 L 0,38.38258 C 3.8410201E-07,36.794079 1.290522,35.504997 2.880352,35.504997 M 41.691601,32.867001 L 41.691601,40.591217 33.968002,40.591217 33.968002,45.48729 41.691601,45.48729 41.691601,53.211002 46.587406,53.211002 46.587406,45.48729 54.311005,45.48729 54.311005,40.591217 46.587406,40.591217 46.587406,32.867001 M 44.126499,27.625 C 52.394669,27.625 59.098,34.325611 59.098,42.596501 59.098,50.859093 52.394669,57.565003 44.126499,57.565003 35.858036,57.565003 29.156,50.859093 29.156,42.596501 29.156,34.325611 35.858036,27.625 44.126499,27.625 M 2.880352,17.594002 L 43.182121,17.594002 C 44.771912,17.594002 46.061001,18.882946 46.061001,20.471779 L 46.061001,22.816408 45.653107,22.780068 C 45.149128,22.741593 44.639954,22.722 44.126297,22.722 37.278214,22.722 31.227619,26.205 27.652683,31.492657 L 27.472803,31.773003 2.880352,31.773003 C 1.290522,31.773001 3.8410201E-07,30.484057 8.8062882E-07,28.893322 L 8.8062882E-07,20.471779 C 3.8410201E-07,18.882946 1.290522,17.594002 2.880352,17.594002 M 8.4794798,3.8200022 C 6.678607,3.8200022 5.2110004,5.2864023 5.2110014,7.0887662 5.2110004,8.8935586 6.678607,10.357 8.4794798,10.357 10.281624,10.357 11.748,8.8935586 11.748,7.0887662 11.748,5.2864023 10.281624,3.8200022 8.4794798,3.8200022 M 2.880352,0 L 43.182117,0 C 44.771912,5.590332E-07 46.061001,1.2890898 46.061001,2.8779911 L 46.061001,11.302441 C 46.061001,12.893875 44.771912,14.18 43.182117,14.18 L 2.880352,14.18 C 1.290522,14.18 3.8410201E-07,12.893875 0,11.302441 L 0,2.8779911 C 3.8410201E-07,1.2890898 1.290522,5.590332E-07 2.880352,0 Z"
+                          IconHeight="30" IconWidth="30" ToolTip="Write to Database"
+                          Command="{Binding EasyPay.WriteToDatabaseCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <StackPanel Grid.ColumnSpan="2" Width="275" Height="29" Margin="5,21,0,0" HorizontalAlignment="Left"
+                    VerticalAlignment="Top" Orientation="Horizontal">
+                    <Button Width="116" BorderThickness="1,1,0,1" Content="New Folder"
+                  Command="{Binding EasyPay.FolderBowserCommand, Mode=OneWay, Source={StaticResource Locator}}" Click="Button_Click"/>
+                    <ComboBox Width="159" Height="29" VerticalAlignment="Top" VerticalContentAlignment="Center"
+                    BorderThickness="0,1,1,1" ItemsSource="{Binding mruList}" SelectedItem="{Binding mruList/}"
+                    SelectedValue="{Binding Folder, Mode=TwoWay}"/>
+                </StackPanel>
+                <Border Margin="10,0,0,0" BorderThickness="1,0,1,0">
+                    <Border.BorderBrush>
+                        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                    </Border.BorderBrush>
+                    <StackPanel Margin="5,0,0,0" Orientation="Horizontal">
+                        <StackPanel Width="120" Margin="0,0,0,0">
+                            <TextBlock Margin="0,7,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="Start Date"/>
+                            <DatePicker Grid.Row="2" Grid.Column="1" Width="110" Margin="0,2,0,5" HorizontalAlignment="Left"
+                          VerticalAlignment="Top" SelectedDate="{Binding EasyPay.StartDate, Source={StaticResource Locator}}"/>
+                        </StackPanel>
+                        <StackPanel Margin="10,0,5,0">
+                            <TextBlock Margin="0,7,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Text="End Date"/>
+                            <DatePicker Grid.Row="2" Grid.Column="1" Margin="0,2,0,5" HorizontalAlignment="Left" VerticalAlignment="Top"
+                          SelectedDate="{Binding EasyPay.EndDate, Source={StaticResource Locator}}"/>
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+                <mui:ModernButton Margin="25,5,0,0" HorizontalAlignment="Left" VerticalAlignment="Top" EllipseDiameter="50"
+                          IconData="M 2.4011445,29.590999 L 21.118492,29.590999 21.056913,29.842739 C 20.784836,31.018469 20.641001,32.242752 20.641001,33.5 20.641001,36.29388 21.351297,38.924988 22.600782,41.22221 L 22.706446,41.410999 2.4011445,41.410999 C 1.0756909,41.410999 -2.5183563E-07,40.335525 4.4218915E-14,39.010162 L 4.4218915E-14,31.989338 C -2.5183563E-07,30.666572 1.0756909,29.590999 2.4011445,29.590999 M 35.946209,23.442999 L 35.946209,38.633774 30.187002,32.876209 30.146,32.918011 30.146,36.038982 35.476791,41.368061 37.079151,42.970997 43.969997,36.081878 43.969997,32.876209 38.211189,38.633774 38.211189,23.442999 M 36.854446,21.285999 C 43.599262,21.285999 49.068001,26.752479 49.068001,33.5 49.068001,40.24242 43.599262,45.714001 36.854446,45.714001 30.109732,45.714001 24.641001,40.24242 24.641001,33.5 24.641001,26.752479 30.109732,21.285999 36.854446,21.285999 M 2.4011445,14.663999 L 35.990074,14.663999 C 37.31559,14.663999 38.390999,15.737036 38.390999,17.062481 L 38.390999,17.359283 38.10009,17.333368 C 37.688923,17.301981 37.273518,17.285999 36.85445,17.285999 30.428812,17.285999 24.864136,21.043543 22.242283,26.476805 L 22.239855,26.481998 2.4011445,26.481998 C 1.075691,26.481998 -2.5183563E-07,25.406563 4.4218915E-14,24.081016 L 4.4218915E-14,17.062481 C -2.5183563E-07,15.737036 1.075691,14.663999 2.4011445,14.663999 M 7.068119,3.1849985 C 5.5654387,3.184999 4.3439984,4.4064391 4.3439984,5.909128 4.3439984,7.4115684 5.5654387,8.6329992 7.068119,8.6329992 8.5705585,8.6329992 9.7919979,7.4115684 9.7919979,5.909128 9.7919979,4.4064391 8.5705585,3.184999 7.068119,3.1849985 M 2.4011438,1.8474111E-13 L 35.99007,1.8474111E-13 C 37.315586,-5.0557689E-07 38.390995,1.0754751 38.390995,2.3985205 L 38.390995,9.4195078 C 38.390995,10.745262 37.315586,11.818 35.99007,11.818 L 2.4011438,11.818 C 1.0756909,11.818 -2.5183563E-07,10.745262 4.4218915E-14,9.4195078 L 4.4218915E-14,2.3985205 C -2.5183563E-07,1.0754751 1.0756909,-5.0557689E-07 2.4011438,1.8474111E-13 Z"
+                          IconHeight="30" IconWidth="30" ToolTip="Generate List from DB"
+                          Command="{Binding FromDBCommand, Mode=OneWay}"/>
+            </StackPanel>
+        </Border>
+        <StackPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" VerticalAlignment="Stretch">
+            <ListBox Height="400" Margin="0,0,2,10" HorizontalAlignment="Stretch" VerticalAlignment="Top"
+               BorderThickness="0,0,1,1" Padding="0,0,0,5" ScrollViewer.VerticalScrollBarVisibility="Visible"
+               SelectionMode="Multiple" ItemsSource="{Binding EasyPay.DirList, Source={StaticResource Locator}}">
+                <Control.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor}"/>
+                </Control.BorderBrush>
+                <ItemsControl.ItemContainerStyle>
+                    <Style TargetType="{x:Type ListBoxItem}">
+                        <Setter Property="ListBoxItem.IsSelected" Value="{Binding IsSelected, Mode=TwoWay}"/>
+                        <Setter Property="Control.Foreground" Value="{DynamicResource ItemText}"/>
+                    </Style>
+                </ItemsControl.ItemContainerStyle>
+            </ListBox>
+            <TextBlock Text="DownLoaded Files" VerticalAlignment="Bottom"/>
+            <ListBox Margin="0,2,2,0" Height="200" BorderThickness="0,1,1,1" ItemsSource="{Binding SelectedFiles}">
+                <Control.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                </Control.BorderBrush>
+            </ListBox>
+        </StackPanel>
+        <Grid x:Name="mGrid" Row="1" Column="1" Margin="2,0,0,0" HorizontalAlignment="Stretch"
+          VerticalAlignment="Stretch">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50*"/>
+                <RowDefinition Height="583*"/>
+            </Grid.RowDefinitions>
+            <StackPanel Height="40" Margin="0,0,0,0" Orientation="Horizontal" Grid.Row="0">
+                <TextBlock Margin="5,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"
+                   Text="Last Loaded File: "/>
+                <TextBlock Margin="5,5,10,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"
+                   FontWeight="Bold" Text="{Binding EasyPay.EPFileName, Source={StaticResource Locator}}"/>
+                <TextBlock Margin="15,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"
+                   Text="Date Loaded: "/>
+                <TextBlock Margin="5,5,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="16"
+                   FontWeight="Bold"
+                   Text="{Binding EasyPay.DateLoaded, Source={StaticResource Locator}, StringFormat=\{0:D\}}"/>
+            </StackPanel>
+            <StackPanel Grid.Row="1"
+                  Visibility="{Binding EasyPay.InProgress, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Locator}}">
+                <Label Height="30" Margin="299,0" HorizontalAlignment="Center" Content="Loading Easypay Records ..."
+               FontSize="16"/>
+                <mui:ModernProgressRing Width="180" Height="180" Margin="331,0,294,0" IsActive="true"/>
+            </StackPanel>
+            <DataGrid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" BorderThickness="1,1,1,1"
+                CanUserResizeColumns="true" CanUserSortColumns="true" VerticalScrollBarVisibility="Visible"
+                ItemsSource="{Binding EasyPay.EasyPayRecords, Source={StaticResource Locator}}">
+                <Control.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                </Control.BorderBrush>
+                <FrameworkElement.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save EasyPay Records to CSV file"
+                      Command="{Binding EasyPay.SavetoCSVCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                    </ContextMenu>
+                </FrameworkElement.ContextMenu>
+            </DataGrid>
+        </Grid>
+    </Grid>
+</UserControl>

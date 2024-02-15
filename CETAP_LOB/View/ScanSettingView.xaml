@@ -1,0 +1,71 @@
+﻿<UserControl x:Class="CETAP_LOB.View.ScanSettingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View"
+             mc:Ignorable="d" 
+             Width="880" HorizontalAlignment="Left" VerticalAlignment="Top"
+             DataContext="{Binding ScanSettings, Source={StaticResource Locator}}">
+    <Grid Height="450">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+            <RowDefinition Height="45*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="57*"/>
+            <ColumnDefinition Width="103*"/>
+        </Grid.ColumnDefinitions>
+        <Button Grid.Row="1" Width="265" Height="30" HorizontalAlignment="Left" VerticalAlignment="Top"
+            Content="Scanning Folder"
+            Command="{Binding ScanSettings.ScanFolderBowserCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="1" Grid.Column="1" Width="355" Height="16" Margin="5,6,0,35" HorizontalAlignment="Left"
+           VerticalAlignment="Center" VerticalContentAlignment="Center"
+           Content="{Binding ScanSettings.ScanFolder, Source={StaticResource Locator}}"/>
+        <Button Grid.Row="2" Width="265" Height="30" Margin="0,1,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="Editing Folder"
+            Command="{Binding ScanSettings.EditFolderBowserCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="2" Grid.Column="1" Height="16" Margin="5,10,0,31" VerticalAlignment="Center"
+           VerticalContentAlignment="Center"
+           Content="{Binding ScanSettings.EditFolder, Source={StaticResource Locator}}"/>
+        <Button Grid.Row="3" Width="265" Height="30" Margin="0,2,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="QA Folder"
+            Command="{Binding ScanSettings.QAFolderBowserCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="3" Grid.Column="1" Height="16" Margin="5,10,0,31" VerticalAlignment="Center"
+           VerticalContentAlignment="Center"
+           Content="{Binding ScanSettings.QAFolder, Source={StaticResource Locator}}"/>
+        <Button Grid.Row="4" Width="265" Height="30" Margin="0,6,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="Files For Scoring Folder"
+            Command="{Binding ScanSettings.FilesForScoringFolderCommand, Mode=OneWay, Source={StaticResource Locator}}" Click="Button_Click"/>
+        <Label Grid.Row="4" Grid.Column="1" Height="16" Margin="5,12,0,29" VerticalAlignment="Center"
+           VerticalContentAlignment="Center" Content="{Binding FilesForScoringFolder, Mode=OneWay}"/>
+        <Button Grid.Row="5" Width="265" Height="30" Margin="0,7,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="Files For Scoring Moderation  Folder"
+            Command="{Binding ScanSettings.FilesForScoringFolderModerationCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="5" Grid.Column="1" Height="16" Margin="5,13,0,28" VerticalAlignment="Center"
+           VerticalContentAlignment="Center" Content="{Binding FilesForScoringModerationFolder, Mode=OneWay}"/>
+        <Button Grid.Row="6" Width="265" Height="30" Margin="0,4,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="Scores Folder"
+            Command="{Binding ScanSettings.ScoreFolderCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="6" Grid.Column="1" Height="16" Margin="5,10,0,32" VerticalAlignment="Center"
+           VerticalContentAlignment="Center" Content="{Binding ScoreFolder, Mode=OneWay}"/>
+        <Button Grid.Row="7" Width="265" Height="30" Margin="0,7,0,0" HorizontalAlignment="Left"
+            VerticalAlignment="Top" Content="Score Moderation Folder"
+            Command="{Binding ScanSettings.ScoreModerationFolderCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+        <Label Grid.Row="7" Grid.Column="1" Height="16" Margin="5,13,0,28" VerticalAlignment="Center"
+           VerticalContentAlignment="Center" Content="{Binding ScoreModerationFolder, Mode=OneWay}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="150,17,0,0" Grid.Row="8" TextWrapping="Wrap" Text="Intake Year"
+               VerticalAlignment="Top" Width="115" Height="25"/>
+        <ComboBox Grid.Column="1" HorizontalAlignment="Left" Height="30" Margin="6,12,0,0" Grid.Row="8"
+              VerticalAlignment="Top" Width="130"
+              ItemsSource="{Binding ScanSettings.Periods, Source={StaticResource Locator}}"
+              SelectedItem="{Binding ScanSettings.IntakeRecord, Source={StaticResource Locator}}"/>
+    </Grid>
+</UserControl>

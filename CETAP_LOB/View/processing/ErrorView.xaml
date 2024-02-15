@@ -1,0 +1,32 @@
+﻿<UserControl x:Class="CETAP_LOB.View.processing.ErrorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View.processing"
+             
+
+    BorderThickness="1"
+             DataContext="{Binding Errors,
+                                   Source={StaticResource Locator}}">
+
+    <UserControl.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+    </UserControl.BorderBrush>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="9*" />
+            <RowDefinition Height="89*" />
+        </Grid.RowDefinitions>
+        <TextBlock Grid.Row="0"
+                   Width="275"
+                   Height="35"
+                   Margin="2,0,0,0"
+                   VerticalAlignment="Center"
+                   FontSize="16"
+                   Text="Errors from CETAP applications"
+                   TextWrapping="Wrap" />
+        <DataGrid Grid.Row="1" ItemsSource="{Binding Errors.Errors, Source={StaticResource Locator}}" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" VerticalScrollBarVisibility="Visible" />
+    </Grid>
+</UserControl>

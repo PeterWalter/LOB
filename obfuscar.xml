@@ -1,0 +1,9 @@
+<?xml version='1.0'?>
+<Obfuscator>
+  <Var name="InPath" value=".\Obfuscator_Input" />
+  <Var name="OutPath" value=".\Obfuscator_Output" />
+  <Var name="HidePrivateApi" value="true" />
+
+  <Module file="$(InPath)\CETAP_LOB.exe" />
+  <Module file="$(InPath)\CommonLibrary.dll" />
+</Obfuscator>

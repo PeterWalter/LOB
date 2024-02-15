@@ -1,0 +1,340 @@
+﻿<UserControl x:Class="CETAP_LOB.View.processing.TestsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:auto="clr-namespace:FeserWard.Controls;assembly=Intellibox"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View.processing"
+            xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             Height="887" BorderThickness="1,2,1,1"
+             DataContext="{Binding Tests, Source={StaticResource Locator}}">
+    <Control.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+    </Control.BorderBrush>
+    <Grid Margin="0,0,-1,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="20*"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="25*"/>
+            <ColumnDefinition Width="6"/>
+            <ColumnDefinition Width="45*"/>
+        </Grid.ColumnDefinitions>
+        <StackPanel Width="253"/>
+        <StackPanel Grid.Column="0" Orientation="Vertical">
+            <StackPanel VerticalAlignment="Top" Orientation="Vertical">
+                <TextBlock Margin="0,5" Style="{StaticResource Heading2}" Text="NBT TESTS" TextAlignment="Center"/>
+                <auto:Intellibox Name="autoBox" Grid.Row="1" Grid.Column="0" Width="221" Margin="4,0,0,0" HorizontalAlignment="Left"
+                         VerticalContentAlignment="Center" BorderThickness="1" DisableWhitespaceTrim="true"
+                         ExplicitlyIncludeColumns="true" Focusable="true" Foreground="#FFF59914"
+                         Grid.IsSharedSizeScope="true" MaxResults="20" ResultsHeight="200" ResultsWidth="250"
+                         SelectAllOnFocus="true" WatermarkText="Search by Name or Test Code"
+                         DataProvider="{Binding Tests.TestsProvider, Mode=OneWay, Source={StaticResource Locator}}"
+                         DisplayedValueBinding="{Binding TestName}"
+                         SelectedItem="{Binding Tests.SelectedTest, Source={StaticResource Locator}}"
+                         SelectedValueBinding="{Binding TestID}">
+                    <auto:Intellibox.RowColorizer>
+                        <auto:IntelliboxAlternateRowColorizer EvenRowBrush="Aqua" OddRowBrush="Gainsboro"/>
+                    </auto:Intellibox.RowColorizer>
+                    <Control.Background>
+                        <LinearGradientBrush StartPoint="0.5,0" EndPoint="0.5,1">
+                            <GradientStop Offset="0" Color="#FFB9C5DA"/>
+                            <GradientStop Offset="1" Color="#FF0A60F7"/>
+                        </LinearGradientBrush>
+                    </Control.Background>
+                    <auto:Intellibox.Columns>
+                        <auto:IntelliboxColumn Width="120" Header="Test Name" DisplayMemberBinding="{Binding TestName}"/>
+                    </auto:Intellibox.Columns>
+                </auto:Intellibox>
+                <ListBox Width="220" Height="273" Margin="5,5,0,5" HorizontalAlignment="Left" BorderThickness="1"
+                 ItemsSource="{Binding Tests.Tests, Source={StaticResource Locator}}"
+                 SelectedItem="{Binding Tests.SelectedTest, Source={StaticResource Locator}}"/>
+            </StackPanel>
+            <WrapPanel Width="230" Height="56" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <FrameworkElement.Resources>
+                    <PathGeometry x:Key="CreateIconData">
+                        M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z
+                    </PathGeometry>
+                    <PathGeometry x:Key="UpdateIconData">
+                        M40.535976,24.882L42.667,27.01284 30.350464,39.282002 24.596998,33.57906 26.726624,31.448918C26.726624,31.448918 30.129061,35.067318 30.351763,35.067318 30.574266,35.067318 40.535976,24.882 40.535976,24.882z M18.04645,5.2344228L10.020882,14.858922 14.685021,14.858922 14.685021,28.337532 21.406475,28.337532 21.406475,14.858922 26.073114,14.858922z M18.04505,0C28.01193,1.3615841E-07 36.091999,8.0795967 36.091999,18.04645 36.091999,21.425175 35.103691,24.551703 33.487873,27.256125 32.322567,28.434534 31.231958,29.533442 30.36545,30.398649 29.967646,29.982647 26.797022,26.621319 26.797022,26.621319L19.837364,33.589474 21.918682,35.652092C20.668169,35.926792 19.37846,36.091999 18.04505,36.091999 8.0781965,36.091999 0,28.013331 0,18.04645 0,8.0795967 8.0781965,1.3615841E-07 18.04505,0z
+                    </PathGeometry>
+                    <PathGeometry x:Key="SaveIconData">
+                        F1 M 58.087635,37.91074L47.872219,48.125874 43.038265,43.283699 41.153744,45.166451 47.872219,51.884777 59.972256,39.793491z M50.563049,31.73C57.949932,31.73 64,37.779644 64,45.166451 64,52.553158 57.949932,58.603001 50.563049,58.603001 43.176067,58.603001 37.125999,52.553158 37.125999,45.166451 37.125999,37.779644 43.176067,31.73 50.563049,31.73z M33.032001,0L40.381001,0 40.381001,16.236 33.032001,16.236z M5.0388451,0L13.576872,0 13.576872,15.676368C13.576872,17.995482,15.456882,19.875292,17.775993,19.875292L39.191006,19.875292C41.510117,19.875292,43.389931,17.995482,43.389931,15.676368L43.389931,0 49.177559,0 56.966999,7.789382 56.966999,30.375652C55.002491,29.522047 52.83918,29.042944 50.564068,29.042944 41.672218,29.042944 34.440281,36.274784 34.440281,45.166538 34.440281,49.536861 36.193592,53.500183 39.026005,56.407002L5.0388451,56.407002C2.255872,56.407002,0,54.150986,0,51.368172L0,5.038847C0,2.2558709,2.255872,4.6670634E-08,5.0388451,0z
+                    </PathGeometry>
+                    <PathGeometry x:Key="DeleteIconData">
+                        M51.527958,0L64,12.4741 44.47221,32.001027 64,51.52871 51.528,64.000001 32.000016,44.472668 12.471823,64.000001 0.0010004044,51.528802 19.528015,32.001088 0,12.473726 12.472,0.0010004044 31.999884,19.528773z
+                    </PathGeometry>
+                    <PathGeometry x:Key="RefreshIconData">
+                        F1 M 38,20.5833C 42.9908,20.5833 47.4912,22.6825 50.6667,26.046L 50.6667,17.4167L 55.4166,22.1667L 55.4167, 34.8333L 42.75,34.8333L 38,30.0833L 46.8512,30.0833C 44.6768,27.6539 41.517,26.125 38,26.125C 31.9785,26.125 27.0037, 30.6068 26.2296,36.4167L 20.6543,36.4167C 21.4543,27.5397 28.9148,20.5833 38,20.5833 Z M 38,49.875C 44.0215, 49.875 48.9963,45.3932 49.7703,39.5833L 55.3457,39.5833C 54.5457,48.4603 47.0852,55.4167 38,55.4167C 33.0092, 55.4167 28.5088,53.3175 25.3333,49.954L 25.3333,58.5833L 20.5833,53.8333L 20.5833,41.1667L 33.25,41.1667L 38, 45.9167L 29.1487,45.9167C 31.3231,48.3461 34.483,49.875 38,49.875 Z
+                    </PathGeometry>
+                </FrameworkElement.Resources>
+                <mui:ModernButton Margin="10,5,10,5" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource CreateIconData}"
+                          IconHeight="30" IconWidth="30" ToolTip="Click to Add New Test" UseLayoutRounding="true"
+                          Command="{Binding Tests.AddTestCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource UpdateIconData}"
+                          IconHeight="30" IconWidth="30" ToolTip="Click to update Test" UseLayoutRounding="true"
+                          Command="{Binding Tests.UpDateTestCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource DeleteIconData}"
+                          IconHeight="30" IconWidth="30" ToolTip="Click to Delete Test" UseLayoutRounding="true"
+                          Command="{Binding Tests.DeleteTestCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource SaveIconData}"
+                          IconHeight="30" IconWidth="30" ToolTip="Click to Save Changes" UseLayoutRounding="true"
+                          Command="{Binding Tests.SaveTestCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+            </WrapPanel>
+            <Grid Height="145" Margin="5,10,16,5" HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="6*"/>
+                    <RowDefinition Height="6*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="2*"/>
+                    <ColumnDefinition Width="4*"/>
+                    <ColumnDefinition Width="3*"/>
+                    <ColumnDefinition Width="3*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="3" Width="80" Height="25" HorizontalAlignment="Left" VerticalAlignment="Top"
+               Content="Test Name"/>
+                <TextBox Grid.Column="2" Grid.ColumnSpan="3" Width="148" Height="25" Margin="2,0,0,0"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedTest.TestName, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="1" Grid.ColumnSpan="2" Width="75" Height="20" Margin="0,5,0,0" HorizontalAlignment="Left"
+               VerticalAlignment="Top" ClipToBounds="true" Content="TestCode"/>
+                <TextBox Grid.Row="1" Grid.Column="2" Width="40" Height="25" Margin="2,0,0,0" HorizontalAlignment="Left"
+                 VerticalAlignment="Top" TextWrapping="Wrap" Text="{Binding SelectedTest.TestCode}"/>
+                <Label Grid.Row="2" Grid.RowSpan="2" Grid.ColumnSpan="2" Width="75" Height="25" Margin="0,5,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Content="Section 7"/>
+                <TextBox Grid.Row="2" Grid.RowSpan="2" Grid.Column="2" Width="40" Height="25" Margin="2,5,0,0"
+                 HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedTest.Section7, Source={StaticResource Locator}}"/>
+                <CheckBox Grid.Row="2" Grid.Column="3" Grid.ColumnSpan="2" Width="95" Height="20" Margin="11,5,-16,0"
+                  HorizontalAlignment="Left" VerticalAlignment="Top" Content="Has Errors"
+                  IsChecked="{Binding Tests.SelectedTest.TestHasErrors, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="3" Grid.ColumnSpan="2" Width="75" Height="15" Margin="0,10,0,0"
+               HorizontalAlignment="Left" VerticalAlignment="Top" Content="Description"/>
+                <TextBox Grid.Row="3" Grid.RowSpan="2" Grid.Column="2" Grid.ColumnSpan="3" Width="150" Height="55"
+                 Margin="2,5,-2,-2" HorizontalAlignment="Left" VerticalAlignment="Top"
+                 TextWrapping="WrapWithOverflow"
+                 Text="{Binding Tests.SelectedTest.Description, Source={StaticResource Locator}}"/>
+            </Grid>
+            <TextBox Width="289" Height="53" Margin="0,10,0,0" HorizontalAlignment="Left" FontFamily="Script MT Bold"
+               FontSize="24" Foreground="#FFCF8708" Grid.IsSharedSizeScope="true" IsReadOnly="true"
+               TextWrapping="Wrap" Text="{Binding Tests.Status, Source={StaticResource Locator}}"/>
+        </StackPanel>
+        <GridSplitter Grid.Column="1"/>
+        <StackPanel Grid.Column="2">
+            <TextBlock VerticalAlignment="Center" Style="{StaticResource Heading2}" Text="TEST ALLOCATION"
+                 TextAlignment="Center"/>
+            <StackPanel Margin="2,5" Orientation="Horizontal">
+                <TextBlock Width="101" HorizontalAlignment="Right" VerticalAlignment="Center"
+                   Style="{StaticResource Emphasis}" Text="Allocations for Test : " TextAlignment="Center"/>
+                <TextBlock HorizontalAlignment="Left" VerticalAlignment="Center" Style="{StaticResource Emphasis}"
+                   TextAlignment="Center"
+                   Text="{Binding Tests.SelectedTest.TestName, Source={StaticResource Locator}}"/>
+            </StackPanel>
+            <ListBox Width="280" Height="150" Margin="8,10,0,0" HorizontalAlignment="Left" BorderThickness="1"
+               ItemsSource="{Binding Tests.Allocations, Source={StaticResource Locator}}"
+               SelectedItem="{Binding Tests.SelectedAllocation, Source={StaticResource Locator}}"/>
+            <WrapPanel Width="285" Height="56" Margin="0,10,0,0" HorizontalAlignment="Left" VerticalAlignment="Top">
+                <FrameworkElement.Resources>
+                    <PathGeometry x:Key="CreateIconData">
+                        M2.880352,35.504997L25.563028,35.504997 25.461889,35.77055C24.680614,37.90033 24.254,40.199783 24.254,42.596951 24.254,44.994007 24.680614,47.293259 25.461889,49.422794L25.562908,49.688 2.880352,49.688C1.290522,49.688,3.8410201E-07,48.396416,0,46.807915L0,38.38258C3.8410201E-07,36.794079,1.290522,35.504997,2.880352,35.504997z M41.691601,32.867001L41.691601,40.591217 33.968002,40.591217 33.968002,45.48729 41.691601,45.48729 41.691601,53.211002 46.587406,53.211002 46.587406,45.48729 54.311005,45.48729 54.311005,40.591217 46.587406,40.591217 46.587406,32.867001z M44.126499,27.625C52.394669,27.625 59.098,34.325611 59.098,42.596501 59.098,50.859093 52.394669,57.565003 44.126499,57.565003 35.858036,57.565003 29.156,50.859093 29.156,42.596501 29.156,34.325611 35.858036,27.625 44.126499,27.625z M2.880352,17.594002L43.182121,17.594002C44.771912,17.594002,46.061001,18.882946,46.061001,20.471779L46.061001,22.816408 45.653107,22.780068C45.149128,22.741593 44.639954,22.722 44.126297,22.722 37.278214,22.722 31.227619,26.205 27.652683,31.492657L27.472803,31.773003 2.880352,31.773003C1.290522,31.773001,3.8410201E-07,30.484057,8.8062882E-07,28.893322L8.8062882E-07,20.471779C3.8410201E-07,18.882946,1.290522,17.594002,2.880352,17.594002z M8.4794798,3.8200022C6.678607,3.8200022 5.2110004,5.2864023 5.2110014,7.0887662 5.2110004,8.8935586 6.678607,10.357 8.4794798,10.357 10.281624,10.357 11.748,8.8935586 11.748,7.0887662 11.748,5.2864023 10.281624,3.8200022 8.4794798,3.8200022z M2.880352,0L43.182117,0C44.771912,5.590332E-07,46.061001,1.2890898,46.061001,2.8779911L46.061001,11.302441C46.061001,12.893875,44.771912,14.18,43.182117,14.18L2.880352,14.18C1.290522,14.18,3.8410201E-07,12.893875,0,11.302441L0,2.8779911C3.8410201E-07,1.2890898,1.290522,5.590332E-07,2.880352,0z
+                    </PathGeometry>
+                    <PathGeometry x:Key="UpdateIconData">
+                        M40.535976,24.882L42.667,27.01284 30.350464,39.282002 24.596998,33.57906 26.726624,31.448918C26.726624,31.448918 30.129061,35.067318 30.351763,35.067318 30.574266,35.067318 40.535976,24.882 40.535976,24.882z M18.04645,5.2344228L10.020882,14.858922 14.685021,14.858922 14.685021,28.337532 21.406475,28.337532 21.406475,14.858922 26.073114,14.858922z M18.04505,0C28.01193,1.3615841E-07 36.091999,8.0795967 36.091999,18.04645 36.091999,21.425175 35.103691,24.551703 33.487873,27.256125 32.322567,28.434534 31.231958,29.533442 30.36545,30.398649 29.967646,29.982647 26.797022,26.621319 26.797022,26.621319L19.837364,33.589474 21.918682,35.652092C20.668169,35.926792 19.37846,36.091999 18.04505,36.091999 8.0781965,36.091999 0,28.013331 0,18.04645 0,8.0795967 8.0781965,1.3615841E-07 18.04505,0z
+                    </PathGeometry>
+                    <PathGeometry x:Key="SaveIconData">
+                        F1 M 58.087635,37.91074L47.872219,48.125874 43.038265,43.283699 41.153744,45.166451 47.872219,51.884777 59.972256,39.793491z M50.563049,31.73C57.949932,31.73 64,37.779644 64,45.166451 64,52.553158 57.949932,58.603001 50.563049,58.603001 43.176067,58.603001 37.125999,52.553158 37.125999,45.166451 37.125999,37.779644 43.176067,31.73 50.563049,31.73z M33.032001,0L40.381001,0 40.381001,16.236 33.032001,16.236z M5.0388451,0L13.576872,0 13.576872,15.676368C13.576872,17.995482,15.456882,19.875292,17.775993,19.875292L39.191006,19.875292C41.510117,19.875292,43.389931,17.995482,43.389931,15.676368L43.389931,0 49.177559,0 56.966999,7.789382 56.966999,30.375652C55.002491,29.522047 52.83918,29.042944 50.564068,29.042944 41.672218,29.042944 34.440281,36.274784 34.440281,45.166538 34.440281,49.536861 36.193592,53.500183 39.026005,56.407002L5.0388451,56.407002C2.255872,56.407002,0,54.150986,0,51.368172L0,5.038847C0,2.2558709,2.255872,4.6670634E-08,5.0388451,0z
+                    </PathGeometry>
+                    <PathGeometry x:Key="DeleteIconData">
+                        M51.527958,0L64,12.4741 44.47221,32.001027 64,51.52871 51.528,64.000001 32.000016,44.472668 12.471823,64.000001 0.0010004044,51.528802 19.528015,32.001088 0,12.473726 12.472,0.0010004044 31.999884,19.528773z
+                    </PathGeometry>
+                    <PathGeometry x:Key="RefreshIconData">
+                        F1 M 38,20.5833C 42.9908,20.5833 47.4912,22.6825 50.6667,26.046L 50.6667,17.4167L 55.4166,22.1667L 55.4167, 34.8333L 42.75,34.8333L 38,30.0833L 46.8512,30.0833C 44.6768,27.6539 41.517,26.125 38,26.125C 31.9785,26.125 27.0037, 30.6068 26.2296,36.4167L 20.6543,36.4167C 21.4543,27.5397 28.9148,20.5833 38,20.5833 Z M 38,49.875C 44.0215, 49.875 48.9963,45.3932 49.7703,39.5833L 55.3457,39.5833C 54.5457,48.4603 47.0852,55.4167 38,55.4167C 33.0092, 55.4167 28.5088,53.3175 25.3333,49.954L 25.3333,58.5833L 20.5833,53.8333L 20.5833,41.1667L 33.25,41.1667L 38, 45.9167L 29.1487,45.9167C 31.3231,48.3461 34.483,49.875 38,49.875 Z
+                    </PathGeometry>
+                </FrameworkElement.Resources>
+                <mui:ModernButton Margin="10,5,10,5" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource CreateIconData}"
+                          IconHeight="27" IconWidth="27" ToolTip="Click to make Allocation of Test" UseLayoutRounding="true"
+                          Command="{Binding Tests.AllocateTestCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource UpdateIconData}"
+                          IconHeight="27" IconWidth="27" ToolTip="Click to update Allocation" UseLayoutRounding="true"
+                          Command="{Binding Tests.UpdateAllocationCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource DeleteIconData}"
+                          IconHeight="27" IconWidth="27" ToolTip="Click to Delete Allocation" UseLayoutRounding="true"
+                          Command="{Binding Tests.DeleteAllocationCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Margin="2,0,10,0" HorizontalAlignment="Center" VerticalContentAlignment="Bottom"
+                          EllipseDiameter="40" EllipseStrokeThickness="2" IconData="{StaticResource SaveIconData}"
+                          IconHeight="27" IconWidth="27" ToolTip="Click to Save Allocations" UseLayoutRounding="true"
+                          Command="{Binding Tests.SaveAllocationCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+            </WrapPanel>
+            <Grid Width="277" Height="232" Margin="8,0,0,0" HorizontalAlignment="Left">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="27*"/>
+                    <RowDefinition Height="27*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="82*"/>
+                    <ColumnDefinition Width="195*"/>
+                </Grid.ColumnDefinitions>
+                <Label Grid.ColumnSpan="2" Width="90" Margin="0,2,0,1" HorizontalAlignment="Left"
+               VerticalContentAlignment="Center" Content="Client"/>
+                <TextBox Grid.Column="1" Width="195" Height="27" Margin="0,2,0,0" HorizontalAlignment="Left"
+                 VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedAllocation.Client, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="1" Grid.ColumnSpan="2" Width="90" Height="25" Margin="0,3,0,0" HorizontalAlignment="Left"
+               VerticalAlignment="Top" Content="Client Type"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Width="195" Margin="0,3,0,5" HorizontalAlignment="Left"
+                 Text="{Binding Tests.SelectedAllocation.ClientType, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="2" Grid.ColumnSpan="2" Width="90" Height="25" Margin="0,4,0,0" HorizontalAlignment="Left"
+               VerticalAlignment="Top" VerticalContentAlignment="Center" Content="Test date"/>
+                <DatePicker Grid.Row="2" Grid.Column="1" Width="195" Height="27" Margin="0,2,0,0" HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    SelectedDate="{Binding Tests.SelectedAllocation.TestDate, Source={StaticResource Locator}}"
+                    Text="{Binding Tests.SelectedAllocation.TestDate, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="3" VerticalContentAlignment="Center" Content="TestName"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Width="195" Height="27" Margin="0,3,0,0" HorizontalAlignment="Left"
+                 VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedTest.TestName, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="4" VerticalContentAlignment="Center" Content="Approx. No."/>
+                <TextBox Grid.Row="4" Grid.Column="1" Width="195" Height="24" Margin="0,4,0,0" HorizontalAlignment="Left"
+                 VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedAllocation.Estimated, Source={StaticResource Locator}}"/>
+                <Label Grid.Row="5" Grid.ColumnSpan="2" Width="90" Height="25" Margin="0,2,0,0" HorizontalAlignment="Left"
+               VerticalAlignment="Top" VerticalContentAlignment="Center" Content="Actual No."/>
+                <TextBox Grid.Row="5" Grid.Column="1" Width="195" Height="27" Margin="0,2,0,0" HorizontalAlignment="Left"
+                 VerticalAlignment="Top" TextWrapping="Wrap"
+                 Text="{Binding Tests.SelectedAllocation.ActualUsed, Source={StaticResource Locator}}"/>
+            </Grid>
+            <Label Width="277" Height="51" Margin="8,0,0,0" HorizontalAlignment="Left" FontFamily="Script MT Bold"
+             FontSize="24" Foreground="#FFCF8708"
+             Content="{Binding Tests.AStatus, Source={StaticResource Locator}}"/>
+            <Button Width="155" Height="32" Margin="130,10,0,0" HorizontalAlignment="Left"
+              Content="All Allocations to Excel" Command="{Binding SaveExcelAllocationsCommand, Mode=OneWay}"/>
+        </StackPanel>
+        <GridSplitter Grid.Column="3"/>
+        <StackPanel Grid.Column="4" Margin="0,0,45,0">
+            <StackPanel Orientation="Horizontal">
+                <TextBlock Width="341" Style="{StaticResource Heading2}" Text="TEST PROFILE" TextAlignment="Center"/>
+                <TextBlock Width="85" Height="20" VerticalAlignment="Center" FontSize="16" Text="Intake Year"/>
+                <ComboBox Width="65" Height="20" Margin="0,2,0,0"
+                  ItemsSource="{Binding Tests.Periods, Source={StaticResource Locator}}"
+                  SelectedItem="{Binding Tests.IntakeRecord, Mode=TwoWay, Source={StaticResource Locator}}"/>
+            </StackPanel>
+            <TextBlock Margin="5,2,0,5" Text="Test Profiles and Allocated tests"/>
+            <DataGrid Height="277" Margin="21,5,-1,5" BorderThickness="1"
+                ItemsSource="{Binding Tests.ProfilesAllocations, Source={StaticResource Locator}}">
+                <Control.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                </Control.BorderBrush>
+                <FrameworkElement.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Save records to Excel"
+                      Command="{Binding Tests.AllocationProfileToExcelCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                    </ContextMenu>
+                </FrameworkElement.ContextMenu>
+            </DataGrid>
+            <StackPanel Width="716" HorizontalAlignment="Left" Orientation="Horizontal">
+                <ListBox Width="291" Height="160" Margin="20,5,0,5" HorizontalAlignment="Left" BorderThickness="1"
+                 ItemsSource="{Binding Tests.AllAllocations, Source={StaticResource Locator}}"
+                 SelectedItem="{Binding Tests.SelectedProfAlloc, Source={StaticResource Locator}}">
+                    <Control.BorderBrush>
+                        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+                    </Control.BorderBrush>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <Border Margin="1">
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBlock Grid.Row="1" Margin="5,2,5,2" FontWeight="Bold" Text="{Binding TestDate, StringFormat=\{0:M\}}"/>
+                                    <TextBlock Grid.Column="2" Margin="2" Text="{Binding TestName}"/>
+                                    <TextBlock Margin="5,0,0,2" FontFamily="Trebuchet MS" FontSize="16" TextTrimming="CharacterEllipsis"
+                             Text="{Binding Client}"/>
+                                </StackPanel>
+                            </Border>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ListBox>
+                <StackPanel Height="160" Margin="5,0,240,0" Orientation="Horizontal">
+                    <WrapPanel Width="49" Height="92" Margin="20,40,0,10" HorizontalAlignment="Left" VerticalAlignment="Top"
+                     Orientation="Vertical">
+                        <FrameworkElement.Resources>
+                            <PathGeometry x:Key="CreateIconData">
+                                M19.833,0L32.5,0 32.5,19.833999 52.334,19.833999 52.334,32.500999 32.5,32.500999 32.5,52.333 19.833,52.333 19.833,32.500999 0,32.500999 0,19.833999 19.833,19.833999z
+                            </PathGeometry>
+                            <PathGeometry x:Key="UpdateIconData">
+                                M40.535976,24.882L42.667,27.01284 30.350464,39.282002 24.596998,33.57906 26.726624,31.448918C26.726624,31.448918 30.129061,35.067318 30.351763,35.067318 30.574266,35.067318 40.535976,24.882 40.535976,24.882z M18.04645,5.2344228L10.020882,14.858922 14.685021,14.858922 14.685021,28.337532 21.406475,28.337532 21.406475,14.858922 26.073114,14.858922z M18.04505,0C28.01193,1.3615841E-07 36.091999,8.0795967 36.091999,18.04645 36.091999,21.425175 35.103691,24.551703 33.487873,27.256125 32.322567,28.434534 31.231958,29.533442 30.36545,30.398649 29.967646,29.982647 26.797022,26.621319 26.797022,26.621319L19.837364,33.589474 21.918682,35.652092C20.668169,35.926792 19.37846,36.091999 18.04505,36.091999 8.0781965,36.091999 0,28.013331 0,18.04645 0,8.0795967 8.0781965,1.3615841E-07 18.04505,0z
+                            </PathGeometry>
+                            <PathGeometry x:Key="SaveIconData">
+                                M8.1099597,36.94997L8.1099597,41.793968 39.213959,41.793968 39.213959,36.94997z M12.42,0.049999889L18.4,0.049999889 18.4,12.252 12.42,12.252z M0,0L7.9001866,0 7.9001866,14.64218 39.210766,14.64218 39.210766,0 47.401001,0 47.401001,47.917 0,47.917z
+                            </PathGeometry>
+                            <PathGeometry x:Key="DeleteIconData">
+                                M51.527958,0L64,12.4741 44.47221,32.001027 64,51.52871 51.528,64.000001 32.000016,44.472668 12.471823,64.000001 0.0010004044,51.528802 19.528015,32.001088 0,12.473726 12.472,0.0010004044 31.999884,19.528773z
+                            </PathGeometry>
+                            <PathGeometry x:Key="RefreshIconData">
+                                F1 M 38,20.5833C 42.9908,20.5833 47.4912,22.6825 50.6667,26.046L 50.6667,17.4167L 55.4166,22.1667L 55.4167, 34.8333L 42.75,34.8333L 38,30.0833L 46.8512,30.0833C 44.6768,27.6539 41.517,26.125 38,26.125C 31.9785,26.125 27.0037, 30.6068 26.2296,36.4167L 20.6543,36.4167C 21.4543,27.5397 28.9148,20.5833 38,20.5833 Z M 38,49.875C 44.0215, 49.875 48.9963,45.3932 49.7703,39.5833L 55.3457,39.5833C 54.5457,48.4603 47.0852,55.4167 38,55.4167C 33.0092, 55.4167 28.5088,53.3175 25.3333,49.954L 25.3333,58.5833L 20.5833,53.8333L 20.5833,41.1667L 33.25,41.1667L 38, 45.9167L 29.1487,45.9167C 31.3231,48.3461 34.483,49.875 38,49.875 Z
+                            </PathGeometry>
+                        </FrameworkElement.Resources>
+                        <mui:ModernButton Margin="2" VerticalContentAlignment="Bottom" EllipseDiameter="40" EllipseStrokeThickness="2"
+                              IconData="{StaticResource CreateIconData}" IconHeight="30" IconWidth="30"
+                              ToolTip="Click to create New Profile" UseLayoutRounding="true"
+                              Command="{Binding Tests.NewProfileCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                        <mui:ModernButton Width="42" Margin="2" VerticalContentAlignment="Bottom" EllipseDiameter="40"
+                              EllipseStrokeThickness="2" IconData="{StaticResource SaveIconData}" IconHeight="26" IconWidth="26"
+                              ToolTip="Click to Save Profile" UseLayoutRounding="true"
+                              Command="{Binding Tests.SaveAProfileCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                    </WrapPanel>
+                    <Grid Width="331" Height="62" Margin="5,22,0,23" HorizontalAlignment="Left">
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="30*"/>
+                            <RowDefinition Height="30*"/>
+                        </Grid.RowDefinitions>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="73*"/>
+                            <ColumnDefinition Width="73*"/>
+                            <ColumnDefinition Width="80*"/>
+                            <ColumnDefinition Width="146*"/>
+                        </Grid.ColumnDefinitions>
+                        <Label HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="Test Name"
+                   Padding="0,0,4,0"/>
+                        <TextBox Grid.Column="1" Margin="0,2" IsReadOnly="true" TextWrapping="Wrap"
+                     Text="{Binding Tests.SelectedProfAlloc.TestName, Source={StaticResource Locator}}"/>
+                        <Label Grid.Column="2" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Client" Padding="0,0,4,0"/>
+                        <TextBox Grid.Column="3" TextWrapping="Wrap"
+                     Text="{Binding Tests.SelectedProfAlloc.Client, Source={StaticResource Locator}}"/>
+                        <Label Grid.Row="1" Margin="0,0,2,0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center"
+                   Content="Profile"/>
+                        <TextBox Grid.Row="1" Grid.Column="1" TextWrapping="Wrap"
+                     Text="{Binding SelectedProfNumber, Mode=TwoWay, StringFormat=\{0:D2\}, UpdateSourceTrigger=PropertyChanged}"/>
+                        <Label Grid.Row="1" Grid.Column="2" Width="64" Height="16" Margin="6,7,1,8" HorizontalAlignment="Center"
+                   VerticalAlignment="Center" Content="Intake Cycle"/>
+                        <TextBox Grid.Row="1" Grid.Column="3" Margin="0,4,0,0" TextWrapping="Wrap" Text="{Binding IntakeYear}"/>
+                    </Grid>
+                </StackPanel>
+            </StackPanel>
+            <Label Width="555" Height="90" Margin="26,0,0,0" HorizontalAlignment="Left"
+             Content="{Binding Tests.BStatus, Source={StaticResource Locator}}"/>
+            <ListBox Height="105" Margin="0,2,0,2" BorderThickness="1"
+               ItemsSource="{Binding Tests.GrpProfiles, Source={StaticResource Locator}}"
+               SelectedItem="{Binding Tests.SelectedProfile, Source={StaticResource Locator}}"/>
+            <StackPanel Width="185" Height="35" Margin="21,0,0,0" HorizontalAlignment="Left" Orientation="Horizontal">
+                <Button Margin="2,0" Content="Delete"
+                Command="{Binding Tests.DeleteProfileCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <Button Margin="2,0" Content="Update"/>
+                <Button Width="51" Margin="2,0"/>
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

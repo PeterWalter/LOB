@@ -1,0 +1,741 @@
+﻿<UserControl x:Class="CETAP_LOB.View.processing.QAView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+            xmlns:Converters="clr-namespace:CETAP_LOB.Converters"
+            xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+			 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+			 xmlns:ignore="http://www.ignore.com"
+			 xmlns:local="clr-namespace:CETAP_LOB.View.writers"			
+			 xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+			 HorizontalAlignment="Left"
+			 BorderThickness="0,1,0,0"
+			 d:DesignHeight="700"
+			 d:DesignWidth="1200"
+			 mui:ModernFrame.KeepAlive="false"
+			 mc:Ignorable="d ignore">
+    <UserControl.Resources>
+        <Converters:NumberToColorConverter x:Key="NumberToColorConverter" />
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="True">
+                    <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource self}}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+    </UserControl.Resources>
+    <UserControl.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+    </UserControl.BorderBrush>
+    <UserControl.DataContext>
+        <Binding Path="QA" Source="{StaticResource Locator}" />
+    </UserControl.DataContext>
+ 
+    <Grid Margin="0,0,0,0">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200*" />
+            <ColumnDefinition Width="75*" />
+            <ColumnDefinition Width="1000*" />
+        </Grid.ColumnDefinitions>
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="55*" />
+            <RowDefinition Height="10" />
+            <RowDefinition Height="25*" />
+        </Grid.RowDefinitions>
+
+        <Border Grid.Column="1" BorderThickness="0,0,0,0">
+            <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+                <mui:ModernButton Height="80"
+								  Margin="5,0,3,0"
+								  BorderThickness="5,10,0,5"
+								  Command="{Binding QA.SaveDatFileCommand,
+													Mode=OneWay,
+													Source={StaticResource Locator}}"
+								  EllipseDiameter="50"
+								  IconData="M60.660182,12.419L64.000003,19.102695 22.113763,40.033999 11.186,18.166483 17.870238,14.825334 25.458882,30.010453z M0,0L51.853999,0 51.853999,13.824147 47.603366,15.946638 47.603366,4.2499838 4.2500324,4.2499838 4.2500324,47.604016 47.603366,47.604016 47.603366,30.294183 51.853999,28.169192 51.853999,51.854001 0,51.854001z"
+								  IconHeight="30"
+								  IconWidth="30"
+								  ToolTip="Save File" />
+                <mui:ModernButton Margin="5,0,0,0"
+								  BorderThickness="5,10,0,0"
+								  Command="{Binding QA.RefreshCommand,
+													Mode=OneWay,
+													Source={StaticResource Locator}}"
+								  EllipseDiameter="50"
+								  IconData="F1 M 24,13C 27.1521,13 29.9945,14.3258 32,16.4501L 32,11L 35,14L 35,22L 27,22L 24,19L 29.5903,19C 28.217,17.4656 26.2212,16.5 24,16.5C 20.1969,16.5 17.055,19.3306 16.5661,23L 13.0448,23C 13.5501,17.3935 18.262,13 24,13 Z M 24,31.5C 27.8031,31.5 30.945,28.6694 31.4339,25L 34.9552,25C 34.4499,30.6065 29.738,35 24,35C 20.8479,35 18.0055,33.6742 16,31.5499L 16,37L 13,34L 13,26L 21,26L 24,29L 18.4097,29C 19.783,30.5344 21.7787,31.5 24,31.5 Z"
+								  IconHeight="35"
+								  IconWidth="35"
+								  ToolTip="Refresh Directory" />
+                <mui:ModernButton Height="81"
+								  Margin="5,0,3,0"
+								  BorderThickness="5,0,0,0"
+								  Command="{Binding AutoCleanCommand,
+													Mode=OneWay}"
+								  EllipseDiameter="50"
+								  IconData="M18.660349,20.393C14.879011,20.393 11.806,23.468643 11.806,27.249899 11.806,31.026154 14.879011,34.103001 18.660349,34.103001 22.444386,34.103001 25.519998,31.026154 25.519998,27.249899 25.519998,23.468643 22.444386,20.393 18.660349,20.393z M50.07317,8.7561953C49.408178,8.7706149 48.735172,8.9156297 48.090648,9.2053407 45.51765,10.359123 44.36155,13.394207 45.51765,15.96858 46.671449,18.541552 49.709146,19.691384 52.283444,18.540251 54.856342,17.378819 56.012442,14.352736 54.856342,11.771862 53.990993,9.8450501 52.068145,8.7129386 50.07317,8.7561953z M15.597473,8.6000007L21.868224,8.6000007 22.20032,14.327933 22.20032,14.531032C23.236712,14.816134,24.218506,15.221134,25.133898,15.736836L25.253695,15.615635 29.675461,11.900828 34.111725,16.338337 30.296556,20.624846 30.165057,20.758946C30.683352,21.674349,31.08955,22.659951,31.378649,23.696451L31.544045,23.696451 37.293999,24.196451 37.293999,30.468565 31.566147,30.803267 31.378649,30.803267C31.08955,31.836972,30.683352,32.821373,30.165057,33.736874L30.280955,33.853974 33.993225,38.274582 29.558261,42.709496 25.271895,38.896988 25.133898,38.758988C24.218506,39.274586,23.236712,39.678185,22.20032,39.963387L22.20032,40.146988 21.868224,45.897 15.597473,45.897 15.093578,40.166485 15.093578,39.959488C14.064985,39.671688,13.084595,39.265385,12.174301,38.749787L12.040102,38.881485 7.7381763,42.709496 3.3033104,38.274582 6.9999428,33.869675 7.1522102,33.721176C6.6379356,32.807072,6.2343292,31.83057,5.9464817,30.803267L5.7499523,30.803267 0,30.468565 0,24.196451 5.7278118,23.696451 5.9464817,23.696451C6.2343292,22.665051,6.6379356,21.687248,7.1522102,20.775946L7.0128822,20.640444 3.1874237,16.338337 7.6209869,11.900828 12.027203,15.600036 12.174301,15.744536C13.084595,15.231535,14.064985,14.825334,15.093578,14.537533L15.093578,14.350033z M52.888157,0L57.259197,1.6601361 56.091211,5.7941664 56.035212,5.937414C56.665401,6.3971274,57.240894,6.9413698,57.753986,7.5533617L57.878984,7.4947021 61.949226,6.0845716 63.865797,10.35405 60.071657,12.331821 59.933659,12.393021C60.053354,13.18731,60.075457,13.977598,60.003952,14.758987L60.12245,14.803286 63.999998,16.682059 62.337223,21.053194 58.253977,19.771912 58.12108,19.721113C57.656389,20.352705,57.112095,20.928097,56.496105,21.441189L56.549604,21.556988 57.962284,25.627228 53.691446,27.541302 51.712375,23.744456 51.653774,23.615557C50.862186,23.736756,50.066597,23.760056,49.285309,23.687157L49.241009,23.800455 47.366036,27.678 42.991099,26.017823 44.277584,21.928082 44.325682,21.799183C43.696789,21.334391,43.121297,20.784899,42.607106,20.171606L42.487208,20.225006 38.469066,21.753483 36.553693,17.486847 40.297138,15.390477 40.441637,15.327978C40.321941,14.53499,40.299839,13.744601,40.372736,12.963413L40.24384,12.915114 36.321998,11.158738 37.984774,6.7851217 42.113513,7.9530752 42.263212,8.009104C42.728206,7.3840535,43.269797,6.8124616,43.879186,6.3033789L43.82189,6.1652506 42.29051,2.1496897 46.562749,0.22918414 48.656518,3.977782 48.722916,4.1289099C49.511906,4.0091622,50.299695,3.9843827,51.075585,4.0534113L51.127785,3.9218233z"
+								  IconHeight="30"
+								  IconWidth="30"
+								  ToolTip="AutoClean" />
+                <mui:ModernButton Height="81" Margin="5,1,3,0" BorderThickness="5,1,0,0" EllipseDiameter="50"
+                          IconData="M 34.121552,40.051 L 36.144999,43.16945 15.130303,56.796999 13.106756,53.677217 13.106756,53.675916 8.6079996,46.735841 11.726523,44.71375 16.22783,51.65373 M 0,36.751001 L 27.249001,36.751001 27.249001,42.554475 23.151356,45.210752 23.151356,40.848707 4.0964856,40.848707 4.0964856,59.901056 23.151356,59.901056 23.151356,53.548086 27.249001,50.890455 27.249001,64.000001 0,64.000001 M 34.121553,3.3010007 L 36.145,6.4182236 15.130303,20.046001 13.106757,16.926167 13.106757,16.924866 8.6079996,9.9846706 11.726523,7.9638004 16.227831,14.904045 M 0,0 L 27.249001,0 27.249001,5.8034441 23.151356,8.4597235 23.151356,4.0990154 4.0964847,4.0990154 4.0964847,23.149955 23.151356,23.149955 23.151356,16.798385 27.249001,14.140756 27.249001,27.249 0,27.249 Z"
+                          IconHeight="30" IconWidth="30" ToolTip="Duplicate Barcodes"
+                          Command="{Binding QA.DuplicatesCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Height="81" Margin="5,10,3,0" BorderThickness="5,1,0,0" EllipseDiameter="50"
+                          IconData="F1 M 42,24L 57,24L 57,52L 42,52L 42,50L 47,50L 47,46L 42,46L 42,45L 47,45L 47,41L 42,41L 42,40L 47,40L 47,36L 42,36L 42,35L 47,35L 47,31L 42,31L 42,30L 47,30L 47,26L 42,26L 42,24 Z M 54.9995,50.0005L 54.9997,46.0003L 47.9995,46.0003L 47.9995,50.0005L 54.9995,50.0005 Z M 54.9996,41.0004L 47.9995,41.0004L 47.9995,45.0003L 54.9997,45.0003L 54.9996,41.0004 Z M 54.9996,36.0004L 47.9995,36.0004L 47.9995,40.0004L 54.9996,40.0004L 54.9996,36.0004 Z M 54.9996,31.0004L 47.9995,31.0004L 47.9995,35.0004L 54.9996,35.0004L 54.9996,31.0004 Z M 54.9995,26.0005L 47.9995,26.0005L 47.9995,30.0004L 54.9996,30.0004L 54.9995,26.0005 Z M 18.9997,23.7503L 40.9994,19.7506L 40.9994,56.2506L 18.9997,52.2503L 18.9997,23.7503 Z M 34.6404,44.5147L 31.3367,37.4084L 34.5522,30.4699L 31.9399,30.5805L 30.2234,34.6963L 30.0162,35.3903L 29.8872,35.8892L 29.8596,35.8895C 29.4574,34.1248 28.7481,32.4436 28.1318,30.7417L 25.2803,30.8624L 28.2549,37.4637L 24.997,44.0621L 27.7904,44.1932L 29.5296,39.8757L 29.7578,38.9297L 29.7876,38.93C 30.2317,40.8236 31.1236,42.5844 31.861,44.3843L 34.6404,44.5147 Z"
+                          IconHeight="30" IconWidth="30" ToolTip="Write Excel Summary data"
+                       
+                          Command="{Binding QA.ProcessSummaryCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                <mui:ModernButton Height="67"
+								  Margin="5,20,3,0"
+								  Command="{Binding QA.UpdateTrackerCommand,
+													Mode=OneWay,
+													Source={StaticResource Locator}}"
+								  EllipseDiameter="50"
+								  IconData="M18.151175,25.844L21.165303,25.844 21.199,25.868802 17.134266,30.286999 15.666999,30.286999z M23.04,25.752001L26.097354,25.752001 28.685999,30.378001 27.296575,30.378001z M36.909339,7.5459213C35.326011,7.5459213 34.043488,8.6605629 34.043488,10.034267 34.043488,11.406681 35.326011,12.519993 36.909339,12.519993 38.491362,12.519993 39.772686,11.406681 39.772686,10.034267 39.772686,8.6605629 38.491362,7.5459213 36.909339,7.5459213z M26.599364,7.5459213C25.017137,7.5459213 23.734616,8.6605629 23.734615,10.034267 23.734616,11.406681 25.017137,12.519993 26.599364,12.519993 28.181391,12.519993 29.465211,11.406681 29.465211,10.034267 29.465211,8.6605629 28.181391,7.5459213 26.599364,7.5459213z M0,6.1290001L6.5139999,10.420711 6.5139999,17.68133 0,21.973z M8.6259995,5.3110003L22.236752,5.3110003C21.911151,6.0519928 21.58825,6.7864055 21.301749,7.4387741 20.994448,8.1327748 20.840847,8.8710875 20.840847,9.6315007 20.840847,12.728117 23.443657,15.247729 26.64817,15.247729 28.847378,15.247729 30.770586,14.087477 31.75369,12.3218 32.400792,13.48205 33.455397,14.36999 34.721002,14.850511L34.721002,22.048829 26.90977,22.048829 26.90977,23.670001 17.072532,23.670001 17.072532,22.048829 8.6259995,22.048829z M28.338985,0.0013161717C28.699736,-0.0080255331 29.082805,0.032174252 29.470511,0.12787811 30.799834,0.45600684 31.592849,1.2386069 31.753052,2.1761162 31.915854,1.2386069 32.707466,0.45600684 34.036987,0.12787811 35.589015,-0.25493844 37.06564,0.25031577 37.336443,1.2620468 37.348143,1.3075776 40.370396,8.1814284 40.370396,8.1814284 40.568199,8.6267428 40.674999,9.117598 40.674999,9.6318831 40.674999,11.678785 38.96797,13.339 36.861135,13.339 34.900104,13.339 33.289477,11.902787 33.070773,10.056467 33.061572,10.043367 31.956054,3.9677648 31.753052,2.8349328 31.553846,3.9677648 30.445628,10.043367 30.445627,10.043367 30.217825,11.902787 28.607098,13.339 26.648765,13.339 24.540629,13.339 22.831,11.678785 22.831,9.6318831 22.831,9.117598 22.940403,8.6267428 23.137006,8.1814284 23.137007,8.1814284 26.160357,1.3075776 26.172156,1.2620468 26.375335,0.50324858 27.256731,0.029343484 28.338985,0.0013161717z"
+								  IconHeight="30"
+								  IconWidth="30"
+								  ToolTip="Upade Dat Tracker" Click="ModernButton_Click" RenderTransformOrigin="0.559,-0.232" />
+
+            </StackPanel>
+        </Border>
+        <DataGrid Grid.Column="2"
+				  Margin="0,0,0,0"
+				  HorizontalContentAlignment="Stretch"
+				  VerticalContentAlignment="Stretch"
+				  AutoGenerateColumns="False"
+				  Background="Transparent"
+				  BorderThickness="1"
+				  CanUserDeleteRows="True"
+				  CanUserResizeColumns="True"
+				  CanUserSortColumns="True"
+				  EnableColumnVirtualization="True"
+				  EnableRowVirtualization="True"
+				  HorizontalScrollBarVisibility="Visible"
+				  ItemsSource="{Binding QARecords}"
+				  SelectedItem="{Binding SelectedQARecord}"
+				  VerticalScrollBarVisibility="Visible">
+            <DataGrid.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+            </DataGrid.BorderBrush>
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Errors" SortMemberPath="errorCount">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="ScanNo" SortMemberPath="ScanNo">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding ScanNo, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Edited" SortMemberPath="edited">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Edited, UpdateSourceTrigger=PropertyChanged}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Barcode" SortMemberPath="Barcode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Barcode, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Barcode, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="NBT Reference" SortMemberPath="Reference">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Reference, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Reference, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Surname" SortMemberPath="Surname">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Surname, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Surname, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="First Name" SortMemberPath="FirstName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding FirstName, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Initials" SortMemberPath="Initials">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding LoadWriters.writers/initials, NotifyOnValidationError=True, Source={StaticResource Locator}, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Initials, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="South African ID" SortMemberPath="SAID">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding SAID, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding SAID, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Foreign ID" SortMemberPath="ForeignID">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding ForeignID, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding ForeignID, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="ID Type" SortMemberPath="IDType">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding IDType, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding IDType, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+
+
+                <DataGridTemplateColumn Header="Date of Birth" SortMemberPath="DOB">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding DOB, NotifyOnValidationError=True, StringFormat=\{0:d\}, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding DOB, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Gender" SortMemberPath="Gender">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Gender, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Gender, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+
+                <DataGridTemplateColumn Header="Venue Code" SortMemberPath="VenueCode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding VenueCode, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding VenueCode, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Date of Test" SortMemberPath="DOT">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding DOT, NotifyOnValidationError=True, StringFormat=\{0:d\}, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <DatePicker SelectedDate="{Binding DOT, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Home Language" SortMemberPath="HomeLanguage">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding HomeLanguage, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding HomeLanguage, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="School Language" SortMemberPath="SchoolLanguage">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding SchoolLanguage, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding SchoolLanguage, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Classification" SortMemberPath="Classification">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Classification, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Classification, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="AQL Language" SortMemberPath="AQL_Language">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding AQL_Language, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding AQL_Language, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="AQL Code" SortMemberPath="AQL_Code">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding AQL_Code, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding AQL_Code, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+
+
+                <DataGridTemplateColumn Header="Mat Language" SortMemberPath="Mat_Language">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Mat_Language, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Mat_Language, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+                <DataGridTemplateColumn Header="Mat Code" SortMemberPath="MatCode">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding MatCode, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding MatCode, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+
+
+                <DataGridTemplateColumn Header="Faculty1" SortMemberPath="Faculty1">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Faculty1, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Faculty1, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Faculty2" SortMemberPath="Faculty2">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Faculty2, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Faculty2, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+
+                <DataGridTemplateColumn Header="Faculty3" SortMemberPath="Faculty3">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding Faculty3, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <TextBox Text="{Binding Faculty3, Mode=TwoWay, NotifyOnValidationError=True, UpdateSourceTrigger=PropertyChanged, ValidatesOnNotifyDataErrors=True, ValidatesOnDataErrors=True}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+
+            </DataGrid.Columns>
+            <DataGrid.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Command="{Binding QA.DeleteRowCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Delete Record">
+                        <MenuItem.Icon>
+                            <Image Width="16"
+								   Height="16"
+								   Source="/Assets/icons/DeleteRow.png" />
+                        </MenuItem.Icon>
+                    </MenuItem>
+
+                    <Separator />
+                    <MenuItem Command="{Binding QA.GetNBTCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Get NBT Number from DataBase" />
+                    <MenuItem Command="{Binding QA.GetNamesCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Get Name and Surname from DataBase" />
+                    <MenuItem Command="{Binding QA.GetIDCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Get ID using NBT from DataBase" />
+                    <MenuItem Command="{Binding QA.GetDOBCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Correct Date of Birth" />
+                    <MenuItem Command="{Binding QA.ClearMathCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Clear Math Area" />
+                    <Separator/>
+                    <MenuItem Command="{Binding QA.AddSurnameCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Add Surname to Database" />
+                    <MenuItem Command="{Binding QA.AddNameCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Add First Name to Database" />
+                </ContextMenu>
+            </DataGrid.ContextMenu>
+        </DataGrid>
+
+
+        <Border Grid.Row="0"
+				Grid.Column="0"
+				BorderThickness="1">
+            <Border.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+            </Border.BorderBrush>
+            <StackPanel Margin="0,0,0,0">
+                <Label HorizontalAlignment="Center"
+					   HorizontalContentAlignment="Center"
+					   Content="QA Files"
+					   FontFamily="Segoe WP Black"
+					   FontSize="14" />
+                <ListBox Height="500"
+						 BorderThickness="1"
+						 ItemsSource="{Binding DirList}"
+						 ScrollViewer.VerticalScrollBarVisibility="Visible"
+						 SelectedItem="{Binding SelectedFile}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Padding="2,0" Foreground="{Binding NoOfErrors, Converter={StaticResource NumberToColorConverter}}" Text="{Binding SName}">
+									<!--<TextBlock.Foreground>
+											<SolidColorBrush Color="{Binding NoOfErrors, Converter={StaticResource NumberToColorConverter}}" />
+										</TextBlock.Foreground>-->
+                                </TextBlock>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+
+            </StackPanel>
+        </Border>
+
+
+
+        <GridSplitter Grid.Row="1"
+					  Grid.ColumnSpan="3"
+					  HorizontalAlignment="Stretch"
+					  VerticalAlignment="Stretch"
+					  ResizeDirection="Rows" />
+
+        <StackPanel Grid.Row="2"
+					Grid.ColumnSpan="3"
+					Height="304"
+					Margin="0,0,0,-88.688"
+					VerticalAlignment="Top"
+					Orientation="Vertical">
+            <Border BorderThickness="1">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+                </Border.BorderBrush>
+                <WrapPanel Height="249"
+						   Margin="0"
+						   Orientation="Horizontal">
+                    <StackPanel Margin="0,0,0,0">
+                        <TextBlock Margin="0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="1" />
+                        <ListBox Margin="0" ItemsSource="{Binding QA.SelectedQARecord.Section1, Mode=TwoWay, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, Mode=TwoWay, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="5,0">
+
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="2" />
+
+                        <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section2, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="3" />
+
+                        <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section3, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="4" />
+
+                        <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section4, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel Margin="5,0">
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="5" />
+
+                        <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section5, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </StackPanel>
+                    <StackPanel>
+
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="6" />
+
+                        <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section6, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+
+                    </StackPanel>
+                    <StackPanel>
+                        <TextBlock Margin="5,0"
+								   HorizontalAlignment="Center"
+								   VerticalAlignment="Center"
+								   FontSize="20"
+								   FontWeight="ExtraBold"
+								   Text="7" />
+
+                        <ListBox Margin="10,0,20,0" ItemsSource="{Binding QA.SelectedQARecord.Section7, Source={StaticResource Locator}}">
+                            <ListBox.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ListBox.ItemsPanel>
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
+
+                                    <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+
+                        </ListBox>
+                    </StackPanel>
+
+
+                </WrapPanel>
+            </Border>
+            <Border BorderThickness="1">
+                <Border.BorderBrush>
+                    <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+                </Border.BorderBrush>
+                <StackPanel Height="70">
+                    <TextBlock Margin="5,0"
+							   HorizontalAlignment="Left"
+							   VerticalAlignment="Center"
+							   FontSize="20"
+							   FontWeight="ExtraBold"
+							   Text="MAT SECTION" />
+
+                    <ListBox Margin="20,0,0,0" ItemsSource="{Binding QA.SelectedQARecord.MathSection, Source={StaticResource Locator}}">
+                        <ListBox.ItemsPanel>
+                            <ItemsPanelTemplate>
+                                <StackPanel Orientation="Horizontal" />
+                            </ItemsPanelTemplate>
+                        </ListBox.ItemsPanel>
+                        <ListBox.ItemTemplate>
+                            <DataTemplate>
+
+                                <TextBox Text="{Binding Value, NotifyOnValidationError=True, ValidatesOnDataErrors=True}" />
+
+                            </DataTemplate>
+                        </ListBox.ItemTemplate>
+                    </ListBox>
+                </StackPanel>
+            </Border>
+        </StackPanel>
+
+
+    </Grid>
+</UserControl>

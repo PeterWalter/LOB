@@ -1,0 +1,233 @@
+﻿<UserControl x:Class="CETAP_LOB.View.Composite.CompositeView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:CETAP_LOB.View.Composite"
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+             xmlns:auto="clr-namespace:FeserWard.Controls;assembly=Intellibox"
+             xmlns:Custom="http://www.galasoft.ch/mvvmlight"
+             BorderThickness="1"
+             DataContext="{Binding Composite,
+                                   Source={StaticResource Locator}}"
+             mui:ModernFrame.KeepAlive="False">
+   
+    <UserControl.BorderBrush>
+        <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+    </UserControl.BorderBrush>
+    <Grid Width="1400"
+          Height="700"
+          Margin="5,0,0,-5"
+          HorizontalAlignment="Left"
+          VerticalAlignment="Top">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="10*" />
+            <ColumnDefinition Width="25*" />
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="70*" />
+            <RowDefinition Height="70*" />
+            <RowDefinition Height="270*" />
+            <RowDefinition Height="290*" />
+        </Grid.RowDefinitions>
+        <StackPanel Grid.Row="0"
+                    Grid.ColumnSpan="2"
+                    Margin="0,1,0,2"
+                    Orientation="Horizontal">
+            <mui:ModernButton Margin="15,5,0,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Command="{Binding Composite.LoadNBTCommand,
+                                                Mode=OneWay,
+                                                Source={StaticResource Locator}}"
+                              EllipseDiameter="50"
+                              IconData="M547.942,420.726L547.942,611.614 849.592,611.614 849.592,420.726z M63.7023,55.8918L63.7023,246.817 365.352,246.817 365.352,55.8918z M0,0L429.013,0 429.013,164.97 641.314,164.97 698.724,164.97 698.724,364.798 913.294,364.798 913.294,667.505 756.818,667.505 756.777,705.331 820.394,705.331 820.394,748 577.183,748 577.183,705.331 640.714,705.331 640.757,667.505 484.281,667.505 484.281,364.798 641.314,364.798 641.314,215.416 429.013,215.416 429.013,302.708 272.579,302.708 272.537,340.495 336.111,340.495 336.111,383.202 92.8568,383.202 92.8568,340.495 156.476,340.495 156.517,302.708 0,302.708z"
+                              IconHeight="30"
+                              IconWidth="30"
+                              ToolTip="Load File to DB" />
+            <mui:ModernButton Margin="25,5,20,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Command="{Binding Composite.LoadUpdatesCommand,
+                                                Mode=OneWay,
+                                                Source={StaticResource Locator}}"
+                              EllipseDiameter="50"
+                              IconData="M2.880352,35.504997L25.563028,35.504997 25.461889,35.77055C24.680614,37.90033 24.254,40.199783 24.254,42.596951 24.254,44.994007 24.680614,47.293259 25.461889,49.422794L25.562908,49.688 2.880352,49.688C1.290522,49.688,3.8410201E-07,48.396416,0,46.807915L0,38.38258C3.8410201E-07,36.794079,1.290522,35.504997,2.880352,35.504997z M41.691601,32.867001L41.691601,40.591217 33.968002,40.591217 33.968002,45.48729 41.691601,45.48729 41.691601,53.211002 46.587406,53.211002 46.587406,45.48729 54.311005,45.48729 54.311005,40.591217 46.587406,40.591217 46.587406,32.867001z M44.126499,27.625C52.394669,27.625 59.098,34.325611 59.098,42.596501 59.098,50.859093 52.394669,57.565003 44.126499,57.565003 35.858036,57.565003 29.156,50.859093 29.156,42.596501 29.156,34.325611 35.858036,27.625 44.126499,27.625z M2.880352,17.594002L43.182121,17.594002C44.771912,17.594002,46.061001,18.882946,46.061001,20.471779L46.061001,22.816408 45.653107,22.780068C45.149128,22.741593 44.639954,22.722 44.126297,22.722 37.278214,22.722 31.227619,26.205 27.652683,31.492657L27.472803,31.773003 2.880352,31.773003C1.290522,31.773001,3.8410201E-07,30.484057,8.8062882E-07,28.893322L8.8062882E-07,20.471779C3.8410201E-07,18.882946,1.290522,17.594002,2.880352,17.594002z M8.4794798,3.8200022C6.678607,3.8200022 5.2110004,5.2864023 5.2110014,7.0887662 5.2110004,8.8935586 6.678607,10.357 8.4794798,10.357 10.281624,10.357 11.748,8.8935586 11.748,7.0887662 11.748,5.2864023 10.281624,3.8200022 8.4794798,3.8200022z M2.880352,0L43.182117,0C44.771912,5.590332E-07,46.061001,1.2890898,46.061001,2.8779911L46.061001,11.302441C46.061001,12.893875,44.771912,14.18,43.182117,14.18L2.880352,14.18C1.290522,14.18,3.8410201E-07,12.893875,0,11.302441L0,2.8779911C3.8410201E-07,1.2890898,1.290522,5.590332E-07,2.880352,0z"
+                              IconHeight="30"
+                              IconWidth="30"
+                              ToolTip="Update Records" />
+
+            <mui:ModernButton Margin="25,5,20,0"
+                              HorizontalAlignment="Left"
+                              VerticalAlignment="Top"
+                              Command="{Binding Composite.GenerateFileCompositeCommand,
+                                                Mode=OneWay,
+                                                Source={StaticResource Locator}}"
+                              EllipseDiameter="50"
+                              IconData=""
+                              IconHeight="30"
+                              IconWidth="30"
+                              ToolTip="Generate Composite File from Database Records" />
+
+
+
+
+            <auto:Intellibox x:Name="autoBox"
+                             Grid.Row="1"
+                             Grid.Column="0"
+                             Width="300"
+                             Height="70"
+                             Margin="4,0,0,0"
+                             HorizontalAlignment="Left"
+                             VerticalAlignment="Top"
+                             VerticalContentAlignment="Center"
+                             BorderThickness="1"
+                             DataProvider="{Binding Composite.ResultsProvider,
+                                                    Mode=OneWay,
+                                                    Source={StaticResource Locator}}"
+                             DisableWhitespaceTrim="True"
+                             DisplayedValueBinding="{Binding Surname}"
+                             ExplicitlyIncludeColumns="True"
+                             Focusable="True"
+                             Foreground="#FFF59914"
+                             Grid.IsSharedSizeScope="True"
+                             MaxResults="20"
+                             ResultsHeight="200"
+                             ResultsWidth="650"
+                             SelectAllOnFocus="True"
+                             SelectedItem="{Binding Composite.SelectedWriter,
+                                                    Source={StaticResource Locator}}"
+                             SelectedValueBinding="{Binding Barcode}"
+                             WatermarkText="Search for Writters, Scores Venues, NBT etc.">
+                <auto:Intellibox.RowColorizer>
+                    <auto:IntelliboxAlternateRowColorizer EvenRowBrush="Aqua" OddRowBrush="Gainsboro" />
+                </auto:Intellibox.RowColorizer>
+
+                <auto:Intellibox.Columns>
+                    <auto:IntelliboxColumn Width="120"
+                                           DisplayMemberBinding="{Binding Surname}"
+                                           Header="Surname" />
+                    <auto:IntelliboxColumn Width="120"
+                                           DisplayMemberBinding="{Binding Name}"
+                                           Header="First Name" />
+                    <auto:IntelliboxColumn Width="120"
+                                           DisplayMemberBinding="{Binding RefNo}"
+                                           Header="NBT" />
+                    <auto:IntelliboxColumn Width="120"
+                                           DisplayMemberBinding="{Binding SAID}"
+                                           Header="ID" />
+                </auto:Intellibox.Columns>
+            </auto:Intellibox>
+            <Button Grid.Row="1"
+                    Grid.Column="1"
+                    Width="48"
+                    Height="35"
+                    Margin="47,20,0,10"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding Composite.PreviousCommand,
+                                      Mode=OneWay,
+                                      Source={StaticResource Locator}}"
+                    Content="&lt;&lt;"
+                    IsCancel="True" />
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Width="20"
+                   Height="23"
+                   Margin="10,26,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="{Binding Composite.Page,
+                                     Source={StaticResource Locator}}"
+                   FontSize="16"
+                   FontWeight="Bold"
+                   RenderTransformOrigin="0.091,0.5" />
+            <Button Grid.Row="1"
+                    Grid.Column="1"
+                    Width="50"
+                    Height="35"
+                    Margin="10,20,0,10"
+                    HorizontalAlignment="Left"
+                    VerticalAlignment="Top"
+                    Command="{Binding Composite.NextCommand,
+                                      Mode=OneWay,
+                                      Source={StaticResource Locator}}"
+                    Content="&gt;&gt;"
+                    IsCancel="True" />
+
+            <Label Grid.Row="1"
+                   Grid.Column="1"
+                   Width="40"
+                   Height="30"
+                   Margin="10,26,0,0"
+                   HorizontalAlignment="Left"
+                   VerticalAlignment="Top"
+                   Content="{Binding Composite.Pages,
+                                     Source={StaticResource Locator}}"
+                   FontSize="16"
+                   FontWeight="Bold" />
+            <Label Content="Total Records :" />
+            <Label Content="{Binding Composite.TotalRec, Mode=OneWay, Source={StaticResource Locator}}" />
+        </StackPanel>
+
+        <DataGrid Grid.Row="1"
+                  Grid.RowSpan="2"
+                  Grid.Column="0"
+                  Height="335"
+                  Margin="5,5,2,0"
+                  VerticalAlignment="Top"
+                  BorderThickness="1"
+                  ItemsSource="{Binding Composite.Composit1,
+                                        Source={StaticResource Locator}}">
+            <DataGrid.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+            </DataGrid.BorderBrush>
+        </DataGrid>
+        <DataGrid x:Name="dataGrid"
+                  Grid.Row="1"
+                  Grid.RowSpan="3"
+                  Grid.Column="1"
+                  Margin="5,5,0,0"
+                  BorderThickness="1"
+                  HorizontalScrollBarVisibility="Visible"
+                  ItemsSource="{Binding Composite.NBTScores,
+                                        Source={StaticResource Locator}}"
+                  SelectedItem="{Binding Composite.SelectedWriter,
+                                         Mode=TwoWay,
+                                         Source={StaticResource Locator}}"
+                  SelectedValue="{Binding Composite.SelectedWriter.Barcode,
+                                          Source={StaticResource Locator}}"
+                  SelectionMode="Extended"
+                  VerticalScrollBarVisibility="Visible">
+            <DataGrid.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+            </DataGrid.BorderBrush>
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="MouseLeftButtonDown">
+                    <Custom:EventToCommand Command="{Binding SelectionChangedCommand, Mode=OneWay}" CommandParameter="{Binding SelectedWriters, ElementName=dataGrid}" />
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+        </DataGrid>
+        <DataGrid Grid.Row="3"
+                  Width="390"
+                  Height="254"
+                  Margin="5,31,0,0"
+                  HorizontalAlignment="Left"
+                  VerticalAlignment="Top"
+                  BorderThickness="1"
+                  ItemsSource="{Binding SelectedWriters}">
+            <DataGrid.BorderBrush>
+                <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
+            </DataGrid.BorderBrush>
+        </DataGrid>
+        <Label Grid.Row="3"
+               Width="170"
+               Height="20"
+               Margin="95,5,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="Selected Records"
+               FontSize="16" />
+    </Grid>
+</UserControl>

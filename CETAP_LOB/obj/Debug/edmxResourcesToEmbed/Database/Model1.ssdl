@@ -1,0 +1,690 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="NBT_ProductionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+  <EntityType Name="TestName">
+    <Key>
+      <PropertyRef Name="TestID" />
+    </Key>
+    <Property Name="TestID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestName" Type="nchar" MaxLength="14" Nullable="false" />
+    <Property Name="TestCode" Type="int" Nullable="false" />
+    <Property Name="Section7" Type="smallint" Nullable="false" />
+    <Property Name="HasErrors" Type="bit" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="rowguid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Logs">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Date" Type="datetime2" Precision="7" Nullable="false" />
+    <Property Name="Thread" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="Level" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="Logger" Type="varchar" MaxLength="255" Nullable="false" />
+    <Property Name="Message" Type="varchar" MaxLength="4000" Nullable="false" />
+    <Property Name="UserName" Type="varchar" MaxLength="100" Nullable="false" />
+    <Property Name="Location" Type="nvarchar" MaxLength="200" Nullable="false" />
+    <Property Name="Method" Type="varchar" MaxLength="50" Nullable="false" />
+    <Property Name="exception" Type="varchar" MaxLength="4000" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Users">
+    <Key>
+      <PropertyRef Name="StaffID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Areas" />
+    </Key>
+    <Property Name="StaffID" Type="nchar" MaxLength="8" Nullable="false" />
+    <Property Name="Name" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="Areas" Type="nvarchar" MaxLength="50" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EasyPayFile">
+    <Key>
+      <PropertyRef Name="FileGenerationNumber" />
+    </Key>
+    <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
+    <Property Name="FileName" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="DateWritten" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="NumberOfPayments" Type="int" />
+    <Property Name="NumberOfTenders" Type="int" />
+    <Property Name="TotalFees" Type="money" />
+    <Property Name="TotalBankFees" Type="money" />
+    <Property Name="TotalPayment" Type="money" Nullable="false" />
+    <Property Name="CalculatedAmountCollected" Type="money" Nullable="false" />
+  </EntityType>
+  <EntityType Name="EasyPayRecord">
+    <Key>
+      <PropertyRef Name="PayNumber" />
+    </Key>
+    <Property Name="PayNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
+    <Property Name="PayTag" Type="bigint" Nullable="false" />
+    <Property Name="CollectorID" Type="bigint" />
+    <Property Name="date" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Fee" Type="money" />
+    <Property Name="BankCost" Type="money" />
+    <Property Name="NumOfTrans" Type="smallint" Nullable="false" />
+    <Property Name="AmountPaid" Type="money" Nullable="false" />
+    <Property Name="Trace" Type="nvarchar" MaxLength="50" />
+    <Property Name="TenderType_PAN" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="PointOfService" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="Original" Type="smallint" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Batch">
+    <Key>
+      <PropertyRef Name="BatchID" />
+    </Key>
+    <Property Name="BatchID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BatchName" Type="nchar" MaxLength="22" Nullable="false" />
+    <Property Name="TestDate" Type="date" Nullable="false" />
+    <Property Name="TestCombination" Type="nchar" MaxLength="4" Nullable="false" />
+    <Property Name="BatchedBy" Type="nchar" MaxLength="15" Nullable="false" />
+    <Property Name="BatchDate" Type="datetime" Nullable="false" />
+    <Property Name="RandTestNumber" Type="int" Nullable="false" />
+    <Property Name="Count" Type="int" Nullable="false" />
+    <Property Name="TestVenueID" Type="int" Nullable="false" />
+    <Property Name="TestProfileID" Type="int" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="200" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="BenchmarkLevels">
+    <Key>
+      <PropertyRef Name="yearID" />
+    </Key>
+    <Property Name="yearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="YearSet" Type="int" Nullable="false" />
+    <Property Name="StartIntakeYear" Type="int" Nullable="false" />
+    <Property Name="EndIntakeYear" Type="int" Nullable="false" />
+    <Property Name="AL_PU" Type="int" Nullable="false" />
+    <Property Name="AL_PL" Type="int" Nullable="false" />
+    <Property Name="AL_IU" Type="int" Nullable="false" />
+    <Property Name="AL_IL" Type="int" Nullable="false" />
+    <Property Name="AL_BU" Type="int" Nullable="false" />
+    <Property Name="AL_BL" Type="int" Nullable="false" />
+    <Property Name="QL_PU" Type="int" Nullable="false" />
+    <Property Name="QL_PL" Type="int" Nullable="false" />
+    <Property Name="QL_IU" Type="int" Nullable="false" />
+    <Property Name="QL_IL" Type="int" Nullable="false" />
+    <Property Name="QL_BU" Type="int" Nullable="false" />
+    <Property Name="QL_BL" Type="int" Nullable="false" />
+    <Property Name="MAT_PU" Type="int" Nullable="false" />
+    <Property Name="MAT_PL" Type="int" Nullable="false" />
+    <Property Name="MAT_IU" Type="int" Nullable="false" />
+    <Property Name="MAT_IL" Type="int" Nullable="false" />
+    <Property Name="MAT_BU" Type="int" Nullable="false" />
+    <Property Name="MAT_BL" Type="int" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="Type" Type="nchar" MaxLength="10" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Composit">
+    <Key>
+      <PropertyRef Name="Barcode" />
+    </Key>
+    <Property Name="RefNo" Type="bigint" Nullable="false" />
+    <Property Name="Barcode" Type="bigint" Nullable="false" />
+    <Property Name="Surname" Type="nchar" MaxLength="50" Nullable="false" />
+    <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+    <Property Name="Initials" Type="nchar" MaxLength="3" />
+    <Property Name="SAID" Type="bigint" />
+    <Property Name="ForeignID" Type="nvarchar" MaxLength="20" />
+    <Property Name="DOB" Type="date" Nullable="false" />
+    <Property Name="ID_Type" Type="nchar" MaxLength="1" />
+    <Property Name="Citizenship" Type="int" />
+    <Property Name="Classification" Type="nchar" MaxLength="1" />
+    <Property Name="Gender" Type="nchar" MaxLength="1" />
+    <Property Name="Faculty" Type="nchar" MaxLength="50" />
+    <Property Name="DOT" Type="date" Nullable="false" />
+    <Property Name="VenueCode" Type="int" Nullable="false" />
+    <Property Name="VenueName" Type="nchar" MaxLength="100" />
+    <Property Name="HomeLanguage" Type="nchar" MaxLength="2" />
+    <Property Name="GR12Language" Type="nchar" MaxLength="1" />
+    <Property Name="AQLLanguage" Type="nchar" MaxLength="1" />
+    <Property Name="AQLCode" Type="int" />
+    <Property Name="MatLanguage" Type="nchar" MaxLength="1" />
+    <Property Name="MatCode" Type="int" />
+    <Property Name="ALScore" Type="int" />
+    <Property Name="ALLevel" Type="nvarchar" MaxLength="20" />
+    <Property Name="QLScore" Type="int" />
+    <Property Name="QLLevel" Type="nvarchar" MaxLength="20" />
+    <Property Name="MATScore" Type="int" />
+    <Property Name="MATLevel" Type="nvarchar" MaxLength="20" />
+    <Property Name="WroteAL" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="WroteQL" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="WroteMat" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="Faculty2" Type="nchar" MaxLength="50" />
+    <Property Name="Faculty3" Type="nchar" MaxLength="50" />
+    <Property Name="Batch" Type="nchar" MaxLength="22" Nullable="false" />
+    <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="FirstName">
+    <Key>
+      <PropertyRef Name="NameID" />
+    </Key>
+    <Property Name="NameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Institution">
+    <Key>
+      <PropertyRef Name="InstID" />
+    </Key>
+    <Property Name="InstID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Name" Type="nchar" MaxLength="100" Nullable="false" />
+    <Property Name="Description" Type="nchar" MaxLength="500" />
+    <Property Name="Logo" Type="varbinary(max)" />
+    <Property Name="GUID" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="InstitutionMatch">
+    <Key>
+      <PropertyRef Name="RequestNumber" />
+    </Key>
+    <Property Name="RequestNumber" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="InstID" Type="int" Nullable="false" />
+    <Property Name="Barcode" Type="bigint" Nullable="false" />
+    <Property Name="StudentID" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="Programme" Type="nchar" MaxLength="20" />
+    <Property Name="Faculty" Type="nchar" MaxLength="20" />
+    <Property Name="RequestDate" Type="date" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="IntakeYear">
+    <Key>
+      <PropertyRef Name="yearID" />
+    </Key>
+    <Property Name="yearID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Year" Type="int" Nullable="false" />
+    <Property Name="yearStart" Type="date" Nullable="false" />
+    <Property Name="yearEnd" Type="date" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="NewNBTNumbers">
+    <Key>
+      <PropertyRef Name="NewNBT" />
+    </Key>
+    <Property Name="NewNBT" Type="bigint" Nullable="false" />
+    <Property Name="OriginalNBT" Type="bigint" />
+    <Property Name="Used" Type="bit" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="WriterListID" Type="int" />
+  </EntityType>
+  <EntityType Name="Provinces">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Code" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="QA">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="bigint" Nullable="false" />
+    <Property Name="CSX_Number" Type="int" Nullable="false" />
+    <Property Name="CSX" Type="nchar" MaxLength="37" Nullable="false" />
+    <Property Name="NBT" Type="bigint" Nullable="false" />
+    <Property Name="Barcode" Type="bigint" Nullable="false" />
+    <Property Name="SAID" Type="bigint" />
+    <Property Name="ForeignID" Type="nchar" MaxLength="15" />
+    <Property Name="IDType" Type="int" />
+    <Property Name="Gender" Type="nchar" MaxLength="1" />
+    <Property Name="Citizenship" Type="int" />
+    <Property Name="DateOfBirth" Type="date" Nullable="false" />
+    <Property Name="Surname" Type="nchar" MaxLength="20" />
+    <Property Name="Name" Type="nchar" MaxLength="18" />
+    <Property Name="Initials" Type="nchar" MaxLength="3" />
+    <Property Name="VenueCode" Type="int" Nullable="false" />
+    <Property Name="TestDate" Type="date" Nullable="false" />
+    <Property Name="HLanguage" Type="int" />
+    <Property Name="SchoolLanguage" Type="int" />
+    <Property Name="Classification" Type="int" />
+    <Property Name="AQL_Language" Type="nchar" MaxLength="1" Nullable="false" />
+    <Property Name="AQL_Code" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="Section1" Type="nchar" MaxLength="20" />
+    <Property Name="Section2" Type="nchar" MaxLength="20" />
+    <Property Name="Section3" Type="nchar" MaxLength="25" />
+    <Property Name="Section4" Type="nchar" MaxLength="25" />
+    <Property Name="Section5" Type="nchar" MaxLength="20" />
+    <Property Name="Section6" Type="nchar" MaxLength="25" />
+    <Property Name="Section7" Type="nchar" MaxLength="25" />
+    <Property Name="MAT_Language" Type="nchar" MaxLength="1" />
+    <Property Name="MathCode" Type="nchar" MaxLength="3" />
+    <Property Name="MatSection" Type="nchar" MaxLength="60" />
+    <Property Name="Faculty1" Type="nchar" MaxLength="10" />
+    <Property Name="Faculty2" Type="nchar" MaxLength="10" />
+    <Property Name="Faculty3" Type="nchar" MaxLength="10" />
+    <Property Name="EndOfFile" Type="nchar" MaxLength="1" Nullable="false" />
+    <Property Name="BatchID" Type="int" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="RecordsInQueue">
+    <Key>
+      <PropertyRef Name="RecID" />
+    </Key>
+    <Property Name="RecID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Barcode" Type="bigint" Nullable="false" />
+    <Property Name="NBT" Type="bigint" Nullable="false" />
+    <Property Name="SAID" Type="bigint" />
+    <Property Name="FID" Type="nvarchar" MaxLength="20" />
+    <Property Name="Reason" Type="nchar" MaxLength="100" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="ScannedFile">
+    <Key>
+      <PropertyRef Name="Filename" />
+    </Key>
+    <Property Name="FileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Filename" Type="varchar" MaxLength="30" Nullable="false" />
+    <Property Name="Datescanned" Type="datetime" Nullable="false" />
+    <Property Name="FileData" Type="varbinary(max)" Nullable="false" />
+    <Property Name="BatchID" Type="int" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="Client" Type="nchar" MaxLength="15" />
+  </EntityType>
+  <EntityType Name="ScanTrackers">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="BatchedBy" Type="nchar" MaxLength="20" />
+    <Property Name="DateBatched" Type="datetime" />
+    <Property Name="Records" Type="int" />
+    <Property Name="DateScanned" Type="datetime" />
+    <Property Name="ScanRecords" Type="int" />
+    <Property Name="DateEdited" Type="datetime" />
+    <Property Name="EditRecords" Type="int" />
+    <Property Name="DateQA" Type="datetime" />
+    <Property Name="QARecords" Type="int" />
+    <Property Name="DateSentForScoring" Type="datetime" />
+    <Property Name="SentCount" Type="int" />
+    <Property Name="DateScored" Type="datetime" />
+    <Property Name="ScoredRecords" Type="int" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="TestDate" Type="date" />
+    <Property Name="FileName" Type="varchar" MaxLength="22" Nullable="false" />
+    <Property Name="Description" Type="nvarchar" MaxLength="255" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Surname">
+    <Key>
+      <PropertyRef Name="SurnameID" />
+    </Key>
+    <Property Name="SurnameID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Surname" Type="nvarchar" MaxLength="100" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestAllocation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="TestDate" Type="date" Nullable="false" />
+    <Property Name="ClientType" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="TestID" Type="int" Nullable="false" />
+    <Property Name="Client" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Estimated" Type="int" Nullable="false" />
+    <Property Name="ActualUsed" Type="int" Nullable="false" />
+    <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestProfile">
+    <Key>
+      <PropertyRef Name="ProfileID" />
+    </Key>
+    <Property Name="ProfileID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="Profile" Type="int" Nullable="false" />
+    <Property Name="AllocationID" Type="int" Nullable="false" />
+    <Property Name="Intake" Type="int" Nullable="false" />
+    <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="ModifiedDate" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="TestRooms">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="RowVersion" />
+      <PropertyRef Name="RoomName" />
+      <PropertyRef Name="TestRoom_TestVenue" />
+    </Key>
+    <Property Name="Id" Type="int" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="RoomType" Type="nvarchar" MaxLength="255" />
+    <Property Name="HireCost" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="Capacity" Type="int" />
+    <Property Name="Comment" Type="nvarchar" MaxLength="255" />
+    <Property Name="RoomName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="TestRoom_TestVenue" Type="int" Nullable="false" />
+  </EntityType>
+  <EntityType Name="TestVenues">
+    <Key>
+      <PropertyRef Name="VenueCode" />
+    </Key>
+    <Property Name="VenueCode" Type="int" Nullable="false" />
+    <Property Name="VenueName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="ShortName" Type="nvarchar" MaxLength="255" Nullable="false" />
+    <Property Name="WebsiteName" Type="nvarchar" MaxLength="255" />
+    <Property Name="Room" Type="nvarchar" MaxLength="255" />
+    <Property Name="VenueType" Type="nvarchar" MaxLength="255" />
+    <Property Name="ProvinceID" Type="int" Nullable="false" />
+    <Property Name="Capacity" Type="int" />
+    <Property Name="Comments" Type="nvarchar" MaxLength="255" />
+    <Property Name="Available" Type="bit" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="Place" Type="geography" />
+  </EntityType>
+  <EntityType Name="WriterList">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="NBT" Type="bigint" Nullable="false" />
+    <Property Name="Surname" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Name" Type="nvarchar" MaxLength="30" Nullable="false" />
+    <Property Name="Initials" Type="nchar" MaxLength="3" />
+    <Property Name="SAID" Type="bigint" />
+    <Property Name="ForeignID" Type="nchar" MaxLength="15" />
+    <Property Name="Gender" Type="nchar" MaxLength="10" />
+    <Property Name="DOB" Type="date" Nullable="false" />
+    <Property Name="Classification" Type="nchar" MaxLength="10" />
+    <Property Name="TestLanguage" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="TestType" Type="nchar" MaxLength="10" Nullable="false" />
+    <Property Name="VenueID" Type="int" Nullable="false" />
+    <Property Name="DOT" Type="date" Nullable="false" />
+    <Property Name="Mobile" Type="nchar" MaxLength="15" />
+    <Property Name="HomeTelephone" Type="nchar" MaxLength="15" />
+    <Property Name="EMail" Type="nchar" MaxLength="50" />
+    <Property Name="Paid" Type="money" Nullable="false" />
+    <Property Name="AccountCreation" Type="datetime" Nullable="false" />
+    <Property Name="RegistrationDate" Type="datetime" Nullable="false" />
+    <Property Name="Wrote" Type="bit" Nullable="false" />
+    <Property Name="RowGuid" Type="uniqueidentifier" Nullable="false" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+    <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <EntityType Name="WritersPayments">
+    <Key>
+      <PropertyRef Name="EasyPayPayNumber" />
+    </Key>
+    <Property Name="EasyPayPayNumber" Type="bigint" Nullable="false" />
+    <Property Name="CurrentNBT" Type="bigint" Nullable="false" />
+    <Property Name="OldNBT" Type="bigint" />
+    <Property Name="DateModified" Type="datetime" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Vw_EasyPayRecords">
+    <Key>
+      <PropertyRef Name="File Number" />
+      <PropertyRef Name="NBT Ref" />
+      <PropertyRef Name="Source File Date" />
+      <PropertyRef Name="Payment Date" />
+      <PropertyRef Name="Fee" />
+      <PropertyRef Name="Paid Amount" />
+      <PropertyRef Name="Pay Code" />
+      <PropertyRef Name="Payment Method" />
+      <PropertyRef Name="Bank Reference" />
+    </Key>
+    <Property Name="File Number" Type="int" Nullable="false" />
+    <Property Name="NBT Ref" Type="bigint" Nullable="false" />
+    <Property Name="EasyPay Code" Type="bigint" />
+    <Property Name="Source File Date" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Payment Date" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="Fee" Type="money" Nullable="false" />
+    <Property Name="Processing Fee" Type="money" />
+    <Property Name="Transaction Fee" Type="money" />
+    <Property Name="Paid Amount" Type="varchar" MaxLength="1" Nullable="false" />
+    <Property Name="Pay Code" Type="bigint" Nullable="false" />
+    <Property Name="Payee Name" Type="nvarchar" MaxLength="50" />
+    <Property Name="Payment Method" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="Bank Reference" Type="nchar" MaxLength="20" Nullable="false" />
+    <Property Name="Revenue" Type="money" />
+    <Property Name="Expenses" Type="money" />
+    <Property Name="Net" Type="money" />
+  </EntityType>
+  <Association Name="FK_EasyPayRecord_EasyPayFile">
+    <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
+    <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EasyPayFile">
+        <PropertyRef Name="FileGenerationNumber" />
+      </Principal>
+      <Dependent Role="EasyPayRecord">
+        <PropertyRef Name="FileGenerationNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstitutionMatch_Composit">
+    <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
+    <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Composit">
+        <PropertyRef Name="Barcode" />
+      </Principal>
+      <Dependent Role="InstitutionMatch">
+        <PropertyRef Name="Barcode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstitutionMatch_Institution">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="InstID" />
+      </Principal>
+      <Dependent Role="InstitutionMatch">
+        <PropertyRef Name="InstID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_QA_Batch">
+    <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+    <End Role="QA" Type="Self.QA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Batch">
+        <PropertyRef Name="BatchID" />
+      </Principal>
+      <Dependent Role="QA">
+        <PropertyRef Name="BatchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ScannedFile_Batch">
+    <End Role="Batch" Type="Self.Batch" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ScannedFile" Type="Self.ScannedFile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Batch">
+        <PropertyRef Name="BatchID" />
+      </Principal>
+      <Dependent Role="ScannedFile">
+        <PropertyRef Name="BatchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestAllocation_TestName">
+    <End Role="TestName" Type="Self.TestName" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestName">
+        <PropertyRef Name="TestID" />
+      </Principal>
+      <Dependent Role="TestAllocation">
+        <PropertyRef Name="TestID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProfile_TestAllocation">
+    <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestProfile" Type="Self.TestProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestAllocation">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TestProfile">
+        <PropertyRef Name="AllocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestVenues_Provinces">
+    <End Role="Provinces" Type="Self.Provinces" Multiplicity="1" />
+    <End Role="TestVenues" Type="Self.TestVenues" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Provinces">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestVenues">
+        <PropertyRef Name="ProvinceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WriterList_TestVenues">
+    <End Role="TestVenues" Type="Self.TestVenues" Multiplicity="1" />
+    <End Role="WriterList" Type="Self.WriterList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestVenues">
+        <PropertyRef Name="VenueCode" />
+      </Principal>
+      <Dependent Role="WriterList">
+        <PropertyRef Name="VenueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WritersPayments_EasyPayRecord">
+    <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="1" />
+    <End Role="WritersPayments" Type="Self.WritersPayments" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="EasyPayRecord">
+        <PropertyRef Name="PayNumber" />
+      </Principal>
+      <Dependent Role="WritersPayments">
+        <PropertyRef Name="EasyPayPayNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="NBT_ProductionModelStoreContainer">
+    <EntitySet Name="TestName" EntityType="Self.TestName" Schema="ClusterAnalysis" store:Type="Tables" />
+    <EntitySet Name="Logs" EntityType="Self.Logs" Schema="dbo" store:Type="Tables" />
+    <EntitySet Name="EasyPayFile" EntityType="Self.EasyPayFile" Schema="Easypay" store:Type="Tables" />
+    <EntitySet Name="EasyPayRecord" EntityType="Self.EasyPayRecord" Schema="Easypay" store:Type="Tables" />
+    <EntitySet Name="Batch" EntityType="Self.Batch" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="BenchmarkLevels" EntityType="Self.BenchmarkLevels" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Composit" EntityType="Self.Composit" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="FirstName" EntityType="Self.FirstName" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Institution" EntityType="Self.Institution" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="InstitutionMatch" EntityType="Self.InstitutionMatch" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="IntakeYear" EntityType="Self.IntakeYear" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="NewNBTNumbers" EntityType="Self.NewNBTNumbers" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Provinces" EntityType="Self.Provinces" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="QA" EntityType="Self.QA" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="RecordsInQueue" EntityType="Self.RecordsInQueue" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="ScannedFile" EntityType="Self.ScannedFile" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="ScanTrackers" EntityType="Self.ScanTrackers" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Surname" EntityType="Self.Surname" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="TestAllocation" EntityType="Self.TestAllocation" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="TestProfile" EntityType="Self.TestProfile" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="TestVenues" EntityType="Self.TestVenues" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="WriterList" EntityType="Self.WriterList" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="WritersPayments" EntityType="Self.WritersPayments" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Users].[StaffID] AS [StaffID], 
+    [Users].[Name] AS [Name], 
+    [Users].[Areas] AS [Areas]
+    FROM [dbo].[Users] AS [Users]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="TestRooms" EntityType="Self.TestRooms" store:Type="Tables" store:Schema="Process">
+      <DefiningQuery>SELECT 
+    [TestRooms].[Id] AS [Id], 
+    [TestRooms].[RowVersion] AS [RowVersion], 
+    [TestRooms].[RoomType] AS [RoomType], 
+    [TestRooms].[HireCost] AS [HireCost], 
+    [TestRooms].[Capacity] AS [Capacity], 
+    [TestRooms].[Comment] AS [Comment], 
+    [TestRooms].[RoomName] AS [RoomName], 
+    [TestRooms].[TestRoom_TestVenue] AS [TestRoom_TestVenue]
+    FROM [Process].[TestRooms] AS [TestRooms]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" store:Type="Views" store:Schema="dbo">
+      <DefiningQuery>SELECT 
+    [Vw_EasyPayRecords].[File Number] AS [File Number], 
+    [Vw_EasyPayRecords].[NBT Ref] AS [NBT Ref], 
+    [Vw_EasyPayRecords].[EasyPay Code] AS [EasyPay Code], 
+    [Vw_EasyPayRecords].[Source File Date] AS [Source File Date], 
+    [Vw_EasyPayRecords].[Payment Date] AS [Payment Date], 
+    [Vw_EasyPayRecords].[Fee] AS [Fee], 
+    [Vw_EasyPayRecords].[Processing Fee] AS [Processing Fee], 
+    [Vw_EasyPayRecords].[Transaction Fee] AS [Transaction Fee], 
+    [Vw_EasyPayRecords].[Paid Amount] AS [Paid Amount], 
+    [Vw_EasyPayRecords].[Pay Code] AS [Pay Code], 
+    [Vw_EasyPayRecords].[Payee Name] AS [Payee Name], 
+    [Vw_EasyPayRecords].[Payment Method] AS [Payment Method], 
+    [Vw_EasyPayRecords].[Bank Reference] AS [Bank Reference], 
+    [Vw_EasyPayRecords].[Revenue] AS [Revenue], 
+    [Vw_EasyPayRecords].[Expenses] AS [Expenses], 
+    [Vw_EasyPayRecords].[Net] AS [Net]
+    FROM [dbo].[Vw_EasyPayRecords] AS [Vw_EasyPayRecords]</DefiningQuery>
+    </EntitySet>
+    <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
+      <End Role="EasyPayFile" EntitySet="EasyPayFile" />
+      <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
+      <End Role="Composit" EntitySet="Composit" />
+      <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstitutionMatch_Institution" Association="Self.FK_InstitutionMatch_Institution">
+      <End Role="Institution" EntitySet="Institution" />
+      <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />
+    </AssociationSet>
+    <AssociationSet Name="FK_QA_Batch" Association="Self.FK_QA_Batch">
+      <End Role="Batch" EntitySet="Batch" />
+      <End Role="QA" EntitySet="QA" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ScannedFile_Batch" Association="Self.FK_ScannedFile_Batch">
+      <End Role="Batch" EntitySet="Batch" />
+      <End Role="ScannedFile" EntitySet="ScannedFile" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestAllocation_TestName" Association="Self.FK_TestAllocation_TestName">
+      <End Role="TestName" EntitySet="TestName" />
+      <End Role="TestAllocation" EntitySet="TestAllocation" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProfile_TestAllocation" Association="Self.FK_TestProfile_TestAllocation">
+      <End Role="TestAllocation" EntitySet="TestAllocation" />
+      <End Role="TestProfile" EntitySet="TestProfile" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestVenues_Provinces" Association="Self.FK_TestVenues_Provinces">
+      <End Role="Provinces" EntitySet="Provinces" />
+      <End Role="TestVenues" EntitySet="TestVenues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WriterList_TestVenues" Association="Self.FK_WriterList_TestVenues">
+      <End Role="TestVenues" EntitySet="TestVenues" />
+      <End Role="WriterList" EntitySet="WriterList" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WritersPayments_EasyPayRecord" Association="Self.FK_WritersPayments_EasyPayRecord">
+      <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
+      <End Role="WritersPayments" EntitySet="WritersPayments" />
+    </AssociationSet>
+  </EntityContainer>
+</Schema>

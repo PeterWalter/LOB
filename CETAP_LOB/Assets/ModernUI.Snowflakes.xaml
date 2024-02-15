@@ -1,0 +1,20 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:local="clr-namespace:CETAP_LOB.Assets">
+    <ResourceDictionary.MergedDictionaries>
+        <ResourceDictionary Source="/FirstFloor.ModernUI;component/Assets/ModernUI.Dark.xaml" />
+    </ResourceDictionary.MergedDictionaries>
+
+    <Color x:Key="AccentColor">#0082AD</Color>
+
+    <!--  background image taken from http://good-wallpapers.com/  -->
+    <Rectangle x:Key="WindowBackgroundContent" x:Shared="false">
+        <Rectangle.Fill>
+            <ImageBrush ImageSource="/Assets/background.snowflakes.jpg"
+                        Opacity=".5"
+                        Stretch="UniformToFill" />
+            <!--  <ImageBrush x:Key="WindowBackgroundContent" x:Shared="false"  Opacity=".2" Source="/Assets/background.snowflakes.jpg" Stretch="UniformToFill" />  -->
+        </Rectangle.Fill>
+    </Rectangle>
+
+</ResourceDictionary>
