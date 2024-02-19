@@ -163,6 +163,7 @@ namespace CETAP_LOB.Model
 
         //Moderation data
         ObservableCollection<CompositBDO> GetAllScores(string path);
+        ObservableCollection<CompositBDO> GetAllRemoteScores();
         ObservableCollection<CompositBDO> GetAllModeratedScores(string path);
         ObservableCollection<Section7> getSec7DatFile(datFileAttributes datfile);
 

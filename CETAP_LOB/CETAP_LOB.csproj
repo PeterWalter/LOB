@@ -368,6 +368,7 @@
     <Compile Include="Search\CompositResultsProvider.cs" />
     <Compile Include="Search\TestsResultsProvider.cs" />
     <Compile Include="Search\VenueResultsProvider.cs" />
+    <Compile Include="ViewModel\composite\RemotesViewModel.cs" />
     <Compile Include="ViewModel\composite\CompositeViewModel.cs" />
     <Compile Include="ViewModel\composite\EditCompositeViewModel.cs" />
     <Compile Include="ViewModel\easypay\EasyPayViewModel.cs" />
@@ -402,6 +403,9 @@
     <Compile Include="ViewModel\writers\VenueViewModel.cs" />
     <Compile Include="View\AboutView.xaml.cs">
       <DependentUpon>aboutview.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Composite\RemotesView.xaml.cs">
+      <DependentUpon>RemotesView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\Composite\CompositeView.xaml.cs">
       <DependentUpon>CompositeView.xaml</DependentUpon>
@@ -513,6 +517,10 @@
       <SubType>Code</SubType>
     </Compile>
     <Page Include="View\aboutview.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Composite\RemotesView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

@@ -681,6 +681,8 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.GenerateResourc
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.CoreCompileInputs.cache
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.exe.manifest
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.application
-D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.CopyComplete
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.exe
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.pdb
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Composite\RemotesView.g.cs
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Composite\RemotesView.baml
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.Up2Date

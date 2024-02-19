@@ -77,6 +77,7 @@ namespace CETAP_LOB.ViewModel
             SimpleIoc.Default.Register<ModerationViewModel>();
             SimpleIoc.Default.Register<IntroductionViewModel>();
             SimpleIoc.Default.Register<CompositeViewModel>();
+            SimpleIoc.Default.Register<RemotesViewModel>();
             SimpleIoc.Default.Register<ScanTrackerViewModel>();
             SimpleIoc.Default.Register<FakeEasyPayViewModel>();
             SimpleIoc.Default.Register<EditCompositeViewModel>();
@@ -151,6 +152,17 @@ namespace CETAP_LOB.ViewModel
             get
             {
                 return ServiceLocator.Current.GetInstance<CompositeViewModel>();
+            }
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+        "CA1822:MarkMembersAsStatic",
+        Justification = "This non-static member is needed for data binding purposes.")]
+        public RemotesViewModel Remotes
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<RemotesViewModel>();
             }
         }
 

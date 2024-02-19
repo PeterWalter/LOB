@@ -28,8 +28,10 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Transactions;
 using CETAP_LOB.Model.Composite;
-using CETAP_LOB.Model.easypay;
 using System.Windows.Input;
+using DocumentFormat.OpenXml.Bibliography;
+using CETAP_LOB.View.Composite;
+using DocumentFormat.OpenXml.Office.CustomXsn;
 // using System.Windows.Forms;
 
 namespace CETAP_LOB.Model
@@ -5261,6 +5263,35 @@ namespace CETAP_LOB.Model
                 Scores = new ObservableCollection<CompositBDO>();
             }
             return Scores;
+        }
+        public ObservableCollection<CompositBDO> GetAllRemoteScores()
+        {
+            ObservableCollection<CompositBDO> remoteScores = new ObservableCollection<CompositBDO>();
+
+            using (CETAPEntities cetapEntities = new CETAPEntities())
+            {
+                //   List<TestVenue> venues = cetapEntities.TestVenues.Where(x => x.VenueType == "Remote").ToList();
+
+                //  var Scores = cetapEntities.Composits.Where(x => x.VenueCode >= myYear.yearStart && x.DOT <= myYear.yearEnd).ToList();
+                var Scores = cetapEntities.Composits
+               .Join(cetapEntities.TestVenues,
+                   c => c.VenueCode,
+                   v => v.VenueCode,
+                   (c, v) => new { Composit = c, v.VenueType })
+               .Where(x => x.VenueType == "Remote")
+               .Select(x => x.Composit)
+                .ToList();
+
+                foreach (Composit score in Scores)
+                {
+                    CompositBDO comp = new CompositBDO();
+                    comp = Maps.CompositDALToCompositBDO(score);
+                    remoteScores.Add(comp);
+                }
+               // remoteScores = new ObservableCollection<CompositBDO>(Scores);
+
+            }
+                return remoteScores;
         }
         public ObservableCollection<CompositBDO> GetAllModeratedScores(string path)
         {

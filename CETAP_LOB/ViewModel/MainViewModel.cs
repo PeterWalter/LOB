@@ -32,8 +32,9 @@ namespace CETAP_LOB.ViewModel
     private LinkCollection _mylinks;
     private UserBDO _myuser;
     private IDataService _service;
+    private string myconnect;
 
-    public LinkCollection TitleLink
+        public LinkCollection TitleLink
     {
         get
         {
@@ -100,11 +101,15 @@ namespace CETAP_LOB.ViewModel
         _service = Service;
         string person = WindowsIdentity.GetCurrent().Name;
         User = new UserBDO();
-        
-        List<UserBDO> userBdoList = new List<UserBDO>();
-        User = _service.GetAllUsers().Where<UserBDO>((Func<UserBDO, bool>)(m => m.StaffID == person.Substring(3))).Select(v => v).FirstOrDefault();
+            bool mytest = _service.CheckForDatabase(ref myconnect);
+            List<UserBDO> userBdoList = new List<UserBDO>();
+            if (mytest) 
+            {
+                User = _service.GetAllUsers().Where(m => m.StaffID == person.Substring(3)).Select(v => v).FirstOrDefault();
+            }
+            
+         
         ApplicationSettings.Default.LOBUser = User.Name.Trim();
-     //       ApplicationSettings.Default.LOBUser = "CAROL";
             ApplicationSettings.Default.Save();
         InitializeModels();
     }
@@ -115,6 +120,7 @@ namespace CETAP_LOB.ViewModel
         TitleLink = new LinkCollection();
         CreateTitles();
         CreateMenu();
+     
         _service.GetIntakes();
     }
 
@@ -280,19 +286,26 @@ namespace CETAP_LOB.ViewModel
                     {
                         switch (ch2)
                         {
-                            case '1':
-                                Link link7 = new Link();
-                                link7.DisplayName = "Load and Process";
-                                link7.Source = new Uri("/View/Composite/CompositeView.xaml", UriKind.Relative);
-                                Link link8 = link7;
-                                linkGroup10.Links.Add(link8);
+                                case '1':
+                                    Link link20 = new Link();
+                                    link20.DisplayName = "Remotes";
+                                    link20.Source = new Uri("/View/Composite/RemotesView.xaml", UriKind.Relative);
+                                    Link link21 = link20;
+                                    linkGroup10.Links.Add(link21);
+                                    break;
+                                case '2':
+                                Link link22 = new Link();
+                                link22.DisplayName = "Load and Process";
+                                link22.Source = new Uri("/View/Composite/CompositeView.xaml", UriKind.Relative);
+                                Link link23 = link22;
+                                linkGroup10.Links.Add(link23);
                                 break;
-                            case '2':
-                                Link link9 = new Link();
-                                link9.DisplayName = "Edit and Reload";
-                                link9.Source = new Uri("/View/Composite/EditCompositeView.xaml", UriKind.Relative);
-                                Link link10 = link9;
-                                linkGroup10.Links.Add(link10);
+                            case '3':
+                                Link link24 = new Link();
+                                link24.DisplayName = "Edit and Reload";
+                                link24.Source = new Uri("/View/Composite/EditCompositeView.xaml", UriKind.Relative);
+                                Link link25 = link24;
+                                linkGroup10.Links.Add(link25);
                                 break;
                         }
                     }

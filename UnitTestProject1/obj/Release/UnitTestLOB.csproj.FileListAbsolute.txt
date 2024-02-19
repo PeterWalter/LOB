@@ -128,6 +128,6 @@ D:\projects\source code\LOB\UnitTestProject1\bin\Release\LinqStatistics.pdb
 D:\projects\source code\LOB\UnitTestProject1\bin\Release\LinqStatistics.xml
 D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTestLOB.csproj.AssemblyReference.cache
 D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTestLOB.csproj.CoreCompileInputs.cache
-D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTestLOB.csproj.CopyComplete
 D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTestProject1.dll
 D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTestProject1.pdb
+D:\projects\source code\LOB\UnitTestProject1\obj\Release\UnitTest.ED82CA3E.Up2Date

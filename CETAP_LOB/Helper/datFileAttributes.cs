@@ -33,7 +33,6 @@ namespace CETAP_LOB.Helper
     private string _ncs_ModifyFlag;
     private string _ncs_Errorflag;
     private bool _edited;
-  //      private QADatRecord _record;
 
     public string SName
     {
@@ -244,7 +243,7 @@ namespace CETAP_LOB.Helper
             }
             catch (Exception ex)
             {
-                throw ex;
+                throw ;
             }
         }
     public async Task readLineAsync()
@@ -269,7 +268,7 @@ namespace CETAP_LOB.Helper
       }
       catch (Exception ex)
       {
-        throw ex;
+        throw ;
       }
     }
 
