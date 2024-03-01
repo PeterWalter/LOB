@@ -178,7 +178,22 @@ namespace CETAP_LOB {
                 this["ScoreModerationFolder"] = value;
             }
         }
-        
+
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("D:/")]
+        public string RemotesReportsFolder
+        {
+            get
+            {
+                return ((string)(this["RemotesReportsFolder"]));
+            }
+            set
+            {
+                this["RemotesReportsFolder"] = value;
+            }
+        }
+
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("D:/")]

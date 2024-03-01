@@ -178,5 +178,9 @@ namespace CETAP_LOB.Model
         ObservableCollection<ForDuplicatesBarcodesBDO> GetBatchesInQueue();
         bool DuplicateReportGeneration(List<ForDuplicatesBarcodesBDO> Duplicates, string filename);
         List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords);
+       
+        // Remotes reports queries
+        ObservableCollection<CompositBDO> GetAllRemoteScoresByIntakeYear(IntakeYearsBDO intakeYear);
+        void GenerateIndividualReport(CompositBDO selectedWriter);
     }
 }

@@ -6600,6 +6600,15 @@ namespace CETAP_LOB.Model
 
             return LogCollect;
         }
-      
+
+        public ObservableCollection<CompositBDO> GetAllRemoteScoresByIntakeYear(IntakeYearsBDO intakeYear)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void GenerateIndividualReport(CompositBDO selectedWriter)
+        {
+            throw new NotImplementedException();
+        }
     }
 }
