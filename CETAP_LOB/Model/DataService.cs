@@ -28,14 +28,31 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Transactions;
 using CETAP_LOB.Model.Composite;
-using System.Windows.Input;
-using DocumentFormat.OpenXml.Bibliography;
-using CETAP_LOB.View.Composite;
-using DocumentFormat.OpenXml.Office.CustomXsn;
+using Syncfusion.Licensing;
+using Syncfusion.Pdf;
+using Syncfusion.Pdf.Graphics;
+using Syncfusion.Drawing;
+using Syncfusion.Pdf.Grid;
+using DocumentFormat.OpenXml.Packaging;
+using Syncfusion.Pdf.Security;
+//using Syncfusion.Pdf.Grid;
+//using Syncfusion.Licensing;
+//using Syncfusion.Pdf.Security;
+//using Syncfusion.Drawing;
+//using Syncfusion.Drawing;
+
+//using System.Windows.Input;
+//using DocumentFormat.OpenXml.Bibliography;
+//using CETAP_LOB.View.Composite;
+//using DocumentFormat.OpenXml.Office.CustomXsn;
+//using DocumentFormat.OpenXml.Packaging;
+//using DocumentFormat.OpenXml.Wordprocessing;
+//using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
 // using System.Windows.Forms;
 
 namespace CETAP_LOB.Model
 {
+
     public class DataService : IDataService
     {
         private static readonly log4net.ILog log = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -68,6 +85,7 @@ namespace CETAP_LOB.Model
         private ObservableCollection<CompositBDO> ModeratedScores;
         private ObservableCollection<QADatRecord> QaData;
         public ObservableCollection<BenchMarkLevelsBDO> benchmarkLevels;
+
         public bool CheckForDatabase(ref string message)
         {
             bool ret = false;
@@ -6603,12 +6621,482 @@ namespace CETAP_LOB.Model
 
         public ObservableCollection<CompositBDO> GetAllRemoteScoresByIntakeYear(IntakeYearsBDO intakeYear)
         {
-            throw new NotImplementedException();
+            ObservableCollection<CompositBDO> remoteScores = new ObservableCollection<CompositBDO>();
+
+            using (CETAPEntities cetapEntities = new CETAPEntities())
+            {
+                //   List<TestVenue> venues = cetapEntities.TestVenues.Where(x => x.VenueType == "Remote").ToList();
+
+                //  var Scores = cetapEntities.Composits.Where(x => x.VenueCode >= myYear.yearStart && x.DOT <= myYear.yearEnd).ToList();
+                var Scores = cetapEntities.Composits
+               .Join(cetapEntities.TestVenues,
+                   c => c.VenueCode,
+                   v => v.VenueCode,
+                   (c, v) => new { Composit = c, v.VenueType })
+               .Where(x => x.VenueType == "Remote" && x.Composit.DOT > intakeYear.yearStart && x.Composit.DOT < intakeYear.yearEnd)
+               .Select(x => x.Composit)
+                .ToList();
+
+                foreach (Composit score in Scores)
+                {
+                    CompositBDO comp = new CompositBDO();
+                    comp = Maps.CompositDALToCompositBDO(score);
+                    remoteScores.Add(comp);
+                }
+                // remoteScores = new ObservableCollection<CompositBDO>(Scores);
+
+            }
+            return remoteScores;
         }
 
         public void GenerateIndividualReport(CompositBDO selectedWriter)
         {
-            throw new NotImplementedException();
+            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXxfdHVWR2FZUENwXkc=");
+
+            bool hasvalues = false;
+            //  string appRootPath = AppDomain.CurrentDomain.BaseDirectory;
+           // string sourceFilePath = "template.docx";
+            //  string filePath = Path.Combine(appRootPath, "template.docx");
+            string mypassword;
+
+            if (selectedWriter.SAID is null)
+            {
+                mypassword = selectedWriter.ForeignID;
+            }
+            else
+            {
+                mypassword = selectedWriter.SAID.ToString();
+            }
+
+            if (String.IsNullOrEmpty(mypassword))
+            {
+                hasvalues = false;
+               // return hasvalues;
+            }
+
+            var RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
+
+            string destinationFileName = selectedWriter.Name.Trim() + "_" + selectedWriter.Surname.Trim() + ".pdf";
+
+            string destinationFilePath = Path.Combine(RemotesFolder, destinationFileName.ToLower());
+
+            if (File.Exists(destinationFilePath))
+            {
+                // File exists, do something
+                File.Delete(destinationFilePath);
+            }
+
+
+           
+
+            string toWhom = "Dear " + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(selectedWriter.Name);
+            string txtSurname = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(selectedWriter.Surname);
+            string txtName = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(selectedWriter.Name);
+            string txtDate = selectedWriter.DOT.ToString("yyyy/MM/dd");
+            string txtVenue = selectedWriter.VenueName;
+            string txtNbt = selectedWriter.RefNo.ToString();
+            string txtSaid = mypassword;
+
+            int? al = selectedWriter.ALScore;
+            int? ql = selectedWriter.QLScore;
+            int? mat = selectedWriter.MATScore;
+
+
+            using (PdfDocument doc = new PdfDocument())
+            {
+                // add  a page
+                PdfPage page = doc.Pages.Add();
+                PdfGraphics graphics = page.Graphics;
+                PointF iconLocation = new PointF(1, 1);
+ 
+                // add text
+                PdfFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16, PdfFontStyle.Bold);
+                FileStream imageStream = new FileStream("nbt.png", FileMode.Open, FileAccess.Read);
+                PdfBitmap con = new PdfBitmap(imageStream);
+                graphics.DrawImage(con, iconLocation.X,iconLocation.Y);
+
+                graphics.DrawString("NBT RESULTS", font,PdfBrushes.Black,iconLocation.X + 200, iconLocation.Y + 130);
+
+                font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
+                graphics.DrawString(toWhom, font,PdfBrushes.Black,iconLocation.X, iconLocation.Y + 180);
+
+
+                font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
+                graphics.DrawString("Herewith Confirmation of your NBT results", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 220); ;
+
+                //create a grid 
+                PdfGrid parentGrid = new PdfGrid();
+                PdfGridCellStyle cellStyle = new PdfGridCellStyle();
+                PdfGridCellStyle cellStyle1 = new PdfGridCellStyle();
+                PdfGridCellStyle cellStyle2 = new PdfGridCellStyle();
+                cellStyle.BackgroundBrush = PdfBrushes.Gray;
+
+                //cellStyle.TextBrush = PdfBrushes.White;
+                cellStyle.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
+                cellStyle1.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 14, PdfFontStyle.Bold);
+                cellStyle2.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 10, PdfFontStyle.Bold);
+
+                parentGrid.Columns.Add(4);
+                parentGrid.Columns[0].Width = 200f;
+                parentGrid.Columns[1].Width = 100f;
+                parentGrid.Columns[2].Width = 100f;
+                parentGrid.Columns[3].Width = 100f;
+
+                cellStyle1.TextBrush = PdfBrushes.Black;
+                cellStyle2.TextBrush = PdfBrushes.Black;
+                cellStyle1.BackgroundBrush = PdfBrushes.White;
+               // parentGrid.Style = cellStyle;
+               // parentGrid.Rows[0].Cells[0].Style = cellStyle;
+
+                parentGrid.Headers.Add(1);
+                PdfStringFormat stringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
+                PdfGridRow header = parentGrid.Headers[0];
+                header.Height = 50f;
+                header.ApplyStyle(cellStyle);
+                // add columns
+                PdfGridRow row1 = parentGrid.Rows.Add();
+                PdfGridRow row2 = parentGrid.Rows.Add();
+                parentGrid.Rows[1].Height = 180f;
+                //parentGrid.Rows[1].Height = 25f;
+                header.Cells[0].Value = "Details";
+                header.Cells[0].StringFormat = stringFormat;
+                header.Cells[1].Value = "Academic Literacy (AL Score)";
+                header.Cells[1].StringFormat = stringFormat;
+                header.Cells[2].Value = "Quantitative Literacy (QL Score)";
+                header.Cells[2].StringFormat = stringFormat;
+                header.Cells[3].Value = "Mathematics";
+                header.Cells[3].StringFormat = stringFormat;
+
+                row2.Cells[0].Style = cellStyle2;
+                row2.Cells[1].Value = al.ToString();
+                row2.Cells[1].StringFormat = stringFormat;
+                row2.Cells[1].Style = cellStyle1;
+                //row2.ApplyStyle(cellStyle);
+                row2.Cells[2].Value = ql.ToString();
+                row2.Cells[2].StringFormat = stringFormat;
+                row2.Cells[2].Style = cellStyle1;
+                row2.Cells[3].Value = mat.ToString();
+                row2.Cells[3].StringFormat = stringFormat;
+                row2.Cells[3].Style = cellStyle1;
+
+                //add child grid
+                PdfGrid childGrid = new PdfGrid();
+                childGrid.Style.BorderOverlapStyle = parentGrid.Style.BorderOverlapStyle;
+                //childGrid.Style.BackgroundBrush.Equals(parentGrid.Style.BackgroundBrush);
+                childGrid.Columns.Add(1);
+                childGrid.Columns.Add(2);
+                childGrid.Columns[0].Width = 100f;
+                childGrid.Columns[1].Width = 100f;
+
+                // add child rows
+                PdfGridRow childRow1 = childGrid.Rows.Add();
+                childRow1.Height = 30;
+                PdfGridRow childRow2 = childGrid.Rows.Add();
+                childRow2.Height = 30;
+                PdfGridRow childRow3 = childGrid.Rows.Add();
+                childRow3.Height = 30;
+                PdfGridRow childRow4 = childGrid.Rows.Add();
+                childRow4.Height = 30;
+                PdfGridRow childRow5 = childGrid.Rows.Add();
+                childRow5.Height = 30;
+                PdfGridRow childRow6 = childGrid.Rows.Add();
+                childRow6.Height = 30;
+
+                childRow1.Cells[0].Value = "NBT Reference number:";
+                childRow1.Cells[1].Value = txtNbt;
+                childRow2.Cells[0].Value = "ID/Passport number:";
+                childRow2.Cells[1].Value = txtSaid;
+                childRow3.Cells[0].Value = "Surname:";
+                childRow3.Cells[1].Value = txtSurname;
+                childRow4.Cells[0].Value = "First Name:";
+                childRow4.Cells[1].Value = txtName;
+                childRow5.Cells[0].Value = "Test Date:";
+                childRow5.Cells[1].Value = txtDate;
+                childRow6.Cells[0].Value = "Venue:";
+                childRow6.Cells[1].Value = txtVenue;
+
+                //PDF grid cell
+                PdfGridCell cell = childGrid.Rows[0].Cells[0];
+                childGrid.Rows[0].Cells[1].StringFormat = stringFormat;
+                childGrid.Rows[1].Cells[0].StringFormat = stringFormat;
+                childGrid.Rows[1].Cells[1].StringFormat = stringFormat;
+                childGrid.Rows[2].Cells[0].StringFormat = stringFormat;
+                childGrid.Rows[2].Cells[1].StringFormat = stringFormat;
+                childGrid.Rows[3].Cells[0].StringFormat = stringFormat;
+                childGrid.Rows[3].Cells[1].StringFormat = stringFormat;
+                childGrid.Rows[4].Cells[0].StringFormat = stringFormat;
+                childGrid.Rows[4].Cells[1].StringFormat = stringFormat;
+                childGrid.Rows[5].Cells[0].StringFormat = stringFormat;
+                childGrid.Rows[5].Cells[1].StringFormat = stringFormat;
+
+                //Set cell style.
+                //cell.Style.BackgroundBrush = new PdfSolidBrush(Color.SkyBlue);
+
+                cell.StringFormat = stringFormat;
+                //childGrid.Rows[0].Cells[0].Style = cellStyle;
+
+                parentGrid.Rows[1].Cells[0].Value = childGrid;
+                parentGrid.Rows[1].Cells[0].StringFormat = stringFormat;
+                //parentGrid.Rows[1].Cells[2].Value = al.ToString();
+                parentGrid.Rows[1].Cells[0].Style.CellPadding = new PdfPaddings(0, 0, 0, 0);
+                //parentGrid.Rows[1].Cells[0].Style.Borders = new PdfBorders(PdfBorderType.None);
+
+
+                parentGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable5DarkAccent5);
+                PdfGridStyle gridStyle = new PdfGridStyle();
+                parentGrid.Style = gridStyle;
+
+                childGrid.ApplyBuiltinStyle(PdfGridBuiltinStyle.GridTable2Accent4);
+                PdfGridStyle gridStyle1 = new PdfGridStyle();
+                childGrid.Style = gridStyle1;
+
+                //draw parent grid
+                parentGrid.Draw(page,iconLocation.X,iconLocation.Y + 240);
+
+                font = new PdfStandardFont(PdfFontFamily.Helvetica, 12);
+                graphics.DrawString("Centre for Educational Accessments (CEA) ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 550);
+                graphics.DrawString("Level 4, Hoerikwaggo building, ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 565);
+                graphics.DrawString("North Lane, Upper Campus ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 580);
+                graphics.DrawString("University of Cape Town, Private Bag ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 595);
+                graphics.DrawString("Rondebosch 7701, South Africa ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 610);
+
+
+                font = new PdfStandardFont(PdfFontFamily.Helvetica, 10, PdfFontStyle.Bold);
+                graphics.DrawString("Helpdesk contact number is (021) 650-3523 and email is nbt@uct.ac.za", font,PdfBrushes.Black, iconLocation.X, iconLocation.Y + 660);
+                
+
+                FileStream imageStream1 = new FileStream("cea.png", FileMode.Open, FileAccess.Read);
+                PdfBitmap con1 = new PdfBitmap(imageStream1);
+                graphics.DrawImage(con1, iconLocation.X, iconLocation.Y + 680);
+
+
+                //Document security.
+                PdfSecurity security = doc.Security;
+                //Specifies key size and encryption algorithm.
+                security.KeySize = PdfEncryptionKeySize.Key128Bit;
+                security.Algorithm = PdfEncryptionAlgorithm.RC4;
+                security.OwnerPassword = "nbt";
+                //It allows printing and accessibility copy content.
+                security.Permissions = PdfPermissionsFlags.Print | PdfPermissionsFlags.AccessibilityCopyContent;
+                security.UserPassword = mypassword;
+
+
+                // save document
+                MemoryStream stream = new MemoryStream();
+                doc.Save(stream);
+                doc.Close(true);
+
+                stream.Position = 0;
+                File.WriteAllBytes(destinationFilePath, stream.ToArray());
+            }
+
+
+
+            // SizeF clientSize = page.GetClientSize();
+
+            //             var y = clientSize.Height;
+            //            var x = clientSize.Width;
+
+            //SizeF iconSize = new SizeF(con.Width, con.Height);
+            //            PdfImage icon = new PdfBitmap(imageStream);
+            //            SizeF iconSize = new SizeF(icon.Width, icon.Height);
+
+            // draw the image in the page
+            //PdfGraphics graphics = page.Graphics;
+            //PointF iconLocation = new PointF(1, 1);
+            //PointF textLocation = new PointF(10, 10);
+            //graphics.DrawImage(icon, 1,1);
+            ////icon.Draw(page, new PointF(10, 10));
+
+
+
+
+
+
+            ////text.StringFormat = new PdfStringFormat(PdfTextAlignment.Center);
+            ////result = text.Draw(page, new PointF(clientSize.Width - 25, iconLocation.Y + 10));
+            ////create a grid 
+            //PdfGrid parentGrid = new PdfGrid();
+            //PdfGridCellStyle cellStyle = new PdfGridCellStyle();
+            //PdfGridCellStyle cellStyle1 = new PdfGridCellStyle();
+            //cellStyle.BackgroundBrush = PdfBrushes.Gray;
+            ////cellStyle.TextBrush = PdfBrushes.White;
+            //cellStyle.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 10,PdfFontStyle.Bold);
+            //cellStyle1.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
+ 
+
+
+
+           
+
+            
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+            //FileStream imageStream1 = new FileStream("cea.png", FileMode.Open, FileAccess.Read);
+            //PdfImage icon1 = new PdfBitmap(imageStream1);
+            //SizeF iconSize1 = new SizeF(icon1.Width, icon1.Height);
+
+            //// draw the image in the page
+            //PdfGraphics graphics1 = page.Graphics;
+            //PointF iconLocation1 = new PointF(iconLocation.X, iconLocation.Y + 460);
+            //graphics1.DrawImage(icon1, iconLocation1);
+
+            ////Document security.
+            //PdfSecurity security = doc.Security;
+            ////Specifies key size and encryption algorithm.
+            //security.KeySize = PdfEncryptionKeySize.Key128Bit;
+            //security.Algorithm = PdfEncryptionAlgorithm.RC4;
+            //security.OwnerPassword = "nbt";
+            ////It allows printing and accessibility copy content.
+            //security.Permissions = PdfPermissionsFlags.Print | PdfPermissionsFlags.AccessibilityCopyContent;
+            //security.UserPassword = password;
+
+
+
+            //        hasvalues = true;
+            //        stream.Position = 0;
+            //        File.WriteAllBytes(destinationFilePath, stream.ToArray()); 
+
+
+            //            //File.Copy(sourceFilePath, destinationFilePath, true);
+
+            //            //using (WordprocessingDocument sourceDoc = WordprocessingDocument.Open(sourceFilePath, true))
+            //            //{
+            //            //    using (WordprocessingDocument copiedDoc = WordprocessingDocument.Open(destinationFilePath, true))
+            //            //    {
+            //            //        // Replace text in the main document part
+            //            //        ReplaceText(copiedDoc, "Bianca", selectedWriter.Name); // use name from database
+
+            //            //        // Access the first table in the document (you may need to adjust this based on your document structure)
+            //            //        Table table = copiedDoc.MainDocumentPart.Document.Body.Elements<Table>().FirstOrDefault();
+
+            //            //        if (table != null)
+            //            //        {
+            //            //            // Replace values in certain cells of the table
+            //            //            ReplaceTableCellText(table, "93100", selectedWriter.RefNo.ToString(), 1, 1);//NBT number
+            //            //            ReplaceTableCellText(table, "ILNE", selectedWriter.Name, 4, 1); // First Name
+            //            //            ReplaceTableCellText(table, "DU TOIT", selectedWriter.Surname, 3, 1); // Surname
+            //            //            ReplaceTableCellText(table, "ST PATRICKS COLLEGE", selectedWriter.VenueName, 6, 1); // Venue
+            //            //            ReplaceTableCellText(table, "DOT", selectedWriter.DOT.ToString("yyyy/MM/dd"), 5, 1); // "DateTime.Now.ToString("yyyy/MM/dd"), 5,1); // Date of Test
+            //            //            ReplaceTableCellText(table, "9902190245082", mypassword, 2, 1); // National Id or Passport Number
+            //            //            ReplaceTableCellText(table, "75", Convert.ToString(selectedWriter.ALScore), 1, 2); // AL
+            //            //            ReplaceTableCellText(table, "70", Convert.ToString(selectedWriter.QLScore), 1, 3); // QL  
+            //            //            ReplaceTableCellText(table, "61", Convert.ToString(selectedWriter.MATScore), 1, 4); // Math
+            //            //                                                                                                // Add more ReplaceTableCellText calls as needed
+
+
+            //            //            // Save the modified document
+            //            //            copiedDoc.Save();
+
+
+            //            //        }
+            //            //    }
+            //            //    //// Initialize Word Application
+            //            //    //System.Windows.Application wordApp = new Application();
+
+            //            //    //// Open the Word document
+            //            //    //Document doc = wordApp.Documents.Open(@"C:\Path\To\Your\WordDocument.docx");
+
+            //            //    //// Specify the output PDF file path
+            //            //    //object outputFileName = @"C:\Path\To\Your\Output\PDF\Document.pdf";
+            //            //    //object fileFormat = WdSaveFormat.wdFormatPDF;
+
+            //            //    //// Save the document as PDF
+            //            //    //doc.SaveAs(ref outputFileName, ref fileFormat);
+
+            //            //    //// Close the Word document
+            //            //    //doc.Close();
+
+            //            //    //Document forPdf = new Document();
+
+            //            //    //string fname = Path.GetFileNameWithoutExtension(destinationFilePath);
+            //            //    ////Load a sample Word document
+
+            //            //    //string fnamepdf = fname + ".pdf";
+
+            //            //    //forPdf.LoadFromFile(destinationFilePath);
+
+            //            //    //string pdfFolder = Path.Combine(RemotesFolder, fnamepdf);
+            //            //    //if (File.Exists(pdfFolder))
+            //            //    //{
+            //            //    //    // File exists, do something
+            //            //    //    File.Delete(pdfFolder);
+            //            //    //}
+
+            //            //    ////Create a ToPdfParameterList instance
+            //            //    //ToPdfParameterList parameters = new ToPdfParameterList();
+
+            //            //    ////Set open password and permission password for PDF
+            //            //    //string openPsd = "CEA-nbt";
+            //            //    //string permissionPsd = mypassword;
+            //            //    //parameters.PdfSecurity.Encrypt(openPsd, permissionPsd, PdfPermissionsFlags.Default, PdfEncryptionKeySize.Key128Bit);
+
+            //            //    ////Save the Word document to PDF with password
+
+            //            //    //forPdf.SaveToFile(pdfFolder, parameters);
+            //            //}
+
+            //           // return hasvalues;
         }
+        //        // Replace text in the document
+        //        //private static void ReplaceText(WordprocessingDocument doc, string oldValue, string newValue)
+        //        //{
+        //        //    foreach (var textElement in doc.MainDocumentPart.Document.Descendants<Text>())
+        //        //    {
+        //        //        if (textElement.Text.Contains(oldValue))
+        //        //        {
+        //        //            textElement.Text = textElement.Text.Replace(oldValue, newValue);
+        //        //        }
+        //        //    }
+        //        //}
+
+        //        // Replace text in a specific cell of the table
+        //        //private static void ReplaceTableCellText(Table table, string oldValue, string newValue, int rowIndex, int colIndex)
+        //        //{
+        //        //    var cell = table.Elements<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAtOrDefault(rowIndex)?.Elements<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAtOrDefault(colIndex);
+
+        //        //    if (cell != null)
+        //        //    {
+        //        //        foreach (var textElement in cell.Descendants<Text>())
+        //        //        {
+        //        //            if (textElement.Text.Contains(oldValue))
+        //        //            {
+        //        //                textElement.Text = textElement.Text.Replace(oldValue, newValue);
+        //        //            }
+        //        //        }
+        //        //    }
+        //        //}
+
     }
 }

@@ -22,6 +22,7 @@ namespace CETAP_LOB
             
             Language = XmlLanguage.GetLanguage(CultureInfo.CurrentCulture.IetfLanguageTag);
             InitializeComponent();
+
             IDataService Service = new DataService();
             _service = Service;
 

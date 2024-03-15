@@ -41,7 +41,7 @@
          BorderThickness="1"
          HorizontalScrollBarVisibility="Visible"
          ItemsSource="{Binding Remotes.Composit1, Source={StaticResource Locator}}"
-         SelectedItem="{Binding Remotes.SelectedWriter, Mode=TwoWay, Source={StaticResource Locator}}"
+         SelectedItem="{Binding Remotes.SelectedWriter, Source={StaticResource Locator}}"
          SelectedValue="{Binding Remotes.SelectedWriter.Barcode, Source={StaticResource Locator}}"
          SelectionMode="Extended"
          VerticalScrollBarVisibility="Visible" MaxWidth="1050" MaxHeight="700" Padding="0,0,5,0" HorizontalContentAlignment="Stretch" Width="1020">

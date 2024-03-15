@@ -13,6 +13,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using Syncfusion.Licensing;
 
 namespace CETAP_LOB.ViewModel.composite
 {
@@ -166,6 +167,8 @@ namespace CETAP_LOB.ViewModel.composite
 
         public RemotesViewModel(IDataService Service)
         {
+            SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXxfdHVWR2FZUENwXkc=");
+
             _service = Service;
             InitializeModels();
             RegisterCommands();
@@ -186,7 +189,9 @@ namespace CETAP_LOB.ViewModel.composite
 
         private void RegisterCommands()
         {
-            IndividualReportCommand = new RelayCommand((Action)(() => GenerateIndividualReport()), (Func<bool>)(() => canGenerate()));
+          //   DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => IsDataClean());
+            IndividualReportCommand = new RelayCommand(() => GenerateIndividualReport(),() => canGenerate());
+           // IndividualReportCommand = new RelayCommand((Action)(() => GenerateIndividualReport()), (Func<bool>)(() => canGenerate()));
             SelectionChangedCommand = new RelayCommand<ObservableCollection<CompositBDO>>((Action<ObservableCollection<CompositBDO>>)(SelectedWriters =>
             {
                 if (SelectedWriters == null)
@@ -212,12 +217,12 @@ namespace CETAP_LOB.ViewModel.composite
 
         private void GenerateIndividualReport()
         {
-            if (canGenerate())
-            {
-                _service.GenerateIndividualReport(SelectedWriter);
+         _service.GenerateIndividualReport(SelectedWriter);
                 SelectedWriter = null;
+           
                 ModernDialog.ShowMessage("Word Document report has been generated", " Selected Record!!!", MessageBoxButton.OK);
-            }
+
+        
         }
 
         private bool canGenerate()

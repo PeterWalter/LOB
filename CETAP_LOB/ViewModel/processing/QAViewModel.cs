@@ -22,6 +22,7 @@ using System.Reflection.Emit;
 
 namespace CETAP_LOB.ViewModel.processing
 {
+
     public class QAViewModel : ViewModelBase
     {
         private string Duplicatefile = "";
@@ -311,8 +312,8 @@ public IntakeYearsBDO Intake_Year
     private void InitializeModels()
     {
       Folder = ApplicationSettings.Default.QAFolder;
-            //  _intake_year = _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
-            _intake_year = _service.GetIntakeRecord(2024);
+              _intake_year = _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
+           // _intake_year = _service.GetIntakeRecord(2024);
       _service.ReadEndofDatFile();
       _myDOT = DateTime.Now;
       Selectfolder();

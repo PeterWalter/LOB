@@ -28,6 +28,7 @@ namespace CETAP_LOB.ViewModel
     public const string QAFolderPropertyName = "QAFolder";
     public const string EditFolderPropertyName = "EditFolder";
     public const string ScanFolderPropertyName = "ScanFolder";
+    public const string RemotesFolderPropertyName = "RemotesFolder";
     private bool IsSet;
     private List<IntakeYearsBDO> _myPeriods;
     private IntakeYearsBDO _intakerecord;
@@ -39,6 +40,7 @@ namespace CETAP_LOB.ViewModel
     private string _myQAFolder;
     private string _editFolder;
     private string _scanfolder;
+    private string _remotesFolder;
     private IDataService _service;
 
     public RelayCommand ScanFolderBowserCommand { get; private set; }
@@ -52,6 +54,8 @@ namespace CETAP_LOB.ViewModel
     public RelayCommand FilesForScoringFolderCommand { get; private set; }
 
     public RelayCommand ScoreFolderCommand { get; private set; }
+
+ public RelayCommand RemotesFolderCommand { get; private set; }
 
     public RelayCommand ScoreModerationFolderCommand { get; private set; }
 
@@ -139,7 +143,24 @@ namespace CETAP_LOB.ViewModel
       }
     }
 
-    public string FilesForScoringFolder
+        public string RemotesFolder
+        {
+            get
+            {
+                return _remotesFolder;
+            }
+            set
+            {
+                if (_remotesFolder == value)
+                    return;
+                _remotesFolder = value;
+                ApplicationSettings.Default.RemotesReportsFolder = _remotesFolder;
+                ApplicationSettings.Default.Save();
+                RaisePropertyChanged("RemotesFolder");
+            }
+        }
+
+        public string FilesForScoringFolder
     {
       get
       {
@@ -240,7 +261,8 @@ namespace CETAP_LOB.ViewModel
       FilesForScoringModerationFolder = ApplicationSettings.Default.ModerationFilesForScoring;
       ScoreModerationFolder = ApplicationSettings.Default.ScoreModerationFolder;
       ScoreFolder = ApplicationSettings.Default.ScoreFolder;
-      _intakeYear = ApplicationSettings.Default.IntakeYear;
+            RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
+            _intakeYear = ApplicationSettings.Default.IntakeYear;
     }
 
     private void RegisterCommands()
@@ -249,7 +271,8 @@ namespace CETAP_LOB.ViewModel
       ScanFolderBowserCommand = new RelayCommand(new Action(SelectScanFolder));
       QAFolderBowserCommand = new RelayCommand(new Action(SelectQAFolder));
       ScoreFolderCommand = new RelayCommand(new Action(SelectScoreFolder));
-      FilesForScoringFolderCommand = new RelayCommand(new Action(SelectFilesForScoringFolder));
+            RemotesFolderCommand = new RelayCommand(new Action(SelectRemotesFolder));
+            FilesForScoringFolderCommand = new RelayCommand(new Action(SelectFilesForScoringFolder));
       FilesForScoringFolderModerationCommand = new RelayCommand(new Action(SelectFilesForScoringModerationFolder));
       ScoreModerationFolderCommand = new RelayCommand(new Action(SelectScoreModerationFolder));
       _myPeriods = new List<IntakeYearsBDO>();
@@ -257,7 +280,19 @@ namespace CETAP_LOB.ViewModel
       _intakerecord = _myPeriods.Where<IntakeYearsBDO>((Func<IntakeYearsBDO, bool>) (x => x.Year == _intakeYear)).FirstOrDefault<IntakeYearsBDO>();
     }
 
-    private void SelectScoreFolder()
+        private void SelectRemotesFolder()
+        {
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
+            folderBrowserDialog.SelectedPath = RemotesFolder;
+            if (folderBrowserDialog.ShowDialog() != DialogResult.OK)
+                return;
+            RemotesFolder = folderBrowserDialog.SelectedPath;
+            ApplicationSettings.Default.RemotesReportsFolder = RemotesFolder;
+            ApplicationSettings.Default.Save();
+        }
+
+        private void SelectScoreFolder()
     {
       FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
       ScanFolder = ApplicationSettings.Default.ScoreFolder;
