@@ -42,7 +42,7 @@
          HorizontalScrollBarVisibility="Visible"
          ItemsSource="{Binding Remotes.Composit1, Source={StaticResource Locator}}"
          SelectedItem="{Binding Remotes.SelectedWriter, Source={StaticResource Locator}}"
-         SelectedValue="{Binding Remotes.SelectedWriter.Barcode, Source={StaticResource Locator}}"
+         SelectedValue="{Binding Remotes.SelectedWriter, Source={StaticResource Locator}}"
          SelectionMode="Extended"
          VerticalScrollBarVisibility="Visible" MaxWidth="1050" MaxHeight="700" Padding="0,0,5,0" HorizontalContentAlignment="Stretch" Width="1020">
             <DataGrid.BorderBrush>
@@ -50,7 +50,7 @@
             </DataGrid.BorderBrush>
             <!--<i:Interaction.Triggers>
              <i:EventTrigger EventName="MouseLeftButtonDown">
-                 <Custom:EventToCommand Command="{Binding SelectionChangedCommand, Mode=OneWay}" CommandParameter="{Binding SelectedWriters, ElementName=dataGrid}" />
+                 <Custom:EventToCommand Command="{Binding SelectionChangedCommand, Mode=OneWay}" CommandParameter="{Binding Remotes.SelectedWriter, ElementName=dataGrid}" />
              </i:EventTrigger>
          </i:Interaction.Triggers>-->
         </DataGrid>

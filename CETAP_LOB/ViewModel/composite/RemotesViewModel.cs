@@ -24,7 +24,7 @@ namespace CETAP_LOB.ViewModel.composite
         public const string PeriodsPropertyName = "Periods";
         //public const string PagesPropertyName = "Pages";
         //public const string PagePropertyName = "Page";
-        public const string SelectedWritersPropertyName = "SelectedWriters";
+      //  public const string SelectedWritersPropertyName = "SelectedWriters";
         public const string ScoreFolderPropertyName = "ScoreFolder";
         public const string SelectedWriterPropertyName = "SelectedWriter";
         public const string WritersCompositPropertyName = "WritersComposit";
@@ -192,11 +192,11 @@ namespace CETAP_LOB.ViewModel.composite
           //   DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => IsDataClean());
             IndividualReportCommand = new RelayCommand(() => GenerateIndividualReport(),() => canGenerate());
            // IndividualReportCommand = new RelayCommand((Action)(() => GenerateIndividualReport()), (Func<bool>)(() => canGenerate()));
-            SelectionChangedCommand = new RelayCommand<ObservableCollection<CompositBDO>>((Action<ObservableCollection<CompositBDO>>)(SelectedWriters =>
+            SelectionChangedCommand = new RelayCommand<ObservableCollection<CompositBDO>>((Action<ObservableCollection<CompositBDO>>)(SelectedWriter =>
             {
-                if (SelectedWriters == null)
+                if (SelectedWriter == null)
                     return;
-                Composit1 = SelectedWriters;
+                Composit1 = SelectedWriter;
             }));
         }
 
