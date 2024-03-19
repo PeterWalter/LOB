@@ -34,17 +34,18 @@
         </Grid.RowDefinitions>
         <DataGrid
          x:Name="dataGrid"
-         Grid.Row="1"
-         Grid.RowSpan="2"
+         Grid.Row="2"
          Grid.Column="1"
-         Margin="70,0,229,0"
+         Margin="5,0,337,0"
          BorderThickness="1"
          HorizontalScrollBarVisibility="Visible"
          ItemsSource="{Binding Remotes.Composit1, Source={StaticResource Locator}}"
          SelectedItem="{Binding Remotes.SelectedWriter, Source={StaticResource Locator}}"
          SelectedValue="{Binding Remotes.SelectedWriter, Source={StaticResource Locator}}"
          SelectionMode="Extended"
-         VerticalScrollBarVisibility="Visible" MaxWidth="1050" MaxHeight="700" Padding="0,0,5,0" HorizontalContentAlignment="Stretch" Width="1020">
+            IsTextSearchEnabled="True"
+            IsTextSearchCaseSensitive="False"
+         VerticalScrollBarVisibility="Visible" MaxWidth="1050" MaxHeight="700" Padding="0,0,5,0" HorizontalContentAlignment="Stretch">
             <DataGrid.BorderBrush>
                 <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
             </DataGrid.BorderBrush>
@@ -134,5 +135,10 @@
 
 
         </Grid>
+        <StackPanel Grid.Column="1" Grid.Row="1" Orientation="Horizontal" Margin="56,0,0,0">
+            <Label Content="Search record by name, Surname or NBT Number" VerticalAlignment="Center" Margin="5,0,5,0" FontSize="16" Width="368" Height="28"/>
+            <TextBox Text="{Binding SearchString, UpdateSourceTrigger = PropertyChanged}" 
+                     TextWrapping="Wrap" Width="146" VerticalAlignment="Center" Margin="10,0,5,0" FontSize="14" Height="28" HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </UserControl>

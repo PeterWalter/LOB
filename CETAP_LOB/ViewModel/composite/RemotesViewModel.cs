@@ -14,6 +14,9 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 using Syncfusion.Licensing;
+using System.ComponentModel;
+using System.Windows.Data;
+using System.Runtime.CompilerServices;
 
 namespace CETAP_LOB.ViewModel.composite
 {
@@ -30,7 +33,7 @@ namespace CETAP_LOB.ViewModel.composite
         public const string WritersCompositPropertyName = "WritersComposit";
         public const string Composit1PropertyName = "Composit1";
         public const string NBTScoresPropertyName = "NBTScores";
-
+        public const string SearchStringPropertyName = "SearchString";
         //     public string RemotesFolder;
         //private const int RecordsLength = 5000;
         //private int recPage;
@@ -46,7 +49,7 @@ namespace CETAP_LOB.ViewModel.composite
         private ObservableCollection<CompositBDO> _mycomposit;
         private ObservableCollection<CompositBDO> _myscores;
         private IDataService _service;
-
+        private string _searchString;
         public RelayCommand LoadNBTCommand { get; private set; }
 
         //public RelayCommand LoadUpdatesCommand { get; private set; }
@@ -73,6 +76,31 @@ namespace CETAP_LOB.ViewModel.composite
 
         public IIntelliboxResultsProvider ResultsProvider { get; private set; }
 
+        public string SearchString
+        {
+            get
+            {
+                return _searchString;
+            }
+            set
+            {
+                if (_searchString == value)
+                    return;
+                _searchString = value;
+                RaisePropertyChanged("SearchString");
+                ItemsView.Refresh();
+            }
+        }
+        private ICollectionView _itemsView;
+        public ICollectionView ItemsView
+        {
+            get
+            {
+                return _itemsView;
+            }
+
+        }
+
         public int TotalRec
         {
             get
@@ -87,6 +115,7 @@ namespace CETAP_LOB.ViewModel.composite
                 RaisePropertyChanged("TotalRec");
             }
         }
+
 
         public IntakeYearsBDO IntakeYear
         {
@@ -185,8 +214,24 @@ namespace CETAP_LOB.ViewModel.composite
             Composit1 = new ObservableCollection<CompositBDO>();
             RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
             Composit1 = _service.GetAllRemoteScoresByIntakeYear(IntakeYear);
+             _itemsView = CollectionViewSource.GetDefaultView(Composit1);
+            _itemsView.Filter = x => Filter(x as CompositBDO);
+
+            Enumerable.Range(0, 1000)
+                      .Select(x => new CompositBDO())
+                      .ToList()
+                      .ForEach(Composit1.Add);
         }
 
+    private bool Filter(CompositBDO item)
+        {
+            _searchString = (SearchString ?? string.Empty).ToLower();
+            return item != null &&
+                ((item.Name ?? string.Empty).ToLower().Contains(_searchString) ||
+                 (item.Surname ?? string.Empty).ToLower().Contains(_searchString) ||
+                 (item.RefNo.ToString() ??string.Empty).Contains(_searchString));
+
+        }
         private void RegisterCommands()
         {
           //   DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => IsDataClean());
@@ -199,6 +244,7 @@ namespace CETAP_LOB.ViewModel.composite
                 Composit1 = SelectedWriter;
             }));
         }
+
 
         //private void GenerateCompositeSelectedRecords()
         //{

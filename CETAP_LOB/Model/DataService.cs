@@ -6633,7 +6633,7 @@ namespace CETAP_LOB.Model
                    c => c.VenueCode,
                    v => v.VenueCode,
                    (c, v) => new { Composit = c, v.VenueType })
-               .Where(x => x.VenueType == "Remote" && x.Composit.DOT > intakeYear.yearStart && x.Composit.DOT < intakeYear.yearEnd)
+               .Where(x => (x.VenueType == "Remote" || x.Composit.RefNo.ToString().Substring(7,1) == "9") && x.Composit.VenueCode != 99999 && x.Composit.DOT > intakeYear.yearStart && x.Composit.DOT < intakeYear.yearEnd)
                .Select(x => x.Composit)
                 .ToList();
 
