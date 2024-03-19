@@ -698,7 +698,5 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Debug\nbt.png
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\cea.png
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Base.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Base.xml
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\System.ValueTuple.dll
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\System.ValueTuple.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Pdf.Base.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Pdf.Base.xml

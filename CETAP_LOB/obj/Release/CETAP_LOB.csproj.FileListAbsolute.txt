@@ -665,6 +665,8 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\CetapDat.dat
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\PackingList.xlsm
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\PackingList.xlsx
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\PackingList.xltx
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\nbt.png
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\cea.png
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CETAP_LOB.exe.config
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CETAP_LOB.exe.manifest
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CETAP_LOB.application
@@ -675,6 +677,7 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\ClosedXML.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CommonLibrary.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CsvHelper.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.Framework.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.SqlServer.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\FileHelpers.dll
@@ -686,12 +689,18 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\Intellibox.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\LinqStatistics.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\LINQtoCSV.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\log4net.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\LuhnNet.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Bcl.AsyncInterfaces.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Maps.MapControl.WPF.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Practices.ServiceLocation.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.SqlServer.Types.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Renci.SshNet.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Compression.Base.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Compression.Portable.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Licensing.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Pdf.Base.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Runtime.CompilerServices.Unsafe.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Text.Encoding.CodePages.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Threading.Tasks.Extensions.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Windows.Interactivity.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\xunit.abstractions.dll
@@ -699,6 +708,8 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\xunit.core.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\AutoMapper.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\ClosedXML.pdb
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CsvHelper.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.Framework.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.SqlServer.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\FileHelpers.xml
@@ -715,6 +726,9 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Bcl.AsyncInterfaces.
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Practices.ServiceLocation.pdb
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Microsoft.Practices.ServiceLocation.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\Renci.SshNet.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Compression.Base.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Compression.Portable.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Release\Syncfusion.Pdf.Base.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Runtime.CompilerServices.Unsafe.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\System.Threading.Tasks.Extensions.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\xunit.abstractions.xml
@@ -741,6 +755,7 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\splitpage1.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\writers\VenueMapView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\MainWindow.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\aboutview.g.cs
+D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\RemotesView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\CompositeView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\EditCompositeView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\easypay\EasyPayView.g.cs
@@ -779,6 +794,7 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Release\Assets\ModernUI.Bubbles.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\Assets\ModernUI.Snowflakes.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\Assets\ModernUi.WaterDrop.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\MainWindow.baml
+D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\RemotesView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\CompositeView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\EditCompositeView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\easypay\EasyPayView.baml
@@ -806,8 +822,6 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.csproj.GenerateResou
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.csproj.CoreCompileInputs.cache
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.exe.manifest
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.application
+D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.csproj.Up2Date
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.exe
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.pdb
-D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.csproj.Up2Date
-D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\RemotesView.g.cs
-D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Composite\RemotesView.baml
