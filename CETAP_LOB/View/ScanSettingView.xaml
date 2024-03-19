@@ -44,7 +44,7 @@
            Content="{Binding ScanSettings.QAFolder, Source={StaticResource Locator}}"/>
         <Button Grid.Row="4" Width="265" Height="30" Margin="0,6,0,0" HorizontalAlignment="Left"
             VerticalAlignment="Top" Content="Files For Scoring Folder"
-            Command="{Binding ScanSettings.FilesForScoringFolderCommand, Mode=OneWay, Source={StaticResource Locator}}" Click="Button_Click"/>
+            Command="{Binding ScanSettings.FilesForScoringFolderCommand, Mode=OneWay, Source={StaticResource Locator}}" />
         <Label Grid.Row="4" Grid.Column="1" Height="16" Margin="5,12,0,29" VerticalAlignment="Center"
            VerticalContentAlignment="Center" Content="{Binding FilesForScoringFolder, Mode=OneWay}"/>
         <Button Grid.Row="5" Width="265" Height="30" Margin="0,7,0,0" HorizontalAlignment="Left"
@@ -64,8 +64,8 @@
            VerticalContentAlignment="Center" Content="{Binding ScoreModerationFolder, Mode=OneWay}"/>
         
         <Button Grid.Row="8" Width="265" Height="30" Margin="0,7,0,0" HorizontalAlignment="Left"
-            VerticalAlignment="Top" Content="Score Moderation Folder"
-            Command="{Binding ScanSettings.RemotesFolderCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+            VerticalAlignment="Top" Content="Remotes\Walk-ins\Special Folder"
+            Command="{Binding ScanSettings.RemotesFolderCommand, Mode=OneWay, Source={StaticResource Locator}}" />
         
         <Label Grid.Row="8" Grid.Column="1" Height="16" Margin="5,13,0,28" VerticalAlignment="Center"
            VerticalContentAlignment="Center" Content="{Binding RemotesFolder, Mode=OneWay}"/>

@@ -6653,7 +6653,7 @@ namespace CETAP_LOB.Model
         {
             SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXxfdHVWR2FZUENwXkc=");
 
-            bool hasvalues = false;
+          
             //  string appRootPath = AppDomain.CurrentDomain.BaseDirectory;
            // string sourceFilePath = "template.docx";
             //  string filePath = Path.Combine(appRootPath, "template.docx");
@@ -6665,13 +6665,9 @@ namespace CETAP_LOB.Model
             }
             else
             {
-                mypassword = selectedWriter.SAID.ToString();
-            }
+               long password = selectedWriter.SAID ?? 0;
+                mypassword = password.ToString("D13");
 
-            if (String.IsNullOrEmpty(mypassword))
-            {
-                hasvalues = false;
-               // return hasvalues;
             }
 
             var RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
@@ -6775,7 +6771,7 @@ namespace CETAP_LOB.Model
                 row2.Cells[2].Value = ql.ToString();
                 row2.Cells[2].StringFormat = stringFormat;
                 row2.Cells[2].Style = cellStyle1;
-                row2.Cells[3].Value = mat.ToString();
+                row2.Cells[3].Value = mat != null ? mat.ToString() : "N/A";
                 row2.Cells[3].StringFormat = stringFormat;
                 row2.Cells[3].Style = cellStyle1;
 

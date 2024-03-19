@@ -25,9 +25,6 @@ namespace CETAP_LOB.View
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
-
-        }
+    
     }
 }
