@@ -60,16 +60,19 @@
     <ApplicationIcon>c_logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestCertificateThumbprint>68AB61ABEE845CF44517BF097AAD71F17D36572E</ManifestCertificateThumbprint>
+    <ManifestCertificateThumbprint>D620DAB2AA71A131F4C363E41883AEB60A6EDCA4</ManifestCertificateThumbprint>
   </PropertyGroup>
   <PropertyGroup>
-    <ManifestKeyFile>CETAP_LOB_TemporaryKey.pfx</ManifestKeyFile>
+    <ManifestKeyFile>CETAP_LOB_1_TemporaryKey.pfx</ManifestKeyFile>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateManifests>true</GenerateManifests>
   </PropertyGroup>
   <PropertyGroup>
     <SignManifests>true</SignManifests>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AutoMapper, Version=4.2.0.0, Culture=neutral, PublicKeyToken=be96cd2c38ef1005, processorArchitecture=MSIL">
@@ -686,6 +689,7 @@
     <None Include="CetapDat.dat">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
+    <None Include="CETAP_LOB_1_TemporaryKey.pfx" />
     <None Include="CETAP_LOB_TemporaryKey.pfx" />
     <None Include="Database\Model1.edmx.diagram">
       <DependentUpon>Model1.edmx</DependentUpon>

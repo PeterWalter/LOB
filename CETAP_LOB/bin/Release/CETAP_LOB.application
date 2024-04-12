@@ -7,14 +7,14 @@
     <framework targetVersion="4.8" profile="Full" supportedRuntime="4.0.30319" />
   </compatibleFrameworks>
   <dependency>
-    <dependentAssembly dependencyType="install" codebase="CETAP_LOB.exe.manifest" size="35554">
+    <dependentAssembly dependencyType="install" codebase="CETAP_LOB.exe.manifest" size="35557">
       <assemblyIdentity name="CETAP_LOB.exe" version="1.0.0.4" publicKeyToken="0000000000000000" language="neutral" processorArchitecture="msil" type="win32" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>dbzSvmuVfjKEn2NZySGfEdN7KcAfK+0L5pHPH5xGfec=</dsig:DigestValue>
+        <dsig:DigestValue>pxE1Yj0uit+9bwke0n9yyS9XCtDIKo0/bMrVYmzmWyw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

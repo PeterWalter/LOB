@@ -708,7 +708,6 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Release\xunit.core.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\AutoMapper.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\ClosedXML.pdb
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\CsvHelper.xml
-D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\DocumentFormat.OpenXml.Framework.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Release\EntityFramework.SqlServer.xml
