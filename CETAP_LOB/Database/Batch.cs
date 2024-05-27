@@ -17,8 +17,8 @@ namespace CETAP_LOB.Database
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2214:DoNotCallOverridableMethodsInConstructors")]
         public Batch()
         {
-            QAs = new HashSet<QA>();
             ScannedFiles = new HashSet<ScannedFile>();
+            QAs = new HashSet<QA>();
         }
     
         public int BatchID { get; set; }
@@ -36,8 +36,8 @@ namespace CETAP_LOB.Database
         public byte[] RowVersion { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<QA> QAs { get; set; }
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<ScannedFile> ScannedFiles { get; set; }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<QA> QAs { get; set; }
     }
 }

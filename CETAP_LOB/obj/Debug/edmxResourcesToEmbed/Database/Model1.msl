@@ -4,6 +4,8 @@
     <EntitySetMapping Name="TestNames">
       <EntityTypeMapping TypeName="NBT_ProductionModel.TestName">
         <MappingFragment StoreEntitySet="TestName">
+          <ScalarProperty Name="TestCode_CHAR" ColumnName="TestCode_CHAR" />
+          <ScalarProperty Name="InUse" ColumnName="InUse" />
           <ScalarProperty Name="TestID" ColumnName="TestID" />
           <ScalarProperty Name="TestName1" ColumnName="TestName" />
           <ScalarProperty Name="TestCode" ColumnName="TestCode" />
@@ -227,49 +229,6 @@
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>
-    <EntitySetMapping Name="QAs">
-      <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
-        <MappingFragment StoreEntitySet="QA">
-          <ScalarProperty Name="ID" ColumnName="ID" />
-          <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
-          <ScalarProperty Name="CSX" ColumnName="CSX" />
-          <ScalarProperty Name="NBT" ColumnName="NBT" />
-          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
-          <ScalarProperty Name="SAID" ColumnName="SAID" />
-          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
-          <ScalarProperty Name="IDType" ColumnName="IDType" />
-          <ScalarProperty Name="Gender" ColumnName="Gender" />
-          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
-          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-          <ScalarProperty Name="Surname" ColumnName="Surname" />
-          <ScalarProperty Name="Name" ColumnName="Name" />
-          <ScalarProperty Name="Initials" ColumnName="Initials" />
-          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
-          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
-          <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
-          <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
-          <ScalarProperty Name="Classification" ColumnName="Classification" />
-          <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
-          <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
-          <ScalarProperty Name="Section1" ColumnName="Section1" />
-          <ScalarProperty Name="Section2" ColumnName="Section2" />
-          <ScalarProperty Name="Section3" ColumnName="Section3" />
-          <ScalarProperty Name="Section4" ColumnName="Section4" />
-          <ScalarProperty Name="Section5" ColumnName="Section5" />
-          <ScalarProperty Name="Section6" ColumnName="Section6" />
-          <ScalarProperty Name="Section7" ColumnName="Section7" />
-          <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
-          <ScalarProperty Name="MathCode" ColumnName="MathCode" />
-          <ScalarProperty Name="MatSection" ColumnName="MatSection" />
-          <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
-          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
-          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
-          <ScalarProperty Name="EndOfFile" ColumnName="EndOfFile" />
-          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-        </MappingFragment>
-      </EntityTypeMapping>
-    </EntitySetMapping>
     <EntitySetMapping Name="RecordsInQueues">
       <EntityTypeMapping TypeName="NBT_ProductionModel.RecordsInQueue">
         <MappingFragment StoreEntitySet="RecordsInQueue">
@@ -462,6 +421,109 @@
           <ScalarProperty Name="Revenue" ColumnName="Revenue" />
           <ScalarProperty Name="Expenses" ColumnName="Expenses" />
           <ScalarProperty Name="Net" ColumnName="Net" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="QAs">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
+        <MappingFragment StoreEntitySet="QA">
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="dateCreated" ColumnName="dateCreated" />
+          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+          <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+          <ScalarProperty Name="MatSection" ColumnName="MatSection" />
+          <ScalarProperty Name="MathCode" ColumnName="MathCode" />
+          <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
+          <ScalarProperty Name="Section7" ColumnName="Section7" />
+          <ScalarProperty Name="Section6" ColumnName="Section6" />
+          <ScalarProperty Name="Section5" ColumnName="Section5" />
+          <ScalarProperty Name="Section4" ColumnName="Section4" />
+          <ScalarProperty Name="Section3" ColumnName="Section3" />
+          <ScalarProperty Name="Section2" ColumnName="Section2" />
+          <ScalarProperty Name="Section1" ColumnName="Section1" />
+          <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
+          <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+          <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
+          <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="IDType" ColumnName="IDType" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="NBT" ColumnName="NBT" />
+          <ScalarProperty Name="CSX" ColumnName="CSX" />
+          <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
+          <ScalarProperty Name="ID" ColumnName="ID" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Schools">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.School">
+        <MappingFragment StoreEntitySet="Schools">
+          <ScalarProperty Name="Position" ColumnName="Position" />
+          <ScalarProperty Name="Address" ColumnName="Address" />
+          <ScalarProperty Name="Country" ColumnName="Country" />
+          <ScalarProperty Name="Province" ColumnName="Province" />
+          <ScalarProperty Name="Postal_Code" ColumnName="Postal Code" />
+          <ScalarProperty Name="City" ColumnName="City" />
+          <ScalarProperty Name="School_Name" ColumnName="School Name" />
+          <ScalarProperty Name="School_Id" ColumnName="School Id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="Cleaned_batch">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.Cleaned_batch">
+        <MappingFragment StoreEntitySet="Cleaned_batch">
+          <ScalarProperty Name="date_modified" ColumnName="date_modified" />
+          <ScalarProperty Name="modified_by" ColumnName="modified_by" />
+          <ScalarProperty Name="date_created" ColumnName="date_created" />
+          <ScalarProperty Name="created_by" ColumnName="created_by" />
+          <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+          <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+          <ScalarProperty Name="Math_section" ColumnName="Math_section" />
+          <ScalarProperty Name="Math_code" ColumnName="Math_code" />
+          <ScalarProperty Name="Maths_Language" ColumnName="Maths_Language" />
+          <ScalarProperty Name="AQL_section7" ColumnName="AQL_section7" />
+          <ScalarProperty Name="AQL_section6" ColumnName="AQL_section6" />
+          <ScalarProperty Name="AQL_section5" ColumnName="AQL_section5" />
+          <ScalarProperty Name="AQL_section4" ColumnName="AQL_section4" />
+          <ScalarProperty Name="AQL_section3" ColumnName="AQL_section3" />
+          <ScalarProperty Name="AQL_section2" ColumnName="AQL_section2" />
+          <ScalarProperty Name="AQL_section1" ColumnName="AQL_section1" />
+          <ScalarProperty Name="AQL_code" ColumnName="AQL_code" />
+          <ScalarProperty Name="AQL_language" ColumnName="AQL_language" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+          <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+          <ScalarProperty Name="DOT" ColumnName="DOT" />
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="IDType" ColumnName="IDType" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="NBT" ColumnName="NBT" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="CSX" ColumnName="CSX" />
+          <ScalarProperty Name="CSX_type_id" ColumnName="CSX_type_id" />
+          <ScalarProperty Name="rec_id" ColumnName="rec_id" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

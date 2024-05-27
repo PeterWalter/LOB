@@ -112,7 +112,7 @@ namespace CETAP_LOB.Model.venueprep
         {
           if (Regex.IsMatch(_surname, "\\d"))
             AddError("Surname", "Surname cannot have digits");
-          else if (!Regex.IsMatch(_surname, "^[^\\s=!@#](?:[^!@#]*[^\\s!@#])?$"))
+          else if (!Regex.IsMatch(_surname, "^[^\\s=!@#](?:[^!@#;é'`èëáàãíìïòôöúüç©]*[^\\s!@#])?$"))
             AddError("Surname", "cannot start/end with space or have funny characters");
           else if (_surname.Length > 20)
             AddError("Surname", "Too many characters for Surname");
@@ -143,8 +143,9 @@ namespace CETAP_LOB.Model.venueprep
         {
           if (Regex.IsMatch(_myname, "\\d"))
             AddError("FirstName", "First name cannot have digits");
-          else if (!Regex.IsMatch(_myname, "^[^\\s=!@#](?:[^!@#]*[^\\s!@#])?$"))
-            AddError("FirstName", "cannot start/end with space or have funny characters");
+                    else if (!Regex.IsMatch(_myname,  "^[^\\s=!@#](?:[^!@#;é'`èëáàãíìïòôöúüç©]*[^\\s!@#])?$")) //!Regex.IsMatch(_myname, @"^[^=!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘]*(?:[^!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘]*[^=!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘])?$"))
+
+                        AddError("FirstName", "cannot start/end with space or have funny characters");
           else if (_myname.Length > 18)
             AddError("FirstName", "To many characters for Name (max is 18)");
           else

@@ -4,7 +4,7 @@
   <edmx:Runtime>
     <!-- SSDL content -->
     <edmx:StorageModels>
-      <Schema Namespace="NBT_ProductionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+    <Schema Namespace="NBT_ProductionModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
         <EntityType Name="TestName">
           <Key>
             <PropertyRef Name="TestID" />
@@ -18,6 +18,8 @@
           <Property Name="rowguid" Type="uniqueidentifier" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+          <Property Name="InUse" Type="bit" />
+          <Property Name="TestCode_CHAR" Type="char" MaxLength="5" />
         </EntityType>
         <EntityType Name="Logs">
           <Key>
@@ -56,10 +58,10 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="NumberOfPayments" Type="int" />
           <Property Name="NumberOfTenders" Type="int" />
-          <Property Name="TotalFees" Type="money" />
-          <Property Name="TotalBankFees" Type="money" />
-          <Property Name="TotalPayment" Type="money" Nullable="false" />
-          <Property Name="CalculatedAmountCollected" Type="money" Nullable="false" />
+          <Property Name="TotalFees" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalBankFees" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPayment" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="CalculatedAmountCollected" Type="decimal" Precision="18" Scale="2" />
         </EntityType>
         <EntityType Name="EasyPayRecord">
           <Key>
@@ -69,12 +71,12 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
           <Property Name="PayTag" Type="bigint" Nullable="false" />
           <Property Name="CollectorID" Type="bigint" />
-          <Property Name="date" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="date" Type="nvarchar" MaxLength="50" />
           <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
-          <Property Name="Fee" Type="money" />
-          <Property Name="BankCost" Type="money" />
+          <Property Name="Fee" Type="decimal" Precision="18" Scale="2" />
+          <Property Name="BankCost" Type="decimal" Precision="18" Scale="2" />
           <Property Name="NumOfTrans" Type="smallint" Nullable="false" />
-          <Property Name="AmountPaid" Type="money" Nullable="false" />
+          <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="2" />
           <Property Name="Trace" Type="nvarchar" MaxLength="50" />
           <Property Name="TenderType_PAN" Type="nchar" MaxLength="20" Nullable="false" />
           <Property Name="PointOfService" Type="nchar" MaxLength="20" Nullable="false" />
@@ -234,7 +236,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Key>
             <PropertyRef Name="ID" />
           </Key>
-          <Property Name="ID" Type="bigint" Nullable="false" />
+          <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="CSX_Number" Type="int" Nullable="false" />
           <Property Name="CSX" Type="nchar" MaxLength="37" Nullable="false" />
           <Property Name="NBT" Type="bigint" Nullable="false" />
@@ -244,22 +246,22 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="IDType" Type="int" />
           <Property Name="Gender" Type="nchar" MaxLength="1" />
           <Property Name="Citizenship" Type="int" />
-          <Property Name="DateOfBirth" Type="date" Nullable="false" />
+          <Property Name="DateOfBirth" Type="datetime" />
           <Property Name="Surname" Type="nchar" MaxLength="20" />
           <Property Name="Name" Type="nchar" MaxLength="18" />
           <Property Name="Initials" Type="nchar" MaxLength="3" />
           <Property Name="VenueCode" Type="int" Nullable="false" />
-          <Property Name="TestDate" Type="date" Nullable="false" />
+          <Property Name="TestDate" Type="datetime" />
           <Property Name="HLanguage" Type="int" />
           <Property Name="SchoolLanguage" Type="int" />
           <Property Name="Classification" Type="int" />
-          <Property Name="AQL_Language" Type="nchar" MaxLength="1" Nullable="false" />
-          <Property Name="AQL_Code" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="AQL_Language" Type="nchar" MaxLength="1" />
+          <Property Name="AQL_Code" Type="nchar" MaxLength="3" />
           <Property Name="Section1" Type="nchar" MaxLength="20" />
           <Property Name="Section2" Type="nchar" MaxLength="20" />
           <Property Name="Section3" Type="nchar" MaxLength="25" />
           <Property Name="Section4" Type="nchar" MaxLength="25" />
-          <Property Name="Section5" Type="nchar" MaxLength="20" />
+          <Property Name="Section5" Type="nchar" MaxLength="20" Nullable="false" />
           <Property Name="Section6" Type="nchar" MaxLength="25" />
           <Property Name="Section7" Type="nchar" MaxLength="25" />
           <Property Name="MAT_Language" Type="nchar" MaxLength="1" />
@@ -268,8 +270,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="Faculty1" Type="nchar" MaxLength="10" />
           <Property Name="Faculty2" Type="nchar" MaxLength="10" />
           <Property Name="Faculty3" Type="nchar" MaxLength="10" />
-          <Property Name="EndOfFile" Type="nchar" MaxLength="1" Nullable="false" />
-          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="BatchID" Type="int" />
+          <Property Name="dateCreated" Type="datetime" Nullable="false" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="RecordsInQueue">
@@ -320,6 +322,21 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="FileName" Type="varchar" MaxLength="22" Nullable="false" />
           <Property Name="Description" Type="nvarchar" MaxLength="255" />
           <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+        </EntityType>
+        <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.Process.Schools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="Schools">
+          <Key>
+            <PropertyRef Name="School Id" />
+          </Key>
+          <Property Name="School Id" Type="int" Nullable="false" />
+          <Property Name="School Name" Type="nvarchar" MaxLength="255" />
+          <Property Name="City" Type="nvarchar" MaxLength="255" />
+          <Property Name="Postal Code" Type="nvarchar" MaxLength="255" />
+          <Property Name="Province" Type="nvarchar" MaxLength="255" />
+          <Property Name="Country" Type="nvarchar" MaxLength="255" />
+          <Property Name="Address" Type="nvarchar" MaxLength="255" />
+          <Property Name="Position" Type="geography" />
         </EntityType>
         <EntityType Name="Surname">
           <Key>
@@ -431,6 +448,51 @@ warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a 
           <Property Name="OldNBT" Type="bigint" />
           <Property Name="DateModified" Type="datetime" Nullable="false" />
         </EntityType>
+        <EntityType Name="Cleaned_batch">
+          <Key>
+            <PropertyRef Name="rec_id" />
+          </Key>
+          <Property Name="rec_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="CSX_type_id" Type="int" Nullable="false" />
+          <Property Name="CSX" Type="varchar" MaxLength="37" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="NBT" Type="bigint" Nullable="false" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="ForeignID" Type="varchar" MaxLength="15" />
+          <Property Name="IDType" Type="int" />
+          <Property Name="Gender" Type="int" />
+          <Property Name="Citizenship" Type="int" />
+          <Property Name="Faculty" Type="varchar" MaxLength="1" />
+          <Property Name="DOB" Type="date" Nullable="false" />
+          <Property Name="Surname" Type="varchar" MaxLength="20" Nullable="false" />
+          <Property Name="Name" Type="varchar" MaxLength="18" Nullable="false" />
+          <Property Name="Initials" Type="varchar" MaxLength="3" />
+          <Property Name="VenueCode" Type="int" />
+          <Property Name="DOT" Type="date" Nullable="false" />
+          <Property Name="HomeLanguage" Type="int" />
+          <Property Name="SchoolLanguage" Type="int" />
+          <Property Name="Classification" Type="int" />
+          <Property Name="AQL_language" Type="char" MaxLength="1" />
+          <Property Name="AQL_code" Type="int" />
+          <Property Name="AQL_section1" Type="varchar" MaxLength="20" />
+          <Property Name="AQL_section2" Type="varchar" MaxLength="20" />
+          <Property Name="AQL_section3" Type="varchar" MaxLength="25" />
+          <Property Name="AQL_section4" Type="varchar" MaxLength="25" />
+          <Property Name="AQL_section5" Type="varchar" MaxLength="20" />
+          <Property Name="AQL_section6" Type="varchar" MaxLength="25" />
+          <Property Name="AQL_section7" Type="varchar" MaxLength="25" />
+          <Property Name="Maths_Language" Type="char" MaxLength="1" />
+          <Property Name="Math_code" Type="int" />
+          <Property Name="Math_section" Type="varchar" MaxLength="60" />
+          <Property Name="Faculty1" Type="char" MaxLength="1" />
+          <Property Name="Faculty2" Type="char" MaxLength="2" />
+          <Property Name="Faculty3" Type="char" MaxLength="3" />
+          <Property Name="BatchID" Type="int" Nullable="false" />
+          <Property Name="created_by" Type="varchar" MaxLength="50" />
+          <Property Name="date_created" Type="datetime" Nullable="false" />
+          <Property Name="modified_by" Type="varchar" MaxLength="50" />
+          <Property Name="date_modified" Type="datetime" />
+        </EntityType>
         <!--Errors Found During Generation:
 warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Vw_EasyPayRecords">
@@ -462,18 +524,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="Expenses" Type="money" />
           <Property Name="Net" Type="money" />
         </EntityType>
-        <Association Name="FK_EasyPayRecord_EasyPayFile">
-          <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
-          <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="EasyPayFile">
-              <PropertyRef Name="FileGenerationNumber" />
-            </Principal>
-            <Dependent Role="EasyPayRecord">
-              <PropertyRef Name="FileGenerationNumber" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_InstitutionMatch_Composit">
           <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
           <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
@@ -499,7 +549,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           </ReferentialConstraint>
         </Association>
         <Association Name="FK_QA_Batch">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+          <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
           <End Role="QA" Type="Self.QA" Multiplicity="*" />
           <ReferentialConstraint>
             <Principal Role="Batch">
@@ -612,12 +662,25 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <EntitySet Name="TestVenues" EntityType="Self.TestVenues" Schema="Process" store:Type="Tables" />
           <EntitySet Name="WriterList" EntityType="Self.WriterList" Schema="Process" store:Type="Tables" />
           <EntitySet Name="WritersPayments" EntityType="Self.WritersPayments" Schema="Process" store:Type="Tables" />
+          <EntitySet Name="Cleaned_batch" EntityType="Self.Cleaned_batch" Schema="scoring" store:Type="Tables" />
           <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
             <DefiningQuery>SELECT 
     [Users].[StaffID] AS [StaffID], 
     [Users].[Name] AS [Name], 
     [Users].[Areas] AS [Areas]
     FROM [dbo].[Users] AS [Users]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="Schools" EntityType="Self.Schools" store:Type="Tables" store:Schema="Process">
+            <DefiningQuery>SELECT 
+    [Schools].[School Id] AS [School Id], 
+    [Schools].[School Name] AS [School Name], 
+    [Schools].[City] AS [City], 
+    [Schools].[Postal Code] AS [Postal Code], 
+    [Schools].[Province] AS [Province], 
+    [Schools].[Country] AS [Country], 
+    [Schools].[Address] AS [Address], 
+    [Schools].[Position] AS [Position]
+    FROM [Process].[Schools] AS [Schools]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="TestRooms" EntityType="Self.TestRooms" store:Type="Tables" store:Schema="Process">
             <DefiningQuery>SELECT 
@@ -651,10 +714,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     [Vw_EasyPayRecords].[Net] AS [Net]
     FROM [dbo].[Vw_EasyPayRecords] AS [Vw_EasyPayRecords]</DefiningQuery>
           </EntitySet>
-          <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
-            <End Role="EasyPayFile" EntitySet="EasyPayFile" />
-            <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
-          </AssociationSet>
           <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
             <End Role="Composit" EntitySet="Composit" />
             <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />
@@ -692,8 +751,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
             <End Role="WritersPayments" EntitySet="WritersPayments" />
           </AssociationSet>
         </EntityContainer>
-      </Schema>
-    </edmx:StorageModels>
+      </Schema></edmx:StorageModels>
     <!-- CSDL content -->
     <edmx:ConceptualModels>
       <Schema Namespace="NBT_ProductionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
@@ -711,6 +769,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
           <NavigationProperty Name="TestAllocations" Relationship="Self.FK_TestAllocation_TestName" FromRole="TestName" ToRole="TestAllocation" />
+          <Property Name="InUse" Type="Boolean" />
+          <Property Name="TestCode_CHAR" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
         </EntityType>
         <EntityType Name="Log">
           <Key>
@@ -737,10 +797,10 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="NumberOfPayments" Type="Int32" />
           <Property Name="NumberOfTenders" Type="Int32" />
-          <Property Name="TotalFees" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="TotalBankFees" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="TotalPayment" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
-          <Property Name="CalculatedAmountCollected" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="TotalFees" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalBankFees" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="TotalPayment" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="CalculatedAmountCollected" Type="Decimal" Precision="18" Scale="2" />
           <NavigationProperty Name="EasyPayRecords" Relationship="Self.FK_EasyPayRecord_EasyPayFile" FromRole="EasyPayFile" ToRole="EasyPayRecord" />
         </EntityType>
         <EntityType Name="EasyPayRecord">
@@ -751,12 +811,12 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="FileGenerationNumber" Type="Int32" Nullable="false" />
           <Property Name="PayTag" Type="Int64" Nullable="false" />
           <Property Name="CollectorID" Type="Int64" />
-          <Property Name="date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
-          <Property Name="Fee" Type="Decimal" Precision="19" Scale="4" />
-          <Property Name="BankCost" Type="Decimal" Precision="19" Scale="4" />
+          <Property Name="Fee" Type="Decimal" Precision="18" Scale="2" />
+          <Property Name="BankCost" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="NumOfTrans" Type="Int16" Nullable="false" />
-          <Property Name="AmountPaid" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+          <Property Name="AmountPaid" Type="Decimal" Precision="18" Scale="2" />
           <Property Name="Trace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="TenderType_PAN" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="PointOfService" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
@@ -781,8 +841,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
           <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
-          <NavigationProperty Name="QAs" Relationship="Self.FK_QA_Batch" FromRole="Batch" ToRole="QA" />
           <NavigationProperty Name="ScannedFiles" Relationship="Self.FK_ScannedFile_Batch" FromRole="Batch" ToRole="ScannedFile" />
+          <NavigationProperty Name="QAs" Relationship="NBT_ProductionModel.FK_QA_Batch" FromRole="Batch" ToRole="QA" />
         </EntityType>
         <EntityType Name="BenchmarkLevel">
           <Key>
@@ -920,49 +980,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
           <Property Name="Code" Type="Int32" Nullable="false" />
           <NavigationProperty Name="TestVenues" Relationship="Self.FK_TestVenues_Provinces" FromRole="Provinces" ToRole="TestVenues" />
-        </EntityType>
-        <EntityType Name="QA">
-          <Key>
-            <PropertyRef Name="ID" />
-          </Key>
-          <Property Name="ID" Type="Int64" Nullable="false" />
-          <Property Name="CSX_Number" Type="Int32" Nullable="false" />
-          <Property Name="CSX" Type="String" MaxLength="37" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="NBT" Type="Int64" Nullable="false" />
-          <Property Name="Barcode" Type="Int64" Nullable="false" />
-          <Property Name="SAID" Type="Int64" />
-          <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
-          <Property Name="IDType" Type="Int32" />
-          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
-          <Property Name="Citizenship" Type="Int32" />
-          <Property Name="DateOfBirth" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="Surname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="Name" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
-          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Name="VenueCode" Type="Int32" Nullable="false" />
-          <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
-          <Property Name="HLanguage" Type="Int32" />
-          <Property Name="SchoolLanguage" Type="Int32" />
-          <Property Name="Classification" Type="Int32" />
-          <Property Name="AQL_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="AQL_Code" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="Section1" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="Section2" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="Section3" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
-          <Property Name="Section4" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
-          <Property Name="Section5" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
-          <Property Name="Section6" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
-          <Property Name="Section7" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
-          <Property Name="MAT_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
-          <Property Name="MathCode" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
-          <Property Name="MatSection" Type="String" MaxLength="60" FixedLength="true" Unicode="true" />
-          <Property Name="Faculty1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Faculty2" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="Faculty3" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
-          <Property Name="EndOfFile" Type="String" MaxLength="1" FixedLength="true" Unicode="true" Nullable="false" />
-          <Property Name="BatchID" Type="Int32" Nullable="false" />
-          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
-          <NavigationProperty Name="Batch" Relationship="Self.FK_QA_Batch" FromRole="QA" ToRole="Batch" />
         </EntityType>
         <EntityType Name="RecordsInQueue">
           <Key>
@@ -1206,18 +1223,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
             </Dependent>
           </ReferentialConstraint>
         </Association>
-        <Association Name="FK_QA_Batch">
-          <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
-          <End Role="QA" Type="Self.QA" Multiplicity="*" />
-          <ReferentialConstraint>
-            <Principal Role="Batch">
-              <PropertyRef Name="BatchID" />
-            </Principal>
-            <Dependent Role="QA">
-              <PropertyRef Name="BatchID" />
-            </Dependent>
-          </ReferentialConstraint>
-        </Association>
         <Association Name="FK_ScannedFile_Batch">
           <End Role="Batch" Type="Self.Batch" Multiplicity="0..1">
             <OnDelete Action="Cascade" />
@@ -1308,7 +1313,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <EntitySet Name="IntakeYears" EntityType="Self.IntakeYear" />
           <EntitySet Name="NewNBTNumbers" EntityType="Self.NewNBTNumber" />
           <EntitySet Name="Provinces" EntityType="Self.Province" />
-          <EntitySet Name="QAs" EntityType="Self.QA" />
           <EntitySet Name="RecordsInQueues" EntityType="Self.RecordsInQueue" />
           <EntitySet Name="ScannedFiles" EntityType="Self.ScannedFile" />
           <EntitySet Name="ScanTrackers" EntityType="Self.ScanTracker" />
@@ -1332,10 +1336,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <AssociationSet Name="FK_WritersPayments_EasyPayRecord" Association="Self.FK_WritersPayments_EasyPayRecord">
             <End Role="EasyPayRecord" EntitySet="EasyPayRecords" />
             <End Role="WritersPayments" EntitySet="WritersPayments" />
-          </AssociationSet>
-          <AssociationSet Name="FK_QA_Batch" Association="Self.FK_QA_Batch">
-            <End Role="Batch" EntitySet="Batches" />
-            <End Role="QA" EntitySet="QAs" />
           </AssociationSet>
           <AssociationSet Name="FK_ScannedFile_Batch" Association="Self.FK_ScannedFile_Batch">
             <End Role="Batch" EntitySet="Batches" />
@@ -1361,7 +1361,127 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
             <End Role="TestVenues" EntitySet="TestVenues" />
             <End Role="WriterList" EntitySet="WriterLists" />
           </AssociationSet>
+          <EntitySet Name="QAs" EntityType="NBT_ProductionModel.QA" />
+          <AssociationSet Name="FK_QA_Batch" Association="NBT_ProductionModel.FK_QA_Batch">
+            <End Role="Batch" EntitySet="Batches" />
+            <End Role="QA" EntitySet="QAs" />
+          </AssociationSet>
+          <EntitySet Name="Schools" EntityType="NBT_ProductionModel.School" />
+          <EntitySet Name="Cleaned_batch" EntityType="NBT_ProductionModel.Cleaned_batch" />
         </EntityContainer>
+        <EntityType Name="QA">
+          <Key>
+            <PropertyRef Name="ID" />
+          </Key>
+          <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CSX_Number" Type="Int32" Nullable="false" />
+          <Property Name="CSX" Type="String" Nullable="false" MaxLength="37" FixedLength="true" Unicode="true" />
+          <Property Name="NBT" Type="Int64" Nullable="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+          <Property Name="IDType" Type="Int32" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Citizenship" Type="Int32" />
+          <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+          <Property Name="Surname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="VenueCode" Type="Int32" Nullable="false" />
+          <Property Name="TestDate" Type="DateTime" Precision="3" />
+          <Property Name="HLanguage" Type="Int32" />
+          <Property Name="SchoolLanguage" Type="Int32" />
+          <Property Name="Classification" Type="Int32" />
+          <Property Name="AQL_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="AQL_Code" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="Section1" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section2" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section3" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section4" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section5" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="true" />
+          <Property Name="Section6" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="Section7" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+          <Property Name="MAT_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="MathCode" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="MatSection" Type="String" MaxLength="60" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty2" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty3" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="BatchID" Type="Int32" />
+          <Property Name="dateCreated" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <NavigationProperty Name="Batch" Relationship="NBT_ProductionModel.FK_QA_Batch" FromRole="QA" ToRole="Batch" />
+        </EntityType>
+        <Association Name="FK_QA_Batch">
+          <End Type="NBT_ProductionModel.Batch" Role="Batch" Multiplicity="0..1" />
+          <End Type="NBT_ProductionModel.QA" Role="QA" Multiplicity="*" />
+          <ReferentialConstraint>
+            <Principal Role="Batch">
+              <PropertyRef Name="BatchID" />
+            </Principal>
+            <Dependent Role="QA">
+              <PropertyRef Name="BatchID" />
+            </Dependent>
+          </ReferentialConstraint>
+        </Association>
+        <EntityType Name="School">
+          <Key>
+            <PropertyRef Name="School_Id" />
+          </Key>
+          <Property Name="School_Id" Type="Int32" Nullable="false" />
+          <Property Name="School_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Postal_Code" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Province" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Country" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+          <Property Name="Position" Type="Geography" />
+        </EntityType>
+        <EntityType Name="Cleaned_batch">
+          <Key>
+            <PropertyRef Name="rec_id" />
+          </Key>
+          <Property Name="rec_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="CSX_type_id" Type="Int32" Nullable="false" />
+          <Property Name="CSX" Type="String" Nullable="false" MaxLength="37" FixedLength="false" Unicode="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="NBT" Type="Int64" Nullable="false" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+          <Property Name="IDType" Type="Int32" />
+          <Property Name="Gender" Type="Int32" />
+          <Property Name="Citizenship" Type="Int32" />
+          <Property Name="Faculty" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="false" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+          <Property Name="VenueCode" Type="Int32" />
+          <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="HomeLanguage" Type="Int32" />
+          <Property Name="SchoolLanguage" Type="Int32" />
+          <Property Name="Classification" Type="Int32" />
+          <Property Name="AQL_language" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="AQL_code" Type="Int32" />
+          <Property Name="AQL_section1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section3" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section4" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section5" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section6" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="AQL_section7" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+          <Property Name="Maths_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Math_code" Type="Int32" />
+          <Property Name="Math_section" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+          <Property Name="Faculty1" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+          <Property Name="Faculty2" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+          <Property Name="Faculty3" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+          <Property Name="BatchID" Type="Int32" Nullable="false" />
+          <Property Name="created_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="modified_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+          <Property Name="date_modified" Type="DateTime" Precision="3" />
+        </EntityType>
       </Schema>
     </edmx:ConceptualModels>
     <!-- C-S mapping content -->
@@ -1371,6 +1491,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <EntitySetMapping Name="TestNames">
             <EntityTypeMapping TypeName="NBT_ProductionModel.TestName">
               <MappingFragment StoreEntitySet="TestName">
+                <ScalarProperty Name="TestCode_CHAR" ColumnName="TestCode_CHAR" />
+                <ScalarProperty Name="InUse" ColumnName="InUse" />
                 <ScalarProperty Name="TestID" ColumnName="TestID" />
                 <ScalarProperty Name="TestName1" ColumnName="TestName" />
                 <ScalarProperty Name="TestCode" ColumnName="TestCode" />
@@ -1594,49 +1716,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>
-          <EntitySetMapping Name="QAs">
-            <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
-              <MappingFragment StoreEntitySet="QA">
-                <ScalarProperty Name="ID" ColumnName="ID" />
-                <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
-                <ScalarProperty Name="CSX" ColumnName="CSX" />
-                <ScalarProperty Name="NBT" ColumnName="NBT" />
-                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
-                <ScalarProperty Name="SAID" ColumnName="SAID" />
-                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
-                <ScalarProperty Name="IDType" ColumnName="IDType" />
-                <ScalarProperty Name="Gender" ColumnName="Gender" />
-                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
-                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
-                <ScalarProperty Name="Surname" ColumnName="Surname" />
-                <ScalarProperty Name="Name" ColumnName="Name" />
-                <ScalarProperty Name="Initials" ColumnName="Initials" />
-                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
-                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
-                <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
-                <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
-                <ScalarProperty Name="Classification" ColumnName="Classification" />
-                <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
-                <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
-                <ScalarProperty Name="Section1" ColumnName="Section1" />
-                <ScalarProperty Name="Section2" ColumnName="Section2" />
-                <ScalarProperty Name="Section3" ColumnName="Section3" />
-                <ScalarProperty Name="Section4" ColumnName="Section4" />
-                <ScalarProperty Name="Section5" ColumnName="Section5" />
-                <ScalarProperty Name="Section6" ColumnName="Section6" />
-                <ScalarProperty Name="Section7" ColumnName="Section7" />
-                <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
-                <ScalarProperty Name="MathCode" ColumnName="MathCode" />
-                <ScalarProperty Name="MatSection" ColumnName="MatSection" />
-                <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
-                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
-                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
-                <ScalarProperty Name="EndOfFile" ColumnName="EndOfFile" />
-                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
-                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
-              </MappingFragment>
-            </EntityTypeMapping>
-          </EntitySetMapping>
           <EntitySetMapping Name="RecordsInQueues">
             <EntityTypeMapping TypeName="NBT_ProductionModel.RecordsInQueue">
               <MappingFragment StoreEntitySet="RecordsInQueue">
@@ -1829,6 +1908,109 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
                 <ScalarProperty Name="Revenue" ColumnName="Revenue" />
                 <ScalarProperty Name="Expenses" ColumnName="Expenses" />
                 <ScalarProperty Name="Net" ColumnName="Net" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="QAs">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.QA">
+              <MappingFragment StoreEntitySet="QA">
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="dateCreated" ColumnName="dateCreated" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+                <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+                <ScalarProperty Name="MatSection" ColumnName="MatSection" />
+                <ScalarProperty Name="MathCode" ColumnName="MathCode" />
+                <ScalarProperty Name="MAT_Language" ColumnName="MAT_Language" />
+                <ScalarProperty Name="Section7" ColumnName="Section7" />
+                <ScalarProperty Name="Section6" ColumnName="Section6" />
+                <ScalarProperty Name="Section5" ColumnName="Section5" />
+                <ScalarProperty Name="Section4" ColumnName="Section4" />
+                <ScalarProperty Name="Section3" ColumnName="Section3" />
+                <ScalarProperty Name="Section2" ColumnName="Section2" />
+                <ScalarProperty Name="Section1" ColumnName="Section1" />
+                <ScalarProperty Name="AQL_Code" ColumnName="AQL_Code" />
+                <ScalarProperty Name="AQL_Language" ColumnName="AQL_Language" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+                <ScalarProperty Name="HLanguage" ColumnName="HLanguage" />
+                <ScalarProperty Name="TestDate" ColumnName="TestDate" />
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="DateOfBirth" ColumnName="DateOfBirth" />
+                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="IDType" ColumnName="IDType" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="NBT" ColumnName="NBT" />
+                <ScalarProperty Name="CSX" ColumnName="CSX" />
+                <ScalarProperty Name="CSX_Number" ColumnName="CSX_Number" />
+                <ScalarProperty Name="ID" ColumnName="ID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Schools">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.School">
+              <MappingFragment StoreEntitySet="Schools">
+                <ScalarProperty Name="Position" ColumnName="Position" />
+                <ScalarProperty Name="Address" ColumnName="Address" />
+                <ScalarProperty Name="Country" ColumnName="Country" />
+                <ScalarProperty Name="Province" ColumnName="Province" />
+                <ScalarProperty Name="Postal_Code" ColumnName="Postal Code" />
+                <ScalarProperty Name="City" ColumnName="City" />
+                <ScalarProperty Name="School_Name" ColumnName="School Name" />
+                <ScalarProperty Name="School_Id" ColumnName="School Id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Cleaned_batch">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.Cleaned_batch">
+              <MappingFragment StoreEntitySet="Cleaned_batch">
+                <ScalarProperty Name="date_modified" ColumnName="date_modified" />
+                <ScalarProperty Name="modified_by" ColumnName="modified_by" />
+                <ScalarProperty Name="date_created" ColumnName="date_created" />
+                <ScalarProperty Name="created_by" ColumnName="created_by" />
+                <ScalarProperty Name="BatchID" ColumnName="BatchID" />
+                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+                <ScalarProperty Name="Faculty1" ColumnName="Faculty1" />
+                <ScalarProperty Name="Math_section" ColumnName="Math_section" />
+                <ScalarProperty Name="Math_code" ColumnName="Math_code" />
+                <ScalarProperty Name="Maths_Language" ColumnName="Maths_Language" />
+                <ScalarProperty Name="AQL_section7" ColumnName="AQL_section7" />
+                <ScalarProperty Name="AQL_section6" ColumnName="AQL_section6" />
+                <ScalarProperty Name="AQL_section5" ColumnName="AQL_section5" />
+                <ScalarProperty Name="AQL_section4" ColumnName="AQL_section4" />
+                <ScalarProperty Name="AQL_section3" ColumnName="AQL_section3" />
+                <ScalarProperty Name="AQL_section2" ColumnName="AQL_section2" />
+                <ScalarProperty Name="AQL_section1" ColumnName="AQL_section1" />
+                <ScalarProperty Name="AQL_code" ColumnName="AQL_code" />
+                <ScalarProperty Name="AQL_language" ColumnName="AQL_language" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="SchoolLanguage" ColumnName="SchoolLanguage" />
+                <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+                <ScalarProperty Name="DOT" ColumnName="DOT" />
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="IDType" ColumnName="IDType" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="NBT" ColumnName="NBT" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="CSX" ColumnName="CSX" />
+                <ScalarProperty Name="CSX_type_id" ColumnName="CSX_type_id" />
+                <ScalarProperty Name="rec_id" ColumnName="rec_id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

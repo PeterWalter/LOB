@@ -13,6 +13,8 @@
     <Property Name="rowguid" Type="uniqueidentifier" Nullable="false" />
     <Property Name="DateModified" Type="datetime" Nullable="false" />
     <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+    <Property Name="InUse" Type="bit" />
+    <Property Name="TestCode_CHAR" Type="char" MaxLength="5" />
   </EntityType>
   <EntityType Name="Logs">
     <Key>
@@ -51,10 +53,10 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
     <Property Name="NumberOfPayments" Type="int" />
     <Property Name="NumberOfTenders" Type="int" />
-    <Property Name="TotalFees" Type="money" />
-    <Property Name="TotalBankFees" Type="money" />
-    <Property Name="TotalPayment" Type="money" Nullable="false" />
-    <Property Name="CalculatedAmountCollected" Type="money" Nullable="false" />
+    <Property Name="TotalFees" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalBankFees" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="TotalPayment" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="CalculatedAmountCollected" Type="decimal" Precision="18" Scale="2" />
   </EntityType>
   <EntityType Name="EasyPayRecord">
     <Key>
@@ -64,12 +66,12 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Property Name="FileGenerationNumber" Type="int" Nullable="false" />
     <Property Name="PayTag" Type="bigint" Nullable="false" />
     <Property Name="CollectorID" Type="bigint" />
-    <Property Name="date" Type="nvarchar" MaxLength="50" Nullable="false" />
+    <Property Name="date" Type="nvarchar" MaxLength="50" />
     <Property Name="Time" Type="nvarchar" MaxLength="50" Nullable="false" />
-    <Property Name="Fee" Type="money" />
-    <Property Name="BankCost" Type="money" />
+    <Property Name="Fee" Type="decimal" Precision="18" Scale="2" />
+    <Property Name="BankCost" Type="decimal" Precision="18" Scale="2" />
     <Property Name="NumOfTrans" Type="smallint" Nullable="false" />
-    <Property Name="AmountPaid" Type="money" Nullable="false" />
+    <Property Name="AmountPaid" Type="decimal" Precision="18" Scale="2" />
     <Property Name="Trace" Type="nvarchar" MaxLength="50" />
     <Property Name="TenderType_PAN" Type="nchar" MaxLength="20" Nullable="false" />
     <Property Name="PointOfService" Type="nchar" MaxLength="20" Nullable="false" />
@@ -229,7 +231,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Key>
       <PropertyRef Name="ID" />
     </Key>
-    <Property Name="ID" Type="bigint" Nullable="false" />
+    <Property Name="ID" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
     <Property Name="CSX_Number" Type="int" Nullable="false" />
     <Property Name="CSX" Type="nchar" MaxLength="37" Nullable="false" />
     <Property Name="NBT" Type="bigint" Nullable="false" />
@@ -239,22 +241,22 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Property Name="IDType" Type="int" />
     <Property Name="Gender" Type="nchar" MaxLength="1" />
     <Property Name="Citizenship" Type="int" />
-    <Property Name="DateOfBirth" Type="date" Nullable="false" />
+    <Property Name="DateOfBirth" Type="datetime" />
     <Property Name="Surname" Type="nchar" MaxLength="20" />
     <Property Name="Name" Type="nchar" MaxLength="18" />
     <Property Name="Initials" Type="nchar" MaxLength="3" />
     <Property Name="VenueCode" Type="int" Nullable="false" />
-    <Property Name="TestDate" Type="date" Nullable="false" />
+    <Property Name="TestDate" Type="datetime" />
     <Property Name="HLanguage" Type="int" />
     <Property Name="SchoolLanguage" Type="int" />
     <Property Name="Classification" Type="int" />
-    <Property Name="AQL_Language" Type="nchar" MaxLength="1" Nullable="false" />
-    <Property Name="AQL_Code" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="AQL_Language" Type="nchar" MaxLength="1" />
+    <Property Name="AQL_Code" Type="nchar" MaxLength="3" />
     <Property Name="Section1" Type="nchar" MaxLength="20" />
     <Property Name="Section2" Type="nchar" MaxLength="20" />
     <Property Name="Section3" Type="nchar" MaxLength="25" />
     <Property Name="Section4" Type="nchar" MaxLength="25" />
-    <Property Name="Section5" Type="nchar" MaxLength="20" />
+    <Property Name="Section5" Type="nchar" MaxLength="20" Nullable="false" />
     <Property Name="Section6" Type="nchar" MaxLength="25" />
     <Property Name="Section7" Type="nchar" MaxLength="25" />
     <Property Name="MAT_Language" Type="nchar" MaxLength="1" />
@@ -263,8 +265,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Property Name="Faculty1" Type="nchar" MaxLength="10" />
     <Property Name="Faculty2" Type="nchar" MaxLength="10" />
     <Property Name="Faculty3" Type="nchar" MaxLength="10" />
-    <Property Name="EndOfFile" Type="nchar" MaxLength="1" Nullable="false" />
-    <Property Name="BatchID" Type="int" Nullable="false" />
+    <Property Name="BatchID" Type="int" />
+    <Property Name="dateCreated" Type="datetime" Nullable="false" />
     <Property Name="DateModified" Type="datetime" Nullable="false" />
   </EntityType>
   <EntityType Name="RecordsInQueue">
@@ -315,6 +317,21 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
     <Property Name="FileName" Type="varchar" MaxLength="22" Nullable="false" />
     <Property Name="Description" Type="nvarchar" MaxLength="255" />
     <Property Name="RowVersion" Type="timestamp" StoreGeneratedPattern="Computed" Nullable="false" />
+  </EntityType>
+  <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.Process.Schools' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+  <EntityType Name="Schools">
+    <Key>
+      <PropertyRef Name="School Id" />
+    </Key>
+    <Property Name="School Id" Type="int" Nullable="false" />
+    <Property Name="School Name" Type="nvarchar" MaxLength="255" />
+    <Property Name="City" Type="nvarchar" MaxLength="255" />
+    <Property Name="Postal Code" Type="nvarchar" MaxLength="255" />
+    <Property Name="Province" Type="nvarchar" MaxLength="255" />
+    <Property Name="Country" Type="nvarchar" MaxLength="255" />
+    <Property Name="Address" Type="nvarchar" MaxLength="255" />
+    <Property Name="Position" Type="geography" />
   </EntityType>
   <EntityType Name="Surname">
     <Key>
@@ -426,6 +443,51 @@ warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a 
     <Property Name="OldNBT" Type="bigint" />
     <Property Name="DateModified" Type="datetime" Nullable="false" />
   </EntityType>
+  <EntityType Name="Cleaned_batch">
+    <Key>
+      <PropertyRef Name="rec_id" />
+    </Key>
+    <Property Name="rec_id" Type="bigint" StoreGeneratedPattern="Identity" Nullable="false" />
+    <Property Name="CSX_type_id" Type="int" Nullable="false" />
+    <Property Name="CSX" Type="varchar" MaxLength="37" Nullable="false" />
+    <Property Name="Barcode" Type="bigint" Nullable="false" />
+    <Property Name="NBT" Type="bigint" Nullable="false" />
+    <Property Name="SAID" Type="bigint" />
+    <Property Name="ForeignID" Type="varchar" MaxLength="15" />
+    <Property Name="IDType" Type="int" />
+    <Property Name="Gender" Type="int" />
+    <Property Name="Citizenship" Type="int" />
+    <Property Name="Faculty" Type="varchar" MaxLength="1" />
+    <Property Name="DOB" Type="date" Nullable="false" />
+    <Property Name="Surname" Type="varchar" MaxLength="20" Nullable="false" />
+    <Property Name="Name" Type="varchar" MaxLength="18" Nullable="false" />
+    <Property Name="Initials" Type="varchar" MaxLength="3" />
+    <Property Name="VenueCode" Type="int" />
+    <Property Name="DOT" Type="date" Nullable="false" />
+    <Property Name="HomeLanguage" Type="int" />
+    <Property Name="SchoolLanguage" Type="int" />
+    <Property Name="Classification" Type="int" />
+    <Property Name="AQL_language" Type="char" MaxLength="1" />
+    <Property Name="AQL_code" Type="int" />
+    <Property Name="AQL_section1" Type="varchar" MaxLength="20" />
+    <Property Name="AQL_section2" Type="varchar" MaxLength="20" />
+    <Property Name="AQL_section3" Type="varchar" MaxLength="25" />
+    <Property Name="AQL_section4" Type="varchar" MaxLength="25" />
+    <Property Name="AQL_section5" Type="varchar" MaxLength="20" />
+    <Property Name="AQL_section6" Type="varchar" MaxLength="25" />
+    <Property Name="AQL_section7" Type="varchar" MaxLength="25" />
+    <Property Name="Maths_Language" Type="char" MaxLength="1" />
+    <Property Name="Math_code" Type="int" />
+    <Property Name="Math_section" Type="varchar" MaxLength="60" />
+    <Property Name="Faculty1" Type="char" MaxLength="1" />
+    <Property Name="Faculty2" Type="char" MaxLength="2" />
+    <Property Name="Faculty3" Type="char" MaxLength="3" />
+    <Property Name="BatchID" Type="int" Nullable="false" />
+    <Property Name="created_by" Type="varchar" MaxLength="50" />
+    <Property Name="date_created" Type="datetime" Nullable="false" />
+    <Property Name="modified_by" Type="varchar" MaxLength="50" />
+    <Property Name="date_modified" Type="datetime" />
+  </EntityType>
   <!--Errors Found During Generation:
 warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="Vw_EasyPayRecords">
@@ -457,18 +519,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     <Property Name="Expenses" Type="money" />
     <Property Name="Net" Type="money" />
   </EntityType>
-  <Association Name="FK_EasyPayRecord_EasyPayFile">
-    <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
-    <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
-    <ReferentialConstraint>
-      <Principal Role="EasyPayFile">
-        <PropertyRef Name="FileGenerationNumber" />
-      </Principal>
-      <Dependent Role="EasyPayRecord">
-        <PropertyRef Name="FileGenerationNumber" />
-      </Dependent>
-    </ReferentialConstraint>
-  </Association>
   <Association Name="FK_InstitutionMatch_Composit">
     <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
     <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
@@ -494,7 +544,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     </ReferentialConstraint>
   </Association>
   <Association Name="FK_QA_Batch">
-    <End Role="Batch" Type="Self.Batch" Multiplicity="1" />
+    <End Role="Batch" Type="Self.Batch" Multiplicity="0..1" />
     <End Role="QA" Type="Self.QA" Multiplicity="*" />
     <ReferentialConstraint>
       <Principal Role="Batch">
@@ -607,12 +657,25 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     <EntitySet Name="TestVenues" EntityType="Self.TestVenues" Schema="Process" store:Type="Tables" />
     <EntitySet Name="WriterList" EntityType="Self.WriterList" Schema="Process" store:Type="Tables" />
     <EntitySet Name="WritersPayments" EntityType="Self.WritersPayments" Schema="Process" store:Type="Tables" />
+    <EntitySet Name="Cleaned_batch" EntityType="Self.Cleaned_batch" Schema="scoring" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [Users].[StaffID] AS [StaffID], 
     [Users].[Name] AS [Name], 
     [Users].[Areas] AS [Areas]
     FROM [dbo].[Users] AS [Users]</DefiningQuery>
+    </EntitySet>
+    <EntitySet Name="Schools" EntityType="Self.Schools" store:Type="Tables" store:Schema="Process">
+      <DefiningQuery>SELECT 
+    [Schools].[School Id] AS [School Id], 
+    [Schools].[School Name] AS [School Name], 
+    [Schools].[City] AS [City], 
+    [Schools].[Postal Code] AS [Postal Code], 
+    [Schools].[Province] AS [Province], 
+    [Schools].[Country] AS [Country], 
+    [Schools].[Address] AS [Address], 
+    [Schools].[Position] AS [Position]
+    FROM [Process].[Schools] AS [Schools]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="TestRooms" EntityType="Self.TestRooms" store:Type="Tables" store:Schema="Process">
       <DefiningQuery>SELECT 
@@ -646,10 +709,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     [Vw_EasyPayRecords].[Net] AS [Net]
     FROM [dbo].[Vw_EasyPayRecords] AS [Vw_EasyPayRecords]</DefiningQuery>
     </EntitySet>
-    <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
-      <End Role="EasyPayFile" EntitySet="EasyPayFile" />
-      <End Role="EasyPayRecord" EntitySet="EasyPayRecord" />
-    </AssociationSet>
     <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
       <End Role="Composit" EntitySet="Composit" />
       <End Role="InstitutionMatch" EntitySet="InstitutionMatch" />

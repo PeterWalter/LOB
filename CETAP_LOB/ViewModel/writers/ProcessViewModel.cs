@@ -452,7 +452,9 @@ namespace CETAP_LOB.ViewModel.writers
                             DOT = wsd.DOT,
                             Mobile = wsd.Mobile,
                             Home = wsd.Home,
-                            email = wsd.EMail
+                            email = wsd.EMail,
+                            regdate = wsd.regDate,
+                            creationdate = wsd.creationDate
                           });
 
                     int lastRow = workdata.Count() + 1;

@@ -24,5 +24,7 @@ namespace CETAP_LOB.View.writers
         {
             InitializeComponent();
         }
+
+   
     }
 }

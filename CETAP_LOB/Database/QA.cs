@@ -24,12 +24,12 @@ namespace CETAP_LOB.Database
         public Nullable<int> IDType { get; set; }
         public string Gender { get; set; }
         public Nullable<int> Citizenship { get; set; }
-        public System.DateTime DateOfBirth { get; set; }
+        public Nullable<System.DateTime> DateOfBirth { get; set; }
         public string Surname { get; set; }
         public string Name { get; set; }
         public string Initials { get; set; }
         public int VenueCode { get; set; }
-        public System.DateTime TestDate { get; set; }
+        public Nullable<System.DateTime> TestDate { get; set; }
         public Nullable<int> HLanguage { get; set; }
         public Nullable<int> SchoolLanguage { get; set; }
         public Nullable<int> Classification { get; set; }
@@ -48,8 +48,8 @@ namespace CETAP_LOB.Database
         public string Faculty1 { get; set; }
         public string Faculty2 { get; set; }
         public string Faculty3 { get; set; }
-        public string EndOfFile { get; set; }
-        public int BatchID { get; set; }
+        public Nullable<int> BatchID { get; set; }
+        public System.DateTime dateCreated { get; set; }
         public System.DateTime DateModified { get; set; }
     
         public virtual Batch Batch { get; set; }

@@ -18,7 +18,6 @@
         <EntityTypeShape EntityType="NBT_ProductionModel.IntakeYear" Width="1.5" PointX="4.75" PointY="7.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NBT_ProductionModel.NewNBTNumber" Width="1.5" PointX="14.75" PointY="0.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NBT_ProductionModel.Province" Width="1.5" PointX="0.75" PointY="3" IsExpanded="true" />
-        <EntityTypeShape EntityType="NBT_ProductionModel.QA" Width="1.5" PointX="10" PointY="6.375" IsExpanded="true" />
         <EntityTypeShape EntityType="NBT_ProductionModel.RecordsInQueue" Width="1.5" PointX="4.75" PointY="14.75" IsExpanded="true" />
         <EntityTypeShape EntityType="NBT_ProductionModel.ScannedFile" Width="1.5" PointX="10" PointY="15.5" IsExpanded="true" />
         <EntityTypeShape EntityType="NBT_ProductionModel.ScanTracker" Width="1.5" PointX="14.75" PointY="10.75" IsExpanded="true" />
@@ -34,13 +33,16 @@
         <AssociationConnector Association="NBT_ProductionModel.FK_TestAllocation_TestName" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_EasyPayRecord_EasyPayFile" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_WritersPayments_EasyPayRecord" ManuallyRouted="false" />
-        <AssociationConnector Association="NBT_ProductionModel.FK_QA_Batch" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_ScannedFile_Batch" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_InstitutionMatch_Composit" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_InstitutionMatch_Institution" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_TestVenues_Provinces" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_TestProfile_TestAllocation" ManuallyRouted="false" />
         <AssociationConnector Association="NBT_ProductionModel.FK_WriterList_TestVenues" ManuallyRouted="false" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.QA" Width="1.5" PointX="10" PointY="6.125" />
+        <AssociationConnector Association="NBT_ProductionModel.FK_QA_Batch" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.School" Width="1.5" PointX="12.375" PointY="16.75" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Cleaned_batch" Width="1.5" PointX="19.25" PointY="15.875" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

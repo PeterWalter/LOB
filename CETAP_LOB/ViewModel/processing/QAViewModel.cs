@@ -19,6 +19,10 @@ using System.Linq;
 using System.Windows;
 using ClosedXML.Excel;
 using System.Reflection.Emit;
+using MailKit;
+using MailKit.Net.Smtp;
+using MimeKit;
+using Dumpify;
 
 namespace CETAP_LOB.ViewModel.processing
 {
@@ -339,30 +343,40 @@ public IntakeYearsBDO Intake_Year
     private void GenerateSummary()
         {
             List<datFileAttributes> source = new List<datFileAttributes>();
+            List<BatchBDO> batches = new List<BatchBDO>();
             try
             {
                 foreach (FileSystemInfo afile in new DirectoryInfo(Folder).GetFiles("*.dat"))
                 {
                     datFileAttributes datFileAttributes = new datFileAttributes(afile.FullName);
+                    SelectedFile = datFileAttributes;
+                    BatchBDO mybatch = _service.GetBatchByName(datFileAttributes.SName.ToString());
                     var tests = _service.GetTestFromDatFile(datFileAttributes, _intake_year);
-                   // GetQAData();
-                   // datFileAttributes.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>)(x => x.errorCount));
+                    //  GetQAData();
+                    //   _service.WriteToQaTable(QARecords, mybatch.BatchID);
+                    _service.WriteQAdataToDB(datFileAttributes);
                     source.Add(datFileAttributes);
-                 //   SelectedFile = (datFileAttributes)null;
+                    batches.Add(mybatch);
+                    //   SelectedFile = (datFileAttributes)null;
                 }
-                var summary = source.GroupBy(g => new {g.SName, g.FileCombination, g.TestCode, g.Profile, g.Client, g.AQL_Language, g.MAT_Language, g.VenueCode })
-                            .Select(gm =>
-                                new {
-                                    Batchfile =gm.Key.SName,
-                                    Combination = gm.Key.FileCombination,
-                                    Test_code = gm.Key.TestCode,
-                                    TestClient = gm.Key.Client,
-                                    TestProfileBDO = gm.Key.Profile,
-                                    AQL= gm.Key.AQL_Language,
-                                    Math = gm.Key.MAT_Language,
-                                    Totalrecords = gm.Sum(w => w.RecordCount)   
-                                });
-                
+                var summary = source.GroupBy(g => new { g.SName, g.FileCombination, g.TestCode, g.Profile, g.Client, g.AQL_Language, g.MAT_Language, g.VenueCode })
+                    .Join(batches, g => g.Key.SName, b => b.BatchName,
+                      (g, b) => new
+                      {
+                          batchID = b.BatchID,
+                          Batchfile = g.Key.SName,
+                          Combination = g.Key.FileCombination,
+                          Test_code = g.Key.TestCode,
+                          TestClient = g.Key.Client,
+                          TestProfileBDO = g.Key.Profile,
+                          AQL = g.Key.AQL_Language,
+                          Math = g.Key.MAT_Language,
+                          Totalrecords = g.Sum(w => w.RecordCount),
+                          VenueCode = g.Key.VenueCode
+
+                      });
+
+
                 // create an excel summary sheet
                 var wb = new XLWorkbook();
                 var ws = wb.Worksheets.Add("Summary");
@@ -370,29 +384,34 @@ public IntakeYearsBDO Intake_Year
 
                 Row1.Style.Font.Bold = true;
                 Row1.Style.Font.FontSize = 12.0;
-                ws.Cell(1, 1).Value = "BatchName";
+                ws.Cell(1, 1).Value = "Batch ID";
                 ws.Cell(1, 1).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 ws.Cell(1, 1).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
-                ws.Cell(1, 2).Value = "FileCombination";
+                ws.Cell(1, 2).Value = "BatchName";
                 ws.Cell(1, 2).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 3).Value = "TestCode";
+                ws.Cell(1, 2).Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                ws.Cell(1, 3).Value = "FileCombination";
                 ws.Cell(1, 3).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 4).Value = "CLient";
+                ws.Cell(1, 4).Value = "TestCode";
                 ws.Cell(1, 4).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 5).Value = "Profile";
+                ws.Cell(1, 5).Value = "CLient";
                 ws.Cell(1, 5).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 6).Value = "AQL_Lang";
+                ws.Cell(1, 6).Value = "Profile";
                 ws.Cell(1, 6).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 7).Value = "MAT_Lang";
+                ws.Cell(1, 7).Value = "AQL_Lang";
                 ws.Cell(1, 7).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
-                ws.Cell(1, 8).Value = "Record_count";
+                ws.Cell(1, 8).Value = "MAT_Lang";
                 ws.Cell(1, 8).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws.Cell(1, 9).Value = "Record_count";
+                ws.Cell(1, 9).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                ws.Cell(1, 10).Value = "VenueCode";
+                ws.Cell(1, 10).Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
                 ws.Cell("A2").InsertData(summary);
-              
-                
+
+
                 // ws.Cell(1, 6).Value = "AQL";
-              // ws.Cell(1, 7).Value = "MAT";
-              //  ws.Cell(1, 8).Value = "Venue";
+                // ws.Cell(1, 7).Value = "MAT";
+                //  ws.Cell(1, 8).Value = "Venue";
                 string file = Path.Combine(Folder, "SummaryForScoring.xlsx");
                 wb.SaveAs(file);
                 //DirList = new ObservableCollection<datFileAttributes>(source.OrderByDescending(m => m.NoOfErrors));
@@ -401,6 +420,8 @@ public IntakeYearsBDO Intake_Year
             {
                 int num = (int)ModernDialog.ShowMessage(ex.ToString(), "Summary Data", MessageBoxButton.OK, (Window)null);
             }
+
+            //The_Message();
 
         }
     private void FindDuplicates()
@@ -697,5 +718,126 @@ public IntakeYearsBDO Intake_Year
     {
       _service.LoadTestDate(_myDOT);
     }
-  }
+
+        private void The_Message()
+        {
+            string excelfile = "SummaryForScoring.xlsx";
+            string Fullpath = Path.Combine(Folder, excelfile); 
+            MimeMessage mimeMessage = new MimeMessage();
+            // add the sender address
+            mimeMessage.From.Add(new MailboxAddress("QA Data", "peter.chifamba@uct.ac.za"));
+
+            // AddName the receiver of email address
+            mimeMessage.To.Add(new MailboxAddress("myself", "peter.chifamba@live.com"));
+            
+            // set the message subject
+            mimeMessage.Subject = "QAed data in Excel Attachment";
+            // Set the message body (plain text)
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.TextBody = @"Hi,
+                This email contains Batches of Qa data in an attached Excel file.
+                
+                kind regards,
+
+                 {ApplicationSettings.Default.LOBUser}";
+
+            // Attach the Excel file (replace with your actual file path)
+            var excelAttachment = new MimePart("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            {
+                Content = new MimeContent(System.IO.File.OpenRead(Fullpath)),
+                ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                ContentTransferEncoding = ContentEncoding.Base64,
+                FileName = excelfile
+            };
+
+            bodyBuilder.Attachments.Add(excelAttachment);
+            mimeMessage.Body = bodyBuilder.ToMessageBody();
+
+
+            //// set the message body
+            //mimeMessage.Body = new TextPart("plain")
+            //{
+            //    Text = @"Hi,
+            //    Please find attached file 'summaryforscoring',
+
+            //    kind Regards, 
+            //    {ApplicationSettings.Default.LOBUser}"
+            //};
+
+            SmtpClient client = new SmtpClient();
+            try
+            {
+               // client.Connect("smtp-mail.outlook.com", 587, false);
+                client.Connect("mail.uct.ac.za", 25);
+               
+                //client.Connect("smtp.live.com", 587, false);
+                //client.Authenticate("peter.chifamba@live.com", "1shumba34a");
+               // client.AuthenticationMechanisms.Remove("XOAUTH2");
+             //   client.Authenticate("peter.chifamba@uct.ac.za", "Gurundoro@34ashumba");
+                client.Send(mimeMessage);
+
+                client.Send(mimeMessage);
+                client.Disconnect(true);
+            }
+            catch (Exception ex)
+            {
+               //QAViewModel.dump(ex);
+                MessageBox.Show(ex.ToString());
+            }
+
+
+        }
+
+    }
 }
+//using System;
+//using MimeKit;
+//using MailKit.Net.Smtp;
+
+//class Program
+//{
+//    static void Main(string[] args)
+//    {
+//        // Sender and recipient email addresses
+//        string senderEmail = "your_sender_email@example.com";
+//        string recipientEmail = "recipient_email@example.com";
+
+//        // Create a new email message
+//        var message = new MimeMessage();
+//        message.From.Add(new MailboxAddress("Sender Name", senderEmail));
+//        message.To.Add(new MailboxAddress("Recipient Name", recipientEmail));
+//        message.Subject = "Test Email";
+
+//        // Add some content to the email body
+//        var builder = new BodyBuilder();
+//        builder.TextBody = "This is a test email sent using MimeKit and MailKit.";
+
+//        // Attachments (optional)
+//        // builder.Attachments.Add("path_to_attachment");
+
+//        message.Body = builder.ToMessageBody();
+
+//        try
+//        {
+//            // Connect to the SMTP server
+//            using (var client = new SmtpClient())
+//            {
+//                client.Connect("mail.uct.ac.za", 25); // Use port 25
+//                // If authentication is required:
+//                // client.Authenticate("username", "password");
+
+//                // Send the email
+//                client.Send(message);
+
+//                // Disconnect from the SMTP server
+//                client.Disconnect(true);
+//            }
+
+//            Console.WriteLine("Email sent successfully.");
+//        }
+//        catch (Exception ex)
+//        {
+//            Console.WriteLine("Error: " + ex.Message);
+//        }
+//    }
+//}

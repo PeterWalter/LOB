@@ -199,7 +199,7 @@
                     <mui:ModernButton Margin="10,0,10,0" EllipseDiameter="60" EllipseStrokeThickness="3"
                             IconData="{StaticResource SaveToExcelIconData}" IconHeight="40" IconWidth="40"
                             ToolTip="Create excel File for writers list"
-                            Command="{Binding Process.SaveToExcelCommand, Mode=OneWay, Source={StaticResource Locator}}"/>
+                            Command="{Binding Process.SaveToExcelCommand, Mode=OneWay, Source={StaticResource Locator}}" />
                     <mui:ModernButton Margin="10,0,10,0" EllipseDiameter="60" EllipseStrokeThickness="3"
                             IconData="{StaticResource PackinglistIconData}" IconHeight="40" IconWidth="40"
                             ToolTip="Create Packing list Excel File"

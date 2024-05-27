@@ -28,8 +28,8 @@ namespace CETAP_LOB.Database
         public Nullable<int> NumberOfTenders { get; set; }
         public Nullable<decimal> TotalFees { get; set; }
         public Nullable<decimal> TotalBankFees { get; set; }
-        public decimal TotalPayment { get; set; }
-        public decimal CalculatedAmountCollected { get; set; }
+        public Nullable<decimal> TotalPayment { get; set; }
+        public Nullable<decimal> CalculatedAmountCollected { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<EasyPayRecord> EasyPayRecords { get; set; }

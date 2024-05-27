@@ -7,7 +7,6 @@ using CETAP_LOB.Model.QA;
 using CETAP_LOB.Model.scoring;
 using CETAP_LOB.Model.venueprep;
 using ClosedXML.Excel;
-//using CommonLibrary;
 using CsvHelper;
 using FileHelpers;
 using FirstFloor.ModernUI.Windows.Controls;
@@ -35,20 +34,9 @@ using Syncfusion.Drawing;
 using Syncfusion.Pdf.Grid;
 using DocumentFormat.OpenXml.Packaging;
 using Syncfusion.Pdf.Security;
-//using Syncfusion.Pdf.Grid;
-//using Syncfusion.Licensing;
-//using Syncfusion.Pdf.Security;
-//using Syncfusion.Drawing;
-//using Syncfusion.Drawing;
+using DocumentFormat.OpenXml.Bibliography;
 
-//using System.Windows.Input;
-//using DocumentFormat.OpenXml.Bibliography;
-//using CETAP_LOB.View.Composite;
-//using DocumentFormat.OpenXml.Office.CustomXsn;
-//using DocumentFormat.OpenXml.Packaging;
-//using DocumentFormat.OpenXml.Wordprocessing;
-//using Table = DocumentFormat.OpenXml.Wordprocessing.Table;
-// using System.Windows.Forms;
+
 
 namespace CETAP_LOB.Model
 {
@@ -133,13 +121,13 @@ namespace CETAP_LOB.Model
                 var today = DateTime.Now.Date;
                 CurrentIntake = period.Where(x => x.yearStart < today && x.yearEnd > today).Select(m => m).FirstOrDefault();
 
-                if (CurrentIntake != null) 
-                { 
-                    CurrentYear = CurrentIntake.Year; 
+                if (CurrentIntake != null)
+                {
+                    CurrentYear = CurrentIntake.Year;
                 }
                 else
                 {
-                    CurrentYear = ApplicationSettings.Default.IntakeYear; 
+                    CurrentYear = ApplicationSettings.Default.IntakeYear;
                 }
 
             }
@@ -166,40 +154,40 @@ namespace CETAP_LOB.Model
         {
             int year = ApplicationSettings.Default.IntakeYear;
 
-          //  List<BenchMarkLevelsBDO> mybenchmarks = new List<BenchMarkLevelsBDO>();
+            //  List<BenchMarkLevelsBDO> mybenchmarks = new List<BenchMarkLevelsBDO>();
             benchmarkLevels = new ObservableCollection<BenchMarkLevelsBDO>();
             using (var context = new CETAPEntities())
             {
-               var Dbbenchmarks = context.BenchmarkLevels.Where(x => x.StartIntakeYear <= year && x.EndIntakeYear >= year).Select(x => x).ToList();
+                var Dbbenchmarks = context.BenchmarkLevels.Where(x => x.StartIntakeYear <= year && x.EndIntakeYear >= year).Select(x => x).ToList();
 
-                foreach(BenchmarkLevel mark in Dbbenchmarks)
+                foreach (BenchmarkLevel mark in Dbbenchmarks)
                 {
-                    BenchMarkLevelsBDO mybmark = new BenchMarkLevelsBDO();  
+                    BenchMarkLevelsBDO mybmark = new BenchMarkLevelsBDO();
                     benchmarklevelDALToBenchmarkLevelBDO(mark, mybmark);
                     benchmarkLevels.Add(mybmark);
                 }
             }
-          //  return benchmarkLevels;
+            //  return benchmarkLevels;
         }
 
         private void benchmarklevelDALToBenchmarkLevelBDO(BenchmarkLevel mark, BenchMarkLevelsBDO mybmark)
         {
-           mybmark.YearSet = mark.YearSet;
+            mybmark.YearSet = mark.YearSet;
             mybmark.StartIntakeYear = mark.StartIntakeYear;
             mybmark.YearSet = mark.YearSet;
             mybmark.EndIntakeYear = mark.EndIntakeYear;
             mybmark.yearID = mark.yearID;
             mybmark.QL_BU = mark.QL_BU;
             mybmark.QL_PL = mark.QL_PL;
-            mybmark.QL_BL = mark.QL_BL; 
-            mybmark.QL_PU = mark.QL_PU; 
+            mybmark.QL_BL = mark.QL_BL;
+            mybmark.QL_PU = mark.QL_PU;
             mybmark.QL_IL = mark.QL_IL;
             mybmark.QL_IU = mark.QL_IU;
             mybmark.MAT_IL = mark.MAT_IL;
             mybmark.MAT_BU = mark.MAT_BU;
-            mybmark.MAT_PU = mark.MAT_PU;   
+            mybmark.MAT_PU = mark.MAT_PU;
             mybmark.MAT_IU = mark.MAT_IU;
-            mybmark.MAT_PL = mark.MAT_PL;   
+            mybmark.MAT_PL = mark.MAT_PL;
             mybmark.MAT_BL = mark.MAT_BL;
             mybmark.AL_BL = mark.AL_BL;
             mybmark.AL_BU = mark.AL_BU;
@@ -2441,7 +2429,7 @@ namespace CETAP_LOB.Model
             {
                 string message = "Database has no venue like " + writer.Venue;
                 ModernDialog.ShowMessage(message, "Record not saved", MessageBoxButton.OK);
-               
+
             }
             writersBDO.VenueID = VID.VenueCode;
             //writersBDO.Wrote = writer.
@@ -2664,7 +2652,7 @@ namespace CETAP_LOB.Model
             QAData.CSX_Number = record.CSX_Number;
             QAData.CSX_Part = record.CSX;
         }
-        private string QADataRecordToCSX886 (QADatRecord QAData)
+        private string QADataRecordToCSX886(QADatRecord QAData)
         {
             string CSX886Record = "";
 
@@ -3025,6 +3013,27 @@ namespace CETAP_LOB.Model
         {
             if (WritersList1 == null) return;
             var ApplicantErrors = WritersList1.Where(x => x.HasErrors == true).Select(m => m).ToList();
+            Dictionary<char, string> replacements = new Dictionary<char, string>
+{
+    {';', string.Empty },
+    {'è', "e" },
+    {'ë', "e" },
+    {'ï', "i" },
+    {'ò', "o" },
+    {'ô', "o" },
+    {'á', "a" },
+    {'ú', "u" },
+    {'à', "a" },
+    {'ã', "a" },
+    {'©', "c" },
+    {'í', "i" },
+    {'ì', "i" },
+    {'ö', "o" },
+    {'ü', "u" },
+    {'ç', "c" },
+    {'é', "e" },
+    {'\'', string.Empty }
+};
 
             foreach (var a in ApplicantErrors)
             {
@@ -3037,6 +3046,16 @@ namespace CETAP_LOB.Model
                     {
                         case "Surname":
                             StringBuilder b = new StringBuilder(a.Surname);
+                            //                            StringBuilder b = new StringBuilder(a.Surname);
+
+
+                            foreach (var kvp in replacements)
+                            {
+                                b.Replace(kvp.Key.ToString(), kvp.Value);
+                            }
+
+                            a.Surname = b.ToString();
+
 
                             if (a.Surname.Contains("&#039;"))
                             {
@@ -3044,6 +3063,21 @@ namespace CETAP_LOB.Model
                                 a.Surname = b.ToString();
 
                             }
+                            //if (a.Surname.Contains("é"))
+                            //{
+                            //    b.Replace("é", "e");
+                            //    a.Surname = b.ToString();
+                            //}
+                            //if (a.Surname.Contains("è"))
+                            //{
+                            //    b.Replace("è", "e");
+                            //    a.Surname = b.ToString();
+                            //}
+                            //    if (a.Surname.Contains("'"))
+                            //{
+                            //    b.Replace("'", string.Empty);
+                            //    a.Surname = b.ToString();
+                            //}
 
 
                             break;
@@ -3055,6 +3089,29 @@ namespace CETAP_LOB.Model
                                 c.Replace("&#039;", string.Empty);
                                 a.FirstName = c.ToString();
                             }
+                            //if(a.FirstName.Contains("é"))
+                            //{
+                            //    c.Replace("é", "e");
+                            //    a.FirstName = c.ToString();
+                            //}
+                            //if (a.FirstName.Contains("è"))
+                            //{
+                            //    c.Replace("è", "e");
+                            //    a.FirstName = c.ToString();
+                            //}
+                            //if(a.FirstName.Contains("'"))
+                            //{
+                            //    c.Replace("'", string.Empty);
+                            //    a.FirstName = c.ToString();
+                            //}
+                            foreach (var kv in replacements)
+                            {
+                                c.Replace(kv.Key.ToString(), kv.Value);
+                            }
+
+                            a.FirstName = c.ToString();
+
+
                             if (a.FirstName.Length > 18)
                             {
                                 string myName = "";
@@ -3231,7 +3288,9 @@ namespace CETAP_LOB.Model
             string logUser = "";
 
             var DbWriters = new List<WriterList>();
-            var ApplicantsBDO = new ConcurrentBag<WritersBDO>();
+             var InDbWriters = new List<WritersBDO>();
+            var ApplicantsBDO = new List<WritersBDO>();
+
 
             //Parallel.ForEach(WritersList1, (applic) =>
             //{
@@ -3239,22 +3298,49 @@ namespace CETAP_LOB.Model
             //    TranslateWebwritersToWritersBDO(applic, writer);
             //    ApplicantsBDO.Add(writer);
             //});
+            ApplicantsBDO = WritersList1.AsParallel()
+                                        .Select(applic =>
+                                        {
+                                            WritersBDO writer = new WritersBDO();
+                                            TranslateWebwritersToWritersBDO(applic, writer);
+                                            return writer;
+                                        })
+                                        .ToList();
 
-            foreach (var applic in WritersList1)
-            {
-                WritersBDO writer = new WritersBDO();
-                TranslateWebwritersToWritersBDO(applic, writer);
-                ApplicantsBDO.Add(writer);
-            }
+            //foreach (var applic in WritersList1)
+            //{
+            //    WritersBDO writer = new WritersBDO();
+            //    TranslateWebwritersToWritersBDO(applic, writer);
+            //    ApplicantsBDO.Add(writer);
+            //}
 
             using (var context = new CETAPEntities())
             {
+                var mywriters = context.WriterLists
+                 .Where(x => x.DOT > DateTime.Today).ToList();
+
+                foreach(var mywriter in mywriters)
+                {
+                    WritersBDO writer = new WritersBDO();
+                    TranslatewritersDALToWritersBDO(mywriter, writer);
+                    InDbWriters.Add(writer);
+                }
+                // the writers not matching the ones in database
+                var result = ApplicantsBDO.Where(x => !InDbWriters.Any(y => y.NBT == x.NBT && //y.DOT == x.DOT && y.EMail == x.EMail && y.VenueID == x.VenueID &&
+                              y.TestLanguage == x.TestLanguage && y.TestType == x.TestType)).ToList();
+              
+                var result1 = ApplicantsBDO.Where(x => InDbWriters.Any(y => y.NBT == x.NBT && y.DOT == x.DOT && y.EMail == x.EMail && y.VenueID == x.VenueID &&
+              y.TestLanguage == x.TestLanguage && y.TestType == x.TestType)).ToList();
+
+
+                //   TranslateWebwritersToWritersBDO(WebWriters writer, WritersBDO writersBDO)
+
                 using (var transScope = new TransactionScope(TransactionScopeOption.Required, System.TimeSpan.MaxValue))
                 {
 
                     try
                     {
-                        foreach (var applicant in ApplicantsBDO)
+                        foreach (var applicant in result)
                         {
 
                             logUser = "Writer not saved to Database : " + applicant.Name + " " + applicant.Surname + " " + applicant.NBT;
@@ -3263,14 +3349,18 @@ namespace CETAP_LOB.Model
                             TranslatewritersBDOToWritersDAL(applicant, writerInDB);
                             writerInDB.RowGuid = Guid.NewGuid();
                             writerInDB.DateModified = DateTime.Now;
-
-                            DbWriters.Add(writerInDB);
+                            context.WriterLists.Add(writerInDB);
+                           // DbWriters.Add(writerInDB);
 
                         }
 
-                        context.WriterLists.AddRange(DbWriters);
 
-                        await context.SaveChangesAsync();
+
+
+                       // context.WriterLists.AddRange(DbWriters);
+
+                       // await context.SaveChangesAsync();
+                     context.SaveChanges();
                         transScope.Complete();
                         task = true;
                     }
@@ -3536,7 +3626,7 @@ namespace CETAP_LOB.Model
                 // get the file numbers
                 int StartNum = context.EasyPayFiles.Where(s => s.DateWritten == Date1).Select(s => s.FileGenerationNumber).FirstOrDefault();
                 int endNum = context.EasyPayFiles.Where(s => s.DateWritten == Date2).Select(s => s.FileGenerationNumber).FirstOrDefault();
-                if ( endNum != 0)
+                if (endNum != 0)
                 {
                     var records = await context.Vw_EasyPayRecords.Where(x => x.File_Number >= StartNum && x.File_Number <= endNum).OrderBy(x => x.File_Number).Select(x => x).ToListAsync();
                     EPRecs = new ObservableCollection<Vw_EasyPayRecords>(records);
@@ -3809,6 +3899,42 @@ namespace CETAP_LOB.Model
                 Total = AllRecs;
             }
             return Total;
+        }
+
+        public async Task<List<CompositBDO>> GetAllIntakeScoresAsync(IntakeYearsBDO yr)
+        {
+            var NBTScores = new List<CompositBDO>();
+            if (ApplicationSettings.Default.DBAvailable)
+            {
+                // get all database	Scores
+                using (var context = new CETAPEntities())
+                    try
+                    {
+                        var scores = await context.Composits
+                                                  .Where(x => x.DOT >= yr.yearStart && x.DOT <= yr.yearEnd)
+                                                  .OrderBy(x => x.DOT)
+                                                  .ToListAsync();
+
+
+                        //Convert each score to CompositBDO
+                        foreach (Composit score in scores)
+                        {
+                            CompositBDO comp = new CompositBDO();
+                            comp = Maps.CompositDALToCompositBDO(score);
+                            //CompositDALToCompositBDO(comp, score);
+                            //	testBDO.AllocatedTests = GetAllocatedTestsByTestID(testBDO.TestID);
+                            NBTScores.Add(comp);
+                        }
+                    }
+                    catch (Exception)
+                    {
+
+                        throw;
+                    }
+
+            }
+            AllScores = new ObservableCollection<CompositBDO>(NBTScores);
+            return NBTScores;
         }
         public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, IntakeYearsBDO yr)
         {
@@ -4171,7 +4297,7 @@ namespace CETAP_LOB.Model
 
         public bool RemoveRecordsInQueue(List<long> ScoredRecords)
         {
-            
+
             bool flag = false;
             using (CETAPEntities cetapEntities = new CETAPEntities())
             {
@@ -4180,7 +4306,7 @@ namespace CETAP_LOB.Model
                     var recordsInQueues = cetapEntities.RecordsInQueues;
 
                     List<RecordsInQueue> list = recordsInQueues.Where(x => ScoredRecords.Any(m => m == x.Barcode)).ToList();
-                                                               
+
                     cetapEntities.RecordsInQueues.RemoveRange((IEnumerable<RecordsInQueue>)list);
                     cetapEntities.SaveChanges();
                     flag = true;
@@ -4500,7 +4626,7 @@ namespace CETAP_LOB.Model
         //  generate composite
         public ObservableCollection<CompositBDO> MatchScores()
         {
-             BenchMarkLevelsBDO degbenchmark = new BenchMarkLevelsBDO();
+            BenchMarkLevelsBDO degbenchmark = new BenchMarkLevelsBDO();
             GetIntakeBenchmarks();
 
             degbenchmark = benchmarkLevels.Where(rec => rec.Type == "Degree    ").Select(x => x).FirstOrDefault();
@@ -4672,7 +4798,7 @@ namespace CETAP_LOB.Model
         public bool GenerateComposite()
 
         {
-          //  string resultpath = Path.Combine(ApplicationSettings.Default.ScoreFolder, "Composit.csv") ;
+            //  string resultpath = Path.Combine(ApplicationSettings.Default.ScoreFolder, "Composit.csv") ;
             string filepath = Path.Combine(myDir.Dir, "Composit.csv");
             bool gen = false;
 
@@ -4683,10 +4809,10 @@ namespace CETAP_LOB.Model
                     writer.Configuration.HasHeaderRecord = true;
                     IEnumerable<CompositBDO> records = Composite.ToList();
                     writer.WriteRecords(records);
-                    
+
                 }
             }
-         //   File.Copy(filepath, resultpath);
+            //   File.Copy(filepath, resultpath);
             gen = GenerateExcelComposite();
             return gen;
         }
@@ -5306,10 +5432,10 @@ namespace CETAP_LOB.Model
                     comp = Maps.CompositDALToCompositBDO(score);
                     remoteScores.Add(comp);
                 }
-               // remoteScores = new ObservableCollection<CompositBDO>(Scores);
+                // remoteScores = new ObservableCollection<CompositBDO>(Scores);
 
             }
-                return remoteScores;
+            return remoteScores;
         }
         public ObservableCollection<CompositBDO> GetAllModeratedScores(string path)
         {
@@ -5431,8 +5557,107 @@ namespace CETAP_LOB.Model
                 throw ex;
             }
         }
-      
-        
+
+        public bool WriteQAdataToDB(datFileAttributes filename)
+        {
+            bool completed = false;
+            FileHelperAsyncEngine engine;
+
+            BatchBDO bb = new BatchBDO();
+
+            if (ApplicationSettings.Default.DBAvailable)
+            {
+                bb = GetBatchByName(filename.SName);
+                 using (var context = new CETAPEntities())
+                {
+                    // Find if record already in database
+                    var batchrec = context.Cleaned_batch
+                        .Where(x => x.BatchID == bb.BatchID)
+                        .FirstOrDefault();
+                    if (batchrec != null)
+                    { 
+                         MessageBox.Show("Use update for the file as it exists in DataBase", "File: " + filename.SName, MessageBoxButton.OK);
+                        return completed;
+                    }
+                }
+                List<Cleaned_batch> cleaned = new List<Cleaned_batch>();
+                switch (filename.CSX)
+                {
+                    case 909:
+                        try
+                        {
+                            //   FileHelperAsyncEngine engine;
+                            engine = new FileHelperAsyncEngine(typeof(ASC909));
+
+                            engine.BeginReadFile(filename.FilePath);
+
+                          
+                            foreach (ASC909 record in engine)
+                            {
+                                Cleaned_batch mdata = new Cleaned_batch();
+                                CSX909ToScoreDatRecord(record, mdata);
+                                mdata.BatchID = bb.BatchID;
+                                using (var context = new CETAPEntities())
+                                {
+                                    //// Find if record already in database
+                                    //var myrec = context.Cleaned_batch
+                                    //    .Where(x => x.Barcode == mdata.Barcode && x.BatchID == mdata.BatchID)
+                                    //    .FirstOrDefault();
+                                    //if (myrec != null)
+                                    //{
+                                    //    myrec.modified_by = ApplicationSettings.Default.LOBUser;
+                                    //    myrec.date_modified = DateTime.Now;
+                                    //    context.SaveChanges();
+                                    //    completed = true;
+                                    //}
+                                    //else
+                                    //{
+                                        mdata.date_created = DateTime.Now;
+                                        mdata.date_modified = DateTime.Now;
+                                        mdata.created_by = ApplicationSettings.Default.LOBUser;
+                                        context.Cleaned_batch.Add(mdata);
+                                    //}
+
+                                   
+
+                                }
+                                
+
+                                //using (var context = new CETAPEntities())
+                                //{
+                                //    context.Cleaned_batch.Add(mdata);
+                                //    context.SaveChanges();
+                                //    completed = true;
+                                //}
+
+                                cleaned.Add(mdata);
+                            }
+                        }
+                        catch (FileHelpers.BadUsageException ex)
+                        {
+
+                            MessageBox.Show(ex.Message, "File: " + filename.SName, MessageBoxButton.OK, MessageBoxImage.Error);
+                        }
+                        catch (Exception ex)
+                        {
+
+                            MessageBox.Show(ex.ToString());
+                        }
+                        break;
+                    default:
+                        break;
+                }
+                using (var context = new CETAPEntities())
+                {
+                    context.Cleaned_batch.AddRange(cleaned);
+                    context.SaveChanges();
+                    completed = true;
+                }
+
+            }
+
+            return completed;
+        }
         public ObservableCollection<QADatRecord> GetQADataFromFile(datFileAttributes filename)
         {
 
@@ -5538,7 +5763,7 @@ namespace CETAP_LOB.Model
             {
                 switch (filename.CSX)
                 {
-                  
+
                     case 667:
                         // FileHelperAsyncEngine engine;
                         engine = new FileHelperAsyncEngine(typeof(ASC667));
@@ -6218,6 +6443,74 @@ namespace CETAP_LOB.Model
             ListSurnames.AddSurname(surname);
             return Added;
         }
+        public bool WriteToQaTable(ObservableCollection<QADatRecord> QaRecs, int batchID)
+        {
+            List<Database.QA> qas = new List<Database.QA>();
+            foreach (QADatRecord item in QaRecs)
+            {
+                Database.QA myQa = new Database.QA();
+                QaRecsToDBbQa(myQa, item);
+                myQa.BatchID = batchID;
+                qas.Add(myQa);
+
+                using (CETAPEntities cetapEntities = new CETAPEntities())
+                {
+                    cetapEntities.QAs.Add(myQa);
+                    // cetapEntities.QAs.AddRange(qas);
+                    cetapEntities.SaveChanges();
+
+                }
+            }
+            return true;
+        }
+
+        private static void QaRecsToDBbQa(Database.QA myQa, QADatRecord item)
+        {
+            myQa.CSX_Number = Convert.ToInt32(item.CSX_Number);
+            myQa.CSX = item.CSX_Part;
+            myQa.NBT = Convert.ToInt64(item.Reference);
+            myQa.Barcode = Convert.ToInt64(item.Barcode);
+            if (!string.IsNullOrEmpty(item.SAID.ToString()))
+            {
+                myQa.SAID = Convert.ToInt64(item.SAID);
+            }
+            myQa.ForeignID = item.ForeignID;
+            myQa.IDType = Convert.ToInt32(item.IDType);
+            myQa.Gender = item.Gender;
+            myQa.Citizenship = Convert.ToInt32(item.Citizenship);
+            //  myQa.DateOfBirth = item.DOB.Date;
+            myQa.Surname = item.Surname;
+            myQa.Name = item.FirstName;
+            myQa.Initials = item.initials;
+            myQa.VenueCode = Convert.ToInt32(item.VenueCode);
+            //  myQa.TestDate = item.TestDate.Date;
+            myQa.HLanguage = Convert.ToInt32(item.HomeLanguage);
+            myQa.SchoolLanguage = Convert.ToInt32(item.SchoolLanguage);
+            myQa.Classification = Convert.ToInt32(item.Classification);
+            myQa.AQL_Language = item.AQL_Language;
+            myQa.AQL_Code = item.AQL_Code;
+            Collection<DatAnswer> mysect = item.Section1;
+            //  myQa.Section1 = mysect.ToString();
+            Collection<DatAnswer> mysect2 = item.Section2;
+            //  myQa.Section2 = mysect2.ToString();
+            Collection<DatAnswer> mysect3 = item.Section3;
+            //  myQa.Section3 = mysect3.ToString();
+            Collection<DatAnswer> mysect4 = item.Section4;
+            //   myQa.Section4 = mysect4.ToString();
+            Collection<DatAnswer> mysect5 = item.Section5;
+            //  myQa.Section5 = mysect5.ToString();
+            Collection<DatAnswer> mysect6 = item.Section6;
+            //  myQa.Section6 = mysect6.ToString();
+            Collection<DatAnswer> mysect7 = item.Section7;
+            //  myQa.Section7 = mysect7.ToString();
+            myQa.MathCode = item.MatCode.ToString();
+            myQa.MAT_Language = item.Mat_Language.ToString();
+            Collection<DatAnswer> mysect8 = item.MathSection;
+            //  myQa.MatSection = mysect8.ToString();
+            myQa.Faculty1 = item.Faculty1;
+            myQa.Faculty2 = item.Faculty2;
+            myQa.Faculty3 = item.Faculty3;
+        }
 
         #endregion
 
@@ -6451,7 +6744,7 @@ namespace CETAP_LOB.Model
         {
 
             IntakeYearsBDO myYear = new IntakeYearsBDO();
-            List<ForDuplicatesBarcodesBDO> duplicatesBarcodesBdoList = new List<ForDuplicatesBarcodesBDO>();            
+            List<ForDuplicatesBarcodesBDO> duplicatesBarcodesBdoList = new List<ForDuplicatesBarcodesBDO>();
 
             var myBatch = new List<Composit>();
             myYear = GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
@@ -6551,7 +6844,7 @@ namespace CETAP_LOB.Model
                 return duplicatesBarcodesBdoList;
             }
         }
-            
+
         public bool DuplicateReportGeneration(List<ForDuplicatesBarcodesBDO> Duplicates, string filename)
         {
             XLWorkbook xlWorkbook = new XLWorkbook();
@@ -6566,7 +6859,7 @@ namespace CETAP_LOB.Model
             xlWorksheet.Cell(1, 7).Value = (object)"RecNo";
             xlWorksheet.Cell(1, 8).Value = (object)"Date Modified";
             xlWorksheet.Cell(2, 1).Value = (object)Duplicates.AsEnumerable<ForDuplicatesBarcodesBDO>();
-          //  DateTime dateTime = new DateTime();
+            //  DateTime dateTime = new DateTime();
             DateTime now = DateTime.Now;
             string str = now.Year.ToString() + now.Month.ToString("00") + now.Day.ToString("00") + "_" + now.Hour.ToString("00") + now.Minute.ToString("00");
             filename = filename + str + ".xlsx";
@@ -6633,7 +6926,7 @@ namespace CETAP_LOB.Model
                    c => c.VenueCode,
                    v => v.VenueCode,
                    (c, v) => new { Composit = c, v.VenueType })
-               .Where(x => (x.VenueType == "Remote" || x.Composit.RefNo.ToString().Substring(7,1) == "9") && x.Composit.VenueCode != 99999 && x.Composit.DOT > intakeYear.yearStart && x.Composit.DOT < intakeYear.yearEnd)
+               .Where(x => (x.VenueType == "Remote" || x.Composit.RefNo.ToString().Substring(7, 1) == "9") && x.Composit.VenueCode != 99999 && x.Composit.DOT > intakeYear.yearStart && x.Composit.DOT < intakeYear.yearEnd)
                .Select(x => x.Composit)
                 .ToList();
 
@@ -6653,9 +6946,9 @@ namespace CETAP_LOB.Model
         {
             SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXxfdHVWR2FZUENwXkc=");
 
-          
+
             //  string appRootPath = AppDomain.CurrentDomain.BaseDirectory;
-           // string sourceFilePath = "template.docx";
+            // string sourceFilePath = "template.docx";
             //  string filePath = Path.Combine(appRootPath, "template.docx");
             string mypassword;
 
@@ -6665,7 +6958,7 @@ namespace CETAP_LOB.Model
             }
             else
             {
-               long password = selectedWriter.SAID ?? 0;
+                long password = selectedWriter.SAID ?? 0;
                 mypassword = password.ToString("D13");
 
             }
@@ -6681,9 +6974,6 @@ namespace CETAP_LOB.Model
                 // File exists, do something
                 File.Delete(destinationFilePath);
             }
-
-
-           
 
             string toWhom = "Dear " + CultureInfo.CurrentCulture.TextInfo.ToTitleCase(selectedWriter.Name);
             string txtSurname = CultureInfo.CurrentCulture.TextInfo.ToTitleCase(selectedWriter.Surname);
@@ -6704,17 +6994,17 @@ namespace CETAP_LOB.Model
                 PdfPage page = doc.Pages.Add();
                 PdfGraphics graphics = page.Graphics;
                 PointF iconLocation = new PointF(1, 1);
- 
+
                 // add text
                 PdfFont font = new PdfStandardFont(PdfFontFamily.TimesRoman, 16, PdfFontStyle.Bold);
                 FileStream imageStream = new FileStream("nbt.png", FileMode.Open, FileAccess.Read);
                 PdfBitmap con = new PdfBitmap(imageStream);
-                graphics.DrawImage(con, iconLocation.X,iconLocation.Y);
+                graphics.DrawImage(con, iconLocation.X, iconLocation.Y);
 
-                graphics.DrawString("NBT RESULTS", font,PdfBrushes.Black,iconLocation.X + 200, iconLocation.Y + 130);
+                graphics.DrawString("NBT RESULTS", font, PdfBrushes.Black, iconLocation.X + 200, iconLocation.Y + 130);
 
                 font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
-                graphics.DrawString(toWhom, font,PdfBrushes.Black,iconLocation.X, iconLocation.Y + 180);
+                graphics.DrawString(toWhom, font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 180);
 
 
                 font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
@@ -6741,8 +7031,8 @@ namespace CETAP_LOB.Model
                 cellStyle1.TextBrush = PdfBrushes.Black;
                 cellStyle2.TextBrush = PdfBrushes.Black;
                 cellStyle1.BackgroundBrush = PdfBrushes.White;
-               // parentGrid.Style = cellStyle;
-               // parentGrid.Rows[0].Cells[0].Style = cellStyle;
+                // parentGrid.Style = cellStyle;
+                // parentGrid.Rows[0].Cells[0].Style = cellStyle;
 
                 parentGrid.Headers.Add(1);
                 PdfStringFormat stringFormat = new PdfStringFormat(PdfTextAlignment.Center, PdfVerticalAlignment.Middle);
@@ -6847,7 +7137,7 @@ namespace CETAP_LOB.Model
                 childGrid.Style = gridStyle1;
 
                 //draw parent grid
-                parentGrid.Draw(page,iconLocation.X,iconLocation.Y + 240);
+                parentGrid.Draw(page, iconLocation.X, iconLocation.Y + 240);
 
                 font = new PdfStandardFont(PdfFontFamily.Helvetica, 12);
                 graphics.DrawString("Centre for Educational Accessments (CEA) ", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 550);
@@ -6858,8 +7148,8 @@ namespace CETAP_LOB.Model
 
 
                 font = new PdfStandardFont(PdfFontFamily.Helvetica, 10, PdfFontStyle.Bold);
-                graphics.DrawString("Helpdesk contact number is (021) 650-3523 and email is nbt@uct.ac.za", font,PdfBrushes.Black, iconLocation.X, iconLocation.Y + 660);
-                
+                graphics.DrawString("Helpdesk contact number is (021) 650-3523 and email is nbt@uct.ac.za", font, PdfBrushes.Black, iconLocation.X, iconLocation.Y + 660);
+
 
                 FileStream imageStream1 = new FileStream("cea.png", FileMode.Open, FileAccess.Read);
                 PdfBitmap con1 = new PdfBitmap(imageStream1);
@@ -6885,214 +7175,49 @@ namespace CETAP_LOB.Model
                 stream.Position = 0;
                 File.WriteAllBytes(destinationFilePath, stream.ToArray());
             }
+        }
 
 
 
-            // SizeF clientSize = page.GetClientSize();
+        private void CSX909ToScoreDatRecord(ASC909 record, Cleaned_batch mdata)
+        {
+            mdata.CSX = record.CSX;
+            mdata.CSX_type_id = Convert.ToInt32(record.CSX_Number);
+            mdata.Barcode = Convert.ToInt64(record.SessionID);
+            mdata.NBT = Convert.ToInt64(record.NBT);
+            if (!string.IsNullOrEmpty(record.SAID.Trim())) mdata.SAID = Convert.ToInt64(record.SAID);
 
-            //             var y = clientSize.Height;
-            //            var x = clientSize.Width;
-
-            //SizeF iconSize = new SizeF(con.Width, con.Height);
-            //            PdfImage icon = new PdfBitmap(imageStream);
-            //            SizeF iconSize = new SizeF(icon.Width, icon.Height);
-
-            // draw the image in the page
-            //PdfGraphics graphics = page.Graphics;
-            //PointF iconLocation = new PointF(1, 1);
-            //PointF textLocation = new PointF(10, 10);
-            //graphics.DrawImage(icon, 1,1);
-            ////icon.Draw(page, new PointF(10, 10));
-
-
-
-
-
-
-            ////text.StringFormat = new PdfStringFormat(PdfTextAlignment.Center);
-            ////result = text.Draw(page, new PointF(clientSize.Width - 25, iconLocation.Y + 10));
-            ////create a grid 
-            //PdfGrid parentGrid = new PdfGrid();
-            //PdfGridCellStyle cellStyle = new PdfGridCellStyle();
-            //PdfGridCellStyle cellStyle1 = new PdfGridCellStyle();
-            //cellStyle.BackgroundBrush = PdfBrushes.Gray;
-            ////cellStyle.TextBrush = PdfBrushes.White;
-            //cellStyle.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 10,PdfFontStyle.Bold);
-            //cellStyle1.Font = new PdfStandardFont(PdfFontFamily.Helvetica, 12, PdfFontStyle.Bold);
- 
-
-
+            mdata.ForeignID = record.ForeignID;
+            mdata.IDType = Convert.ToInt32(record.IDType);
+            mdata.Gender = Convert.ToInt32(record.Gender);
+            mdata.Citizenship = Convert.ToInt32(record.Citizenship);
+            mdata.HomeLanguage = Convert.ToInt32(record.HomeLanguage);
+            mdata.SchoolLanguage = Convert.ToInt32(record.SchoolLanguage);
+            mdata.Classification = Convert.ToInt32(record.Classification);
+            mdata.Faculty = record.Faculty;
+            mdata.DOB = DateTime.ParseExact(record.DOB,"yyyyMMdd",CultureInfo.InvariantCulture);
+            mdata.Surname = record.Surname;
+            mdata.Name = record.Name;
+            mdata.Initials = record.Initials;
+            mdata.VenueCode = Convert.ToInt32(record.VenueCode);
+            mdata.DOT = DateTime.ParseExact(record.DOT,"yyyyMMdd",CultureInfo.InvariantCulture);
+            mdata.AQL_language = record.AQL_Language;
+             
+            if(!string.IsNullOrEmpty(record.AQL_Code.Trim())) mdata.AQL_code = Convert.ToInt32(record.AQL_Code.Trim());
+            mdata.AQL_section1 = record.AQL_Section1;
+            mdata.AQL_section2 = record.AQL_Section2;
+            mdata.AQL_section3 = record.AQL_Section3;
+            mdata.AQL_section4 = record.AQL_section4;
+            mdata.AQL_section5 = record.AQL_Section5;
+            mdata.AQL_section6 = record.AQL_Section6;
+            mdata.AQL_section7 = record.AQL_Section7;
+            mdata.Maths_Language = record.Maths_Language;
+            if(!string.IsNullOrEmpty(record.Maths_Code.Trim())) mdata.Math_code = Convert.ToInt32(record.Maths_Code.Trim());
+            mdata.Math_section = record.Maths_Answers;
+            mdata.Faculty1 = record.Faculty1;
+            mdata.Faculty2 = record.Faculty2;
+            mdata.Faculty3 = record.Faculty3;  
 
            
-
-            
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-            //FileStream imageStream1 = new FileStream("cea.png", FileMode.Open, FileAccess.Read);
-            //PdfImage icon1 = new PdfBitmap(imageStream1);
-            //SizeF iconSize1 = new SizeF(icon1.Width, icon1.Height);
-
-            //// draw the image in the page
-            //PdfGraphics graphics1 = page.Graphics;
-            //PointF iconLocation1 = new PointF(iconLocation.X, iconLocation.Y + 460);
-            //graphics1.DrawImage(icon1, iconLocation1);
-
-            ////Document security.
-            //PdfSecurity security = doc.Security;
-            ////Specifies key size and encryption algorithm.
-            //security.KeySize = PdfEncryptionKeySize.Key128Bit;
-            //security.Algorithm = PdfEncryptionAlgorithm.RC4;
-            //security.OwnerPassword = "nbt";
-            ////It allows printing and accessibility copy content.
-            //security.Permissions = PdfPermissionsFlags.Print | PdfPermissionsFlags.AccessibilityCopyContent;
-            //security.UserPassword = password;
-
-
-
-            //        hasvalues = true;
-            //        stream.Position = 0;
-            //        File.WriteAllBytes(destinationFilePath, stream.ToArray()); 
-
-
-            //            //File.Copy(sourceFilePath, destinationFilePath, true);
-
-            //            //using (WordprocessingDocument sourceDoc = WordprocessingDocument.Open(sourceFilePath, true))
-            //            //{
-            //            //    using (WordprocessingDocument copiedDoc = WordprocessingDocument.Open(destinationFilePath, true))
-            //            //    {
-            //            //        // Replace text in the main document part
-            //            //        ReplaceText(copiedDoc, "Bianca", selectedWriter.Name); // use name from database
-
-            //            //        // Access the first table in the document (you may need to adjust this based on your document structure)
-            //            //        Table table = copiedDoc.MainDocumentPart.Document.Body.Elements<Table>().FirstOrDefault();
-
-            //            //        if (table != null)
-            //            //        {
-            //            //            // Replace values in certain cells of the table
-            //            //            ReplaceTableCellText(table, "93100", selectedWriter.RefNo.ToString(), 1, 1);//NBT number
-            //            //            ReplaceTableCellText(table, "ILNE", selectedWriter.Name, 4, 1); // First Name
-            //            //            ReplaceTableCellText(table, "DU TOIT", selectedWriter.Surname, 3, 1); // Surname
-            //            //            ReplaceTableCellText(table, "ST PATRICKS COLLEGE", selectedWriter.VenueName, 6, 1); // Venue
-            //            //            ReplaceTableCellText(table, "DOT", selectedWriter.DOT.ToString("yyyy/MM/dd"), 5, 1); // "DateTime.Now.ToString("yyyy/MM/dd"), 5,1); // Date of Test
-            //            //            ReplaceTableCellText(table, "9902190245082", mypassword, 2, 1); // National Id or Passport Number
-            //            //            ReplaceTableCellText(table, "75", Convert.ToString(selectedWriter.ALScore), 1, 2); // AL
-            //            //            ReplaceTableCellText(table, "70", Convert.ToString(selectedWriter.QLScore), 1, 3); // QL  
-            //            //            ReplaceTableCellText(table, "61", Convert.ToString(selectedWriter.MATScore), 1, 4); // Math
-            //            //                                                                                                // Add more ReplaceTableCellText calls as needed
-
-
-            //            //            // Save the modified document
-            //            //            copiedDoc.Save();
-
-
-            //            //        }
-            //            //    }
-            //            //    //// Initialize Word Application
-            //            //    //System.Windows.Application wordApp = new Application();
-
-            //            //    //// Open the Word document
-            //            //    //Document doc = wordApp.Documents.Open(@"C:\Path\To\Your\WordDocument.docx");
-
-            //            //    //// Specify the output PDF file path
-            //            //    //object outputFileName = @"C:\Path\To\Your\Output\PDF\Document.pdf";
-            //            //    //object fileFormat = WdSaveFormat.wdFormatPDF;
-
-            //            //    //// Save the document as PDF
-            //            //    //doc.SaveAs(ref outputFileName, ref fileFormat);
-
-            //            //    //// Close the Word document
-            //            //    //doc.Close();
-
-            //            //    //Document forPdf = new Document();
-
-            //            //    //string fname = Path.GetFileNameWithoutExtension(destinationFilePath);
-            //            //    ////Load a sample Word document
-
-            //            //    //string fnamepdf = fname + ".pdf";
-
-            //            //    //forPdf.LoadFromFile(destinationFilePath);
-
-            //            //    //string pdfFolder = Path.Combine(RemotesFolder, fnamepdf);
-            //            //    //if (File.Exists(pdfFolder))
-            //            //    //{
-            //            //    //    // File exists, do something
-            //            //    //    File.Delete(pdfFolder);
-            //            //    //}
-
-            //            //    ////Create a ToPdfParameterList instance
-            //            //    //ToPdfParameterList parameters = new ToPdfParameterList();
-
-            //            //    ////Set open password and permission password for PDF
-            //            //    //string openPsd = "CEA-nbt";
-            //            //    //string permissionPsd = mypassword;
-            //            //    //parameters.PdfSecurity.Encrypt(openPsd, permissionPsd, PdfPermissionsFlags.Default, PdfEncryptionKeySize.Key128Bit);
-
-            //            //    ////Save the Word document to PDF with password
-
-            //            //    //forPdf.SaveToFile(pdfFolder, parameters);
-            //            //}
-
-            //           // return hasvalues;
         }
-        //        // Replace text in the document
-        //        //private static void ReplaceText(WordprocessingDocument doc, string oldValue, string newValue)
-        //        //{
-        //        //    foreach (var textElement in doc.MainDocumentPart.Document.Descendants<Text>())
-        //        //    {
-        //        //        if (textElement.Text.Contains(oldValue))
-        //        //        {
-        //        //            textElement.Text = textElement.Text.Replace(oldValue, newValue);
-        //        //        }
-        //        //    }
-        //        //}
-
-        //        // Replace text in a specific cell of the table
-        //        //private static void ReplaceTableCellText(Table table, string oldValue, string newValue, int rowIndex, int colIndex)
-        //        //{
-        //        //    var cell = table.Elements<DocumentFormat.OpenXml.Wordprocessing.TableRow>().ElementAtOrDefault(rowIndex)?.Elements<DocumentFormat.OpenXml.Wordprocessing.TableCell>().ElementAtOrDefault(colIndex);
-
-        //        //    if (cell != null)
-        //        //    {
-        //        //        foreach (var textElement in cell.Descendants<Text>())
-        //        //        {
-        //        //            if (textElement.Text.Contains(oldValue))
-        //        //            {
-        //        //                textElement.Text = textElement.Text.Replace(oldValue, newValue);
-        //        //            }
-        //        //        }
-        //        //    }
-        //        //}
-
-    }
-}
+    } }

@@ -38,7 +38,6 @@ namespace CETAP_LOB.Database
         public virtual DbSet<IntakeYear> IntakeYears { get; set; }
         public virtual DbSet<NewNBTNumber> NewNBTNumbers { get; set; }
         public virtual DbSet<Province> Provinces { get; set; }
-        public virtual DbSet<QA> QAs { get; set; }
         public virtual DbSet<RecordsInQueue> RecordsInQueues { get; set; }
         public virtual DbSet<ScannedFile> ScannedFiles { get; set; }
         public virtual DbSet<ScanTracker> ScanTrackers { get; set; }
@@ -51,5 +50,8 @@ namespace CETAP_LOB.Database
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<TestRoom> TestRooms { get; set; }
         public virtual DbSet<Vw_EasyPayRecords> Vw_EasyPayRecords { get; set; }
+        public virtual DbSet<QA> QAs { get; set; }
+        public virtual DbSet<School> Schools { get; set; }
+        public virtual DbSet<Cleaned_batch> Cleaned_batch { get; set; }
     }
 }

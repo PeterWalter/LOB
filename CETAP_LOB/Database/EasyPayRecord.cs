@@ -23,7 +23,7 @@ namespace CETAP_LOB.Database
         public Nullable<decimal> Fee { get; set; }
         public Nullable<decimal> BankCost { get; set; }
         public short NumOfTrans { get; set; }
-        public decimal AmountPaid { get; set; }
+        public Nullable<decimal> AmountPaid { get; set; }
         public string Trace { get; set; }
         public string TenderType_PAN { get; set; }
         public string PointOfService { get; set; }

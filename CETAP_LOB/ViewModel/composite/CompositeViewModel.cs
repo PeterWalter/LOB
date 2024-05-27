@@ -18,6 +18,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
+using GalaSoft.MvvmLight.Helpers;
 
 namespace CETAP_LOB.ViewModel.composite
 {
@@ -34,7 +35,8 @@ namespace CETAP_LOB.ViewModel.composite
     public const string WritersCompositPropertyName = "WritersComposit";
     public const string Composit1PropertyName = "Composit1";
     public const string NBTScoresPropertyName = "NBTScores";
-    private const int RecordsLength = 5000;
+    public const string IntakeScoresPropertyName = "IntakeScores";
+    //private const int RecordsLength = 5000;
     private int recPage;
     private int _totalRec;
     private IntakeYearsBDO _IntakeYear;
@@ -47,6 +49,7 @@ namespace CETAP_LOB.ViewModel.composite
     private ObservableCollection<CompositBDO> _myWriters;
     private ObservableCollection<CompositBDO> _mycomposit;
     private ObservableCollection<CompositBDO> _myscores;
+    private ObservableCollection<CompositBDO> _myIntakescores;
     private IDataService _service;
 
     public RelayCommand LoadNBTCommand { get; private set; }
@@ -62,6 +65,8 @@ namespace CETAP_LOB.ViewModel.composite
     public RelayCommand PreviousCommand { get; private set; }
 
     public RelayCommand GenerateFileCompositeCommand { get; private set; }
+    public RelayCommand GenerateWriterListCommand { get; private set; }
+    public RelayCommand GenerateIntakeCompositeCommand { get; private set; }
 
     public RelayCommand RefreshCommand { get; private set; }
 
@@ -244,7 +249,23 @@ namespace CETAP_LOB.ViewModel.composite
       }
     }
 
-    public CompositeViewModel(IDataService Service)
+        public ObservableCollection<CompositBDO> IntakeScores
+        {
+            get
+            {
+                return _myIntakescores;
+            }
+            set
+            {
+                if (_myIntakescores == value)
+                    return;
+                _myIntakescores = value;
+                RaisePropertyChanged("IntakeScores");
+            }
+        }
+
+
+        public CompositeViewModel(IDataService Service)
     {
       _service = Service;
       InitializeModels();
@@ -262,9 +283,11 @@ namespace CETAP_LOB.ViewModel.composite
         pp = 5000;
       Pages = pp / 5000 + 1;
       await Refresh(_page);
+      IntakeScores = new ObservableCollection<CompositBDO>(await _service.GetAllIntakeScoresAsync(IntakeYear));
       Composit1 = new ObservableCollection<CompositBDO>();
       ScoreFolder = ApplicationSettings.Default.ScoreFolder;
       Composit1 = _service.GetAllScores(ScoreFolder);
+   
     }
 
     private async Task Refresh(int page)
@@ -281,6 +304,9 @@ namespace CETAP_LOB.ViewModel.composite
       NextCommand = new RelayCommand((Action) (() => GetNext()), (Func<bool>) (() => canGetNext()));
       IndividualReportCommand = new RelayCommand((Action) (() => GenerateIndividualReport()), (Func<bool>) (() => canGenerate()));
       GenerateFileCompositeCommand = new RelayCommand((Action) (() => GenerateCompositeSelectedRecords()), (Func<bool>) (() => canRun()));
+      GenerateWriterListCommand = new RelayCommand(() => GenerateWriterList(), () => canRun1());
+      GenerateIntakeCompositeCommand = new RelayCommand(() => GenerateIntakeComposite());  //, () => canRun1());
+
       SelectionChangedCommand = new RelayCommand<ObservableCollection<CompositBDO>>((Action<ObservableCollection<CompositBDO>>) (SelectedWriters =>
       {
         if (SelectedWriters == null)
@@ -289,12 +315,51 @@ namespace CETAP_LOB.ViewModel.composite
       }));
     }
 
-    private int GetPage()
+        private void GenerateIntakeComposite()
+        {
+            if (IntakeScores.Count() > 1)
+            {
+                getScores();
+            }
+        }
+
+        private void GenerateWriterList()
+        {
+            //if (IntakeScores.Count() < 1)
+            //{
+            //    getScores();
+            //}
+        }
+ private async void getScores()
+        {
+            IntakeScores = new ObservableCollection<CompositBDO>(await _service.GetAllIntakeScoresAsync(IntakeYear));
+            bool flag = false;
+            string folder = "";
+            FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
+            if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
+                folder = folderBrowserDialog.SelectedPath;
+            if (!string.IsNullOrWhiteSpace(folder))
+                flag = _service.GenerateSelectedComposite(IntakeScores, folder);
+            if (!flag)
+                return;
+            ModernDialog.ShowMessage("Composite of " + IntakeYear + " Records created", "Intake Records!!!", MessageBoxButton.OK);
+        }
+ private int GetPage()
     {
       return recPage + 1;
     }
 
-    private bool canRun()
+    private bool canRun1()
+        {
+            bool flag = false;
+            if (IntakeScores.Count() > 1)
+            {
+                flag = true;
+            }
+            
+            return flag;
+        }
+        private bool canRun()
     {
       bool flag = false;
       if (SelectedWriters != null && SelectedWriters.Count<CompositBDO>() > 0)
@@ -385,7 +450,8 @@ namespace CETAP_LOB.ViewModel.composite
           results.Add(Messages);
         }
       }
-      ModernDialog.ShowMessage("Scores loaded to DB !!!", "Scores Update", MessageBoxButton.OK);
+      getScores();
+            ModernDialog.ShowMessage("Scores loaded to DB !!!", "Scores Update", MessageBoxButton.OK);
     }
 
     private async void AddScoresToDB()
@@ -404,6 +470,7 @@ namespace CETAP_LOB.ViewModel.composite
           results.Add(Messages);
       }
       await Refresh(_page);
+      getScores();
       ModernDialog.ShowMessage("Scores loaded to DB !!!", Messages, MessageBoxButton.OK);
     }
 

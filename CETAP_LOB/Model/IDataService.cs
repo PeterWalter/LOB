@@ -81,6 +81,7 @@ namespace CETAP_LOB.Model
         List<BatchBDO> GetAllbatches();
         List<BatchBDO> getbatchesByVenue(int venueID);
         List<BatchBDO> getbatchesByDate(DateTime date);
+        BatchBDO GetBatchByName( string BName);
         bool addBatch(BatchBDO batchBDO, ref string message);
         bool updatebatch(BatchBDO batchBDO, ref string message);
         bool deleteBatch(BatchBDO batch, ref string message);
@@ -113,6 +114,7 @@ namespace CETAP_LOB.Model
 
         // Composit
         Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, IntakeYearsBDO yr);
+        Task<List<CompositBDO>> GetAllIntakeScoresAsync(IntakeYearsBDO yr);
         int GetCompositCount(IntakeYearsBDO yr);
         CompositBDO getResultsByName(string name);
         CompositBDO getResultsBySurName(string surname);
@@ -148,6 +150,8 @@ namespace CETAP_LOB.Model
         QADatRecord GetNBTNumberFromDBbySAID(QADatRecord SelectedRecord);
         QADatRecord GetNBTNumberFromDBbyFID(QADatRecord SelectedRecord);
         bool SaveQADatFile(datFileAttributes datfile, ref string message);
+        bool WriteToQaTable(ObservableCollection<QADatRecord> QaRecs, int batchID);
+        bool WriteQAdataToDB(datFileAttributes filename);
         bool AutoClean();
         QADatRecord GetSAIDbyNBT(QADatRecord SelectedRecord);
         QADatRecord GetFIDbyNBT(QADatRecord SelectedRecord);

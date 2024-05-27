@@ -29,6 +29,8 @@ namespace CETAP_LOB.Database
         public System.Guid rowguid { get; set; }
         public System.DateTime DateModified { get; set; }
         public byte[] RowVersion { get; set; }
+        public Nullable<bool> InUse { get; set; }
+        public string TestCode_CHAR { get; set; }
     
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
         public virtual ICollection<TestAllocation> TestAllocations { get; set; }
