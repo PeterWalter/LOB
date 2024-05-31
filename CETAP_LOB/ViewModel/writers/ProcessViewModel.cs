@@ -482,7 +482,9 @@ namespace CETAP_LOB.ViewModel.writers
                   ws.Cell(1, 11).Value =  "Mobile";
                   ws.Cell(1, 12).Value =  "Home";
                   ws.Cell(1, 13).Value =  "EMail";
-                  //ws.Cell(2, 1).InsertData((IEnumerable) source);
+                  ws.Cell(1, 14).Value = "Date of Registration";
+                  ws.Cell(1, 15).Value = "Creation Date";
+                    //ws.Cell(2, 1).InsertData((IEnumerable) source);
                     var rangeWebWriters = ws.Cell(2, 1).InsertData(workdata);
 
                     var workdata1 = Venue.Where(wsd => wsd.Venue == rws.Venue).Select(wsd => new

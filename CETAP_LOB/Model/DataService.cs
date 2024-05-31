@@ -3016,6 +3016,9 @@ namespace CETAP_LOB.Model
             Dictionary<char, string> replacements = new Dictionary<char, string>
 {
     {';', string.Empty },
+    {'!', string.Empty },
+    {'é', "e" },
+    {'@', string.Empty },
     {'è', "e" },
     {'ë', "e" },
     {'ï', "i" },
@@ -3031,7 +3034,6 @@ namespace CETAP_LOB.Model
     {'ö', "o" },
     {'ü', "u" },
     {'ç', "c" },
-    {'é', "e" },
     {'\'', string.Empty }
 };
 
@@ -3063,53 +3065,26 @@ namespace CETAP_LOB.Model
                                 a.Surname = b.ToString();
 
                             }
-                            //if (a.Surname.Contains("é"))
-                            //{
-                            //    b.Replace("é", "e");
-                            //    a.Surname = b.ToString();
-                            //}
-                            //if (a.Surname.Contains("è"))
-                            //{
-                            //    b.Replace("è", "e");
-                            //    a.Surname = b.ToString();
-                            //}
-                            //    if (a.Surname.Contains("'"))
-                            //{
-                            //    b.Replace("'", string.Empty);
-                            //    a.Surname = b.ToString();
-                            //}
-
 
                             break;
 
                         case "FirstName":
                             StringBuilder c = new StringBuilder(a.FirstName);
+
+                            foreach (var fn in replacements)
+                            {
+                                c.Replace(fn.Key.ToString(), fn.Value);
+                            }
+
+                            a.FirstName = c.ToString();
+
                             if (a.FirstName.Contains("&#039;"))
                             {
                                 c.Replace("&#039;", string.Empty);
                                 a.FirstName = c.ToString();
                             }
-                            //if(a.FirstName.Contains("é"))
-                            //{
-                            //    c.Replace("é", "e");
-                            //    a.FirstName = c.ToString();
-                            //}
-                            //if (a.FirstName.Contains("è"))
-                            //{
-                            //    c.Replace("è", "e");
-                            //    a.FirstName = c.ToString();
-                            //}
-                            //if(a.FirstName.Contains("'"))
-                            //{
-                            //    c.Replace("'", string.Empty);
-                            //    a.FirstName = c.ToString();
-                            //}
-                            foreach (var kv in replacements)
-                            {
-                                c.Replace(kv.Key.ToString(), kv.Value);
-                            }
 
-                            a.FirstName = c.ToString();
+
 
 
                             if (a.FirstName.Length > 18)
@@ -3157,6 +3132,10 @@ namespace CETAP_LOB.Model
                                 a.DOB = DateTime.ParseExact(myDOB, "yyyy/MM/dd", null);
                             }
                             break;
+                        case "HTelephone":
+                            if(a.HTelephone.Length > 15) a.HTelephone = a.Mobile;
+
+                            break;
 
                     }
                 }
@@ -3190,7 +3169,7 @@ namespace CETAP_LOB.Model
             }
             else
             {
-                NewNBT = "No New NBt numbers available to allocate";
+                NewNBT = "No New NBT numbers available to allocate";
             }
 
             return ret;

@@ -140,8 +140,8 @@ namespace CETAP_LOB.Helper
     }
         public static DateTime weblistDateTime(string DatdateString)
         {
-            string dateString = "2022/08/09 1:45:29 PM";
-            DateTime dateTime = DateTime.ParseExact(dateString, "yyyy/MM/dd h:mm:ss tt", CultureInfo.InvariantCulture);
+            //string dateString = "2022/08/09 1:45:29 PM";
+            DateTime dateTime = DateTime.ParseExact(DatdateString.Trim(), "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
             return dateTime;
         }
         public static DateTime WebDateTime(string date)
