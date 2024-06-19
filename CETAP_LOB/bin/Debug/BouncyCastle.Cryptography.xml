@@ -151,6 +151,15 @@
             <summary>Return the content of the OCTET STRING as a <see cref="T:System.IO.Stream"/>.</summary>
             <returns>A <see cref="T:System.IO.Stream"/> represnting the OCTET STRING's content.</returns>
         </member>
+        <member name="F:Org.BouncyCastle.Asn1.Asn1RelativeOid.MaxContentsLength">
+            <summary>Implementation limit on the length of the contents octets for a Relative OID.</summary>
+            <remarks>
+            We adopt the same value used by OpenJDK for Object Identifier. In theory there is no limit on the length of
+            the contents, or the number of subidentifiers, or the length of individual subidentifiers. In practice,
+            supporting arbitrary lengths can lead to issues, e.g. denial-of-service attacks when attempting to convert a
+            parsed value to its (decimal) string form.
+            </remarks>
+        </member>
         <member name="M:Org.BouncyCastle.Asn1.Asn1Sequence.GetInstance(System.Object)">
              return an Asn1Sequence from the given object.
             
@@ -1793,6 +1802,18 @@
             }
             </pre>
         </member>
+        <member name="T:Org.BouncyCastle.Asn1.Cms.KemRecipientInfo">
+            KEMRecipientInfo ::= SEQUENCE {
+              version CMSVersion,  -- always set to 0
+              rid RecipientIdentifier,
+              kem KEMAlgorithmIdentifier,
+              kemct OCTET STRING,
+              kdf KeyDerivationAlgorithmIdentifier,
+              kekLength INTEGER (1..MAX),
+              ukm [0] EXPLICIT UserKeyingMaterial OPTIONAL,
+              wrap KeyEncryptionAlgorithmIdentifier,
+              encryptedKey EncryptedKey }
+        </member>
         <member name="M:Org.BouncyCastle.Asn1.Cms.KeyAgreeRecipientIdentifier.ToAsn1Object">
             Produce an object suitable for an Asn1OutputStream.
             <pre>
@@ -2627,6 +2648,15 @@
             
              @param str string to validate.
              @return true if numeric, fale otherwise.
+        </member>
+        <member name="F:Org.BouncyCastle.Asn1.DerObjectIdentifier.MaxContentsLength">
+            <summary>Implementation limit on the length of the contents octets for an Object Identifier.</summary>
+            <remarks>
+            We adopt the same value used by OpenJDK. In theory there is no limit on the length of the contents, or the
+            number of subidentifiers, or the length of individual subidentifiers. In practice, supporting arbitrary
+            lengths can lead to issues, e.g. denial-of-service attacks when attempting to convert a parsed value to its
+            (decimal) string form.
+            </remarks>
         </member>
         <member name="M:Org.BouncyCastle.Asn1.DerObjectIdentifier.GetInstance(System.Object)">
              return an OID from the passed in object
@@ -4324,16 +4354,33 @@
              e.g. (X509NetscapeCertType.sslCA | X509NetscapeCertType.smimeCA)
         </member>
         <member name="T:Org.BouncyCastle.Asn1.Mozilla.PublicKeyAndChallenge">
-             This is designed to parse
-             the PublicKeyAndChallenge created by the KEYGEN tag included by
-             Mozilla based browsers.
-              <pre>
-              PublicKeyAndChallenge ::= SEQUENCE {
-                spki SubjectPublicKeyInfo,
-                challenge IA5STRING
-              }
-            
-              </pre>
+            <summary>
+            For parsing the PublicKeyAndChallenge created by the KEYGEN tag included by Mozilla based browsers.
+            </summary>
+            <remarks>
+            <code>
+            PublicKeyAndChallenge ::= SEQUENCE
+            {
+                spki        SubjectPublicKeyInfo,
+                challenge   IA5STRING
+            }
+            </code>
+            </remarks>
+        </member>
+        <member name="T:Org.BouncyCastle.Asn1.Mozilla.SignedPublicKeyAndChallenge">
+            <summary>
+            For parsing the SignedPublicKeyAndChallenge created by the KEYGEN tag included by Mozilla based browsers.
+            </summary>
+            <remarks>
+            <code>
+            SignedPublicKeyAndChallenge ::= SEQUENCE
+            {
+                publicKeyAndChallenge   PublicKeyAndChallenge,
+                signatureAlgorithm      AlgorithmIdentifier,
+                signature               BIT STRING
+            }
+            </code>
+            </remarks>
         </member>
         <member name="T:Org.BouncyCastle.Asn1.Nist.KMacWithShake128Params">
             <summary>
@@ -9413,6 +9460,9 @@
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRing.GetPublicKey(System.Int64)">
             <summary>Return the public key referred to by the passed in key ID if it is present.</summary>
         </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRing.GetPublicKey(System.Byte[])">
+            <summary>Return the public key with the passed in fingerprint if it is present.</summary>
+        </member>
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRing.GetPublicKeys">
             <summary>Allows enumeration of all the public keys.</summary>
             <returns>An <c>IEnumerable</c> of <c>PgpPublicKey</c> objects.</returns>
@@ -9504,6 +9554,15 @@
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRingBundle.GetPublicKeyRing(System.Int64)">
             <summary>Return the public key ring which contains the key referred to by keyId</summary>
             <param name="keyId">key ID to match against</param>
+        </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRingBundle.GetPublicKey(System.Byte[])">
+            <summary>Return the PGP public key associated with the given key fingerprint.</summary>
+            <param name="fingerprint">the public key fingerprint to match against.</param>
+        </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRingBundle.GetPublicKeyRing(System.Byte[])">
+            <summary>Return the public key ring which contains the key associated with the given key fingerprint.
+            </summary>
+            <param name="fingerprint">the public key fingerprint to match against.</param>
         </member>
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpPublicKeyRingBundle.Contains(System.Int64)">
             <summary>
@@ -9748,6 +9807,12 @@
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetPublicKey">
             <summary>Return the public key for the master key.</summary>
         </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetPublicKey(System.Int64)">
+            <summary>Return the public key referred to by the passed in keyID if it is present.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetPublicKey(System.Byte[])">
+            <summary>Return the public key with the passed in fingerprint if it is present.</summary>
+        </member>
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetKeysWithSignaturesBy(System.Int64)">
              Return any keys carrying a signature issued by the key represented by keyID.
             
@@ -9760,6 +9825,12 @@
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetSecretKeys">
             <summary>Allows enumeration of the secret keys.</summary>
             <returns>An <c>IEnumerable</c> of <c>PgpSecretKey</c> objects.</returns>
+        </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetSecretKey(System.Int64)">
+            <summary>Return the secret key referred to by the passed in keyID if it is present.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetSecretKey(System.Byte[])">
+            <summary>Return the secret key associated with the passed in fingerprint if it is present.</summary>
         </member>
         <member name="M:Org.BouncyCastle.Bcpg.OpenPgp.PgpSecretKeyRing.GetExtraPublicKeys">
             <summary>
@@ -10633,9 +10704,24 @@
              @param cert recipient's public key certificate
              @exception ArgumentException if there is a problem with the certificate
         </member>
+        <member name="M:Org.BouncyCastle.Cms.CmsEnvelopedGenerator.AddKeyTransRecipient(System.String,Org.BouncyCastle.X509.X509Certificate)">
+             add a recipient.
+            
+             @param algorithm to override automatic selection (useful for OAEP with PKCS#1v1.5 certs)
+             @param cert recipient's public key certificate
+             @exception ArgumentException if there is a problem with the certificate
+        </member>
         <member name="M:Org.BouncyCastle.Cms.CmsEnvelopedGenerator.AddKeyTransRecipient(Org.BouncyCastle.Crypto.AsymmetricKeyParameter,System.Byte[])">
              add a recipient
             
+             @param key the public key used by the recipient
+             @param subKeyId the identifier for the recipient's public key
+             @exception ArgumentException if there is a problem with the key
+        </member>
+        <member name="M:Org.BouncyCastle.Cms.CmsEnvelopedGenerator.AddKeyTransRecipient(System.String,Org.BouncyCastle.Crypto.AsymmetricKeyParameter,System.Byte[])">
+             add a recipient
+            
+             @param algorithm to override automatic selection (useful for OAEP with PKCS#1v1.5 certs)
              @param key the public key used by the recipient
              @param subKeyId the identifier for the recipient's public key
              @exception ArgumentException if there is a problem with the key
@@ -11189,11 +11275,11 @@
             
              @return a map of oids (as string objects) and byte[] representing digests.
         </member>
-        <member name="M:Org.BouncyCastle.Cms.CmsSignedHelper.GetDigestAlgName(System.String)">
+        <member name="M:Org.BouncyCastle.Cms.CmsSignedHelper.GetDigestAlgName(Org.BouncyCastle.Asn1.DerObjectIdentifier)">
             Return the digest algorithm using one of the standard JCA string
             representations rather than the algorithm identifier (if possible).
         </member>
-        <member name="M:Org.BouncyCastle.Cms.CmsSignedHelper.GetEncryptionAlgName(System.String)">
+        <member name="M:Org.BouncyCastle.Cms.CmsSignedHelper.GetEncryptionAlgName(Org.BouncyCastle.Asn1.DerObjectIdentifier)">
             Return the digest encryption algorithm using one of the standard
             JCA string representations rather than the algorithm identifier (if
             possible).
@@ -19719,6 +19805,10 @@
             reset the underlying cipher. This leaves it in the same state
             it was at after the last init (if there was one).
         </member>
+        <member name="M:Org.BouncyCastle.Crypto.Tls.TlsRsaKeyExchange.CheckPkcs1Encoding2(System.Byte[],System.Int32,System.Int32)">
+            Check the argument is a valid encoding with type 2 of a plaintext with the given length. Returns 0 if
+            valid, or -1 if invalid.
+        </member>
         <member name="M:Org.BouncyCastle.Crypto.Utilities.AlgorithmIdentifierFactory.GenerateEncryptionAlgID(Org.BouncyCastle.Asn1.DerObjectIdentifier,System.Int32,Org.BouncyCastle.Security.SecureRandom)">
              Create an AlgorithmIdentifier for the passed in encryption algorithm.
             
@@ -23225,6 +23315,97 @@
             <param name="ciphertext"></param>
             <param name="privateKey"></param>
             <returns>an instance of <see cref="T:Org.BouncyCastle.Pqc.Crypto.Ntru.Owcpa.OwcpaDecryptResult"/> containing <c>packed_rm</c> an  fail flag</returns>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.GET_MAT(Org.BouncyCastle.Pqc.Crypto.Picnic.KMatrices,System.Int32)">
+            <summary>Return a pointer to the r-th matrix.</summary>
+            <remarks>The caller must know the dimensions.</remarks>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.LMatrix(Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine,System.Int32)">
+            <summary>Return the LowMC linear matrix for this round.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.LMatrixInv(Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine,System.Int32)">
+            <summary>Return the LowMC inverse linear layer matrix for this round.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.KMatrix(Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine,System.Int32)">
+            <summary>Return the LowMC key matrix for this round.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.KMatrixInv(Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine,System.Int32)">
+            <summary>Return the LowMC inverse key matrix for this round.</summary>
+        </member>
+        <member name="M:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstants.RConstant(Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine,System.Int32)">
+            <summary>Return the LowMC round constant for this round.</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_linearMatrices">
+            <summary>Length: 10240</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_roundConstants">
+            <summary>Length: 80</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_keyMatrices">
+            <summary>Length: 10752</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_linearMatrices_full">
+            <summary>Length: 2580</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_keyMatrices_full">
+            <summary>Length: 3225</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_keyMatrices_inv">
+            <summary>Length: 645</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_linearMatrices_inv">
+            <summary>Length: 2580</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL1.s_roundConstants_full">
+            <summary>Length: 20</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_linearMatrices">
+            <summary>Length: 34560</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_roundConstants">
+            <summary>Length: 180</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_keyMatrices">
+            <summary>Length: 35712</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_linearMatrices_full">
+            <summary>Length: 4608</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_keyMatrices_full">
+            <summary>Length: 5760</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_keyMatrices_inv">
+            <summary>Length: 1152</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_linearMatrices_inv">
+            <summary>Length: 4608</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL3.s_roundConstants_full">
+            <summary>Length: 24</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_linearMatrices">
+            <summary>Length: 77824</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_roundConstants">
+            <summary>Length: 304</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_keyMatrices">
+            <summary>Length: 79872</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_linearMatrices_full">
+            <summary>Length: 8160</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_keyMatrices_full">
+            <summary>Length: 10200</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_keyMatrices_inv">
+            <summary>Length: 2040</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_linearMatrices_inv">
+            <summary>Length: 8160</summary>
+        </member>
+        <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.LowmcConstantsL5.s_roundConstants_full">
+            <summary>Length: 32</summary>
         </member>
         <member name="F:Org.BouncyCastle.Pqc.Crypto.Picnic.PicnicEngine.PICNIC_MAX_PRIVATEKEY_SIZE">
             Largest serialized public key size, in bytes 
@@ -28608,10 +28789,20 @@
             <param name="pair">The <code>X509CertificatePair</code> to be tested.</param>
             <returns><code>true</code> if the object matches this selector.</returns>
         </member>
+        <member name="P:Org.BouncyCastle.X509.Store.X509CertStoreSelector.AuthorityKeyIdentifier">
+            <remarks>
+            A DER encoding of an ASN.1 AuthorityKeyIdentifier value.
+            </remarks>
+        </member>
         <member name="P:Org.BouncyCastle.X509.Store.X509CertStoreSelector.Policy">
             <summary>
             An <code>ISet</code> of <code>DerObjectIdentifier</code> objects.
             </summary>
+        </member>
+        <member name="P:Org.BouncyCastle.X509.Store.X509CertStoreSelector.SubjectKeyIdentifier">
+            <remarks>
+            A DER encoding of an ASN.1 SubjectKeyIdentifier (OCTET STRING) value.
+            </remarks>
         </member>
         <member name="P:Org.BouncyCastle.X509.Store.X509CrlStoreSelector.Issuers">
             <summary>

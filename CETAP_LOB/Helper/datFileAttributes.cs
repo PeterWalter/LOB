@@ -220,7 +220,7 @@ namespace CETAP_LOB.Helper
     {
       _filepath = filepath;
       countRecords();
-       readLineAsync();
+      readLineAsync();
       _nameWithoutext = Path.GetFileNameWithoutExtension(_filepath).ToUpper();
       if (_nameWithoutext.Length != 22)
         return;

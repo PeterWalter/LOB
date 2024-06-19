@@ -3,32 +3,20 @@
   "WorkspaceRootPath": "D:\\projects\\source code\\LOB\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\model\\venueprep\\webwriters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\model\\venueprep\\webwriters.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\viewmodel\\writers\\loadwritersviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\writers\\loadwritersviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\view\\processing\\editingview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\processing\\editingview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\bdo\\nbtwebupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\bdo\\nbtwebupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\viewmodel\\writers\\processviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\writers\\processviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\helper\\helperutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\helper\\helperutils.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\view\\writers\\loadfileview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\writers\\loadfileview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -37,8 +25,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 175,
-          "SelectedChildIndex": 39,
+          "DockedHeight": 85,
+          "SelectedChildIndex": 41,
           "Children": [
             {
               "$type": "Bookmark",
@@ -198,97 +186,57 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "WebWriters.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\venueprep\\WebWriters.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\Model\\venueprep\\WebWriters.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\venueprep\\WebWriters.cs",
-              "RelativeToolTip": "CETAP_LOB\\Model\\venueprep\\WebWriters.cs",
-              "ViewState": "AQIAAGwAAAAAAAAAAAAAAH4AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-31T17:12:04.988Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "HelperUtils.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Helper\\HelperUtils.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\Helper\\HelperUtils.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Helper\\HelperUtils.cs",
-              "RelativeToolTip": "CETAP_LOB\\Helper\\HelperUtils.cs",
-              "ViewState": "AQIAAHsAAAAAAAAAAAAuwI8AAAAMAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-31T13:33:56.007Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "LoadWritersViewModel.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
-              "RelativeToolTip": "CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
-              "ViewState": "AQIAAO4BAAAAAAAAAAAqwPgBAAAtAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-17T11:45:18.29Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 6,
-              "Title": "LoadFileView.xaml",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\writers\\LoadFileView.xaml",
-              "RelativeDocumentMoniker": "CETAP_LOB\\View\\writers\\LoadFileView.xaml",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\writers\\LoadFileView.xaml",
-              "RelativeToolTip": "CETAP_LOB\\View\\writers\\LoadFileView.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-05-31T12:31:51.135Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 4,
-              "Title": "ProcessViewModel.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\writers\\ProcessViewModel.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\writers\\ProcessViewModel.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\writers\\ProcessViewModel.cs",
-              "RelativeToolTip": "CETAP_LOB\\ViewModel\\writers\\ProcessViewModel.cs",
-              "ViewState": "AQIAAHcBAAAAAAAAAIAwwIoBAAAKAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-31T12:07:54.181Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "ScoringViewModel.cs",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "ViewState": "AQIAAMkAAAAAAAAAAAAAAMQAAAAZAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-18T07:45:39.886Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CompositeViewModel.cs",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "ViewState": "AQIAALUBAAAAAAAAAAAkwNMBAAAsAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-14T11:24:53.823Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
               "Title": "DataService.cs",
               "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
               "RelativeDocumentMoniker": "CETAP_LOB\\Model\\DataService.cs",
               "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
               "RelativeToolTip": "CETAP_LOB\\Model\\DataService.cs",
-              "ViewState": "AQIAAGoMAAAAAAAAAAAwwH4MAAAEAAAA",
+              "ViewState": "AQIAAOoTAAAAAAAAAAAIwPsTAAA9AAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-04-12T11:22:10.846Z",
+              "WhenOpened": "2024-06-05T11:17:54.629Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "EditingView.xaml",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\processing\\EditingView.xaml",
-              "RelativeDocumentMoniker": "CETAP_LOB\\View\\processing\\EditingView.xaml",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\processing\\EditingView.xaml",
-              "RelativeToolTip": "CETAP_LOB\\View\\processing\\EditingView.xaml",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
-              "WhenOpened": "2024-05-21T06:57:13.56Z",
-              "EditorCaption": ""
+              "DocumentIndex": 1,
+              "Title": "NBTWebUpload.cs",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\BDO\\NBTWebUpload.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\BDO\\NBTWebUpload.cs",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\BDO\\NBTWebUpload.cs",
+              "RelativeToolTip": "CETAP_LOB\\BDO\\NBTWebUpload.cs",
+              "ViewState": "AQIAAEQAAAAAAAAAAAAUwE4AAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-18T13:12:11.62Z"
             }
           ]
         },
         {
-          "DockedHeight": 81,
+          "DockedHeight": 171,
           "SelectedChildIndex": -1,
           "Children": [
             {

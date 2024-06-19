@@ -67,26 +67,26 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BouncyCastle.Cryptography.dll" size="6953240">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="BouncyCastle.Cryptography.dll" size="6867224">
       <assemblyIdentity name="BouncyCastle.Cryptography" version="2.0.0.0" publicKeyToken="072EDCF4A5328938" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>BcRjRND59NAvSgoQ618/VWA4PP+oONgTau6JibZB9Bg=</dsig:DigestValue>
+        <dsig:DigestValue>rsInFU/FSXOf9aB5IHI2QfdzzmXQXcpwshUYPJPpZB0=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="5743016">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="5794728">
       <assemblyIdentity name="CETAP_LOB" version="1.1.0.1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>FihAa9Q7FG2XKKdkpTkb6z9fNPEJNeRxjz2VIZjKKWk=</dsig:DigestValue>
+        <dsig:DigestValue>U2b/syRiDTzPB/ASZpdfBUuftJRxd+tuaBNA+GCrznA=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

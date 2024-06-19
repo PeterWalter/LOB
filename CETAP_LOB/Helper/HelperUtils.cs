@@ -138,12 +138,23 @@ namespace CETAP_LOB.Helper
       string[] strArray = date.Split(new char[2]{ '-', '/' });
       return strArray[2].Trim().Length <= 13 ? (strArray[2].Trim().Length <= 8 ? DateTime.ParseExact(date, "yyyy/MM/dd HH:mm", (IFormatProvider) null) : DateTime.ParseExact(date, "yyyy/MM/dd HH:mm:ss", (IFormatProvider) null)) : DateTime.ParseExact(date, "yyyy/MM/dd hh:mm:ss tt", (IFormatProvider) null);
     }
-        public static DateTime weblistDateTime(string DatdateString)
-        {
-            //string dateString = "2022/08/09 1:45:29 PM";
-            DateTime dateTime = DateTime.ParseExact(DatdateString.Trim(), "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
-            return dateTime;
-        }
+    public static DateTime weblistDateTime(string DatdateString)
+    {
+            string[] formats = { "yyyy/MM/dd H:mm:ss tt", "yyyy/MM/dd HH:mm:ss", "yyyy-MM-dd H:mm:ss tt", "yyyy-MM-dd HH:mm:ss", "MM/dd/yyyy h:mm:ss tt", "yyyy-MM-dd HH:mm", "yyyy/MM/dd HH:mm", "MM/dd/yyyy HH:mm" };
+            DateTime dateTime;
+            if(DateTime.TryParseExact(DatdateString.Trim(), formats, CultureInfo.InvariantCulture, DateTimeStyles.None, out dateTime))
+            {  
+                return dateTime; 
+            }
+            else
+            {
+                // Handle invalid date formats (e.g., throw an exception or return a default value)
+                throw new ArgumentException("Invalid date format.");
+            }
+            ////string dateString = "2022/08/09 1:45:29 PM";
+            //DateTime dateTime = DateTime.ParseExact(DatdateString.Trim(), "yyyy/MM/dd HH:mm:ss", CultureInfo.InvariantCulture);
+            //return dateTime;
+    }
         public static DateTime WebDateTime(string date)
     {
      // DateTime dateTime = new DateTime();

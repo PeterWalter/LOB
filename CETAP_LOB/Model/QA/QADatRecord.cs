@@ -216,13 +216,13 @@ namespace CETAP_LOB.Model.QA
                                 AddError("Surname", "Surname cannot have digits");
                           else if (Regex.IsMatch(_surname, "[\\.\\*=!@#%\\&\\$]"))
                                 AddError("Surname", "First name cannot have special characters");
-                          else if (matchCollection.Count < 3)
+                          else if (matchCollection.Count < 2)
                           {
                                 string surname = _surname;
                                 char[] chArray = new char[1]{ ' ' };
                                 foreach (string str in surname.Split(chArray))
                                 {
-                                      if (str.Length < 3) AddError("Surname", "Part of Surname has few letters");
+                                      if (str.Length < 2) AddError("Surname", "Part of Surname has few letters");
                                 }
                           }
                           else if (matchCollection.Count > 2)
@@ -269,7 +269,7 @@ namespace CETAP_LOB.Model.QA
             char[] chArray = new char[1]{ ' ' };
             foreach (string str in myname.Split(chArray))
             {
-              if (str.Length < 3)
+              if (str.Length < 2)
                 AddError("FirstName", "Part of Name has few letters");
             }
           }
@@ -491,6 +491,18 @@ namespace CETAP_LOB.Model.QA
         if (_myCitizenship == value)
           return;
         _myCitizenship = value;
+                bool flag = HelperUtils.IsNumeric(_myCitizenship);
+                if (string.IsNullOrWhiteSpace(_myCitizenship))
+                    AddError("Citizenship", "There should be a value");
+                else if (flag)
+                {
+                    if (Convert.ToInt32(_myCitizenship) > 4)
+                        AddError("Citizenship", "Value should be less than 5");
+                }
+                else
+                    RemoveError("Citizenship");
+                _myCitizenship = _myCitizenship.Trim();
+        checkerrors();
         RaisePropertyChanged("Citizenship");
       }
     }
@@ -507,15 +519,22 @@ namespace CETAP_LOB.Model.QA
           return;
         _classi = value;
         bool flag = HelperUtils.IsNumeric(_classi);
-        if (string.IsNullOrWhiteSpace(_classi))
-          AddError("Classification", "There should be a value");
-        else if (flag)
-        {
-          if (Convert.ToInt32(_classi) > 5)
-            AddError("Classification", "Value should be less than 5");
-        }
-        else
-          RemoveError("Classification");
+
+                if (!flag)
+                {
+                    AddError("Classification", "This should be a number");
+
+                    if (string.IsNullOrWhiteSpace(_classi))
+                        AddError("Classification", "There should be a value");
+                }
+                else if (flag)
+                {
+                    if (Convert.ToInt32(_classi) > 5)
+                        AddError("Classification", "Value should be less than 6");
+                }
+                else
+                    RemoveError("Classification");
+        _classi = _classi.Trim();
         checkerrors();
         RaisePropertyChanged("Classification");
       }

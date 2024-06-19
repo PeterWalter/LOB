@@ -217,10 +217,10 @@ namespace CETAP_LOB.ViewModel.composite
              _itemsView = CollectionViewSource.GetDefaultView(Composit1);
             _itemsView.Filter = x => Filter(x as CompositBDO);
 
-            Enumerable.Range(0, 1000)
-                      .Select(x => new CompositBDO())
-                      .ToList()
-                      .ForEach(Composit1.Add);
+            //Enumerable.Range(0, Composit1.Count)
+            //          .Select(x => new CompositBDO())
+            //          .ToList()
+            //          .ForEach(Composit1.Add);
         }
 
     private bool Filter(CompositBDO item)

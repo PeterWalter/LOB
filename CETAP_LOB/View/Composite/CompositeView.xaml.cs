@@ -24,5 +24,10 @@ namespace CETAP_LOB.View.Composite
         {
             InitializeComponent();
         }
+
+        private void ModernButton_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
     }
 }

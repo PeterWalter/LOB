@@ -421,7 +421,7 @@ public IntakeYearsBDO Intake_Year
                 int num = (int)ModernDialog.ShowMessage(ex.ToString(), "Summary Data", MessageBoxButton.OK, (Window)null);
             }
 
-            //The_Message();
+        //    The_Message();
 
         }
     private void FindDuplicates()
@@ -725,11 +725,13 @@ public IntakeYearsBDO Intake_Year
             string Fullpath = Path.Combine(Folder, excelfile); 
             MimeMessage mimeMessage = new MimeMessage();
             // add the sender address
-            mimeMessage.From.Add(new MailboxAddress("QA Data", "peter.chifamba@uct.ac.za"));
+            mimeMessage.From.Add(new MailboxAddress("QA Data", "nbt@uct.ac.za"));
 
             // AddName the receiver of email address
-            mimeMessage.To.Add(new MailboxAddress("myself", "peter.chifamba@live.com"));
-            
+            mimeMessage.To.Add(new MailboxAddress("Peter Chifamba", "peter.chifamba@uct.ac.za"));
+            mimeMessage.To.Add(new MailboxAddress("Zethu Mthethwa", "zethu.mthethwa@uct.ac.za"));
+            mimeMessage.To.Add(new MailboxAddress("Shaunda Swarts", "shaunda.swarts@uct.ac.za"));
+
             // set the message subject
             mimeMessage.Subject = "QAed data in Excel Attachment";
             // Set the message body (plain text)
@@ -739,7 +741,7 @@ public IntakeYearsBDO Intake_Year
                 
                 kind regards,
 
-                 {ApplicationSettings.Default.LOBUser}";
+                 LOB QA Logistics";
 
             // Attach the Excel file (replace with your actual file path)
             var excelAttachment = new MimePart("application", "vnd.openxmlformats-officedocument.spreadsheetml.sheet")
@@ -776,7 +778,7 @@ public IntakeYearsBDO Intake_Year
              //   client.Authenticate("peter.chifamba@uct.ac.za", "Gurundoro@34ashumba");
                 client.Send(mimeMessage);
 
-                client.Send(mimeMessage);
+              //  client.Send(mimeMessage);
                 client.Disconnect(true);
             }
             catch (Exception ex)

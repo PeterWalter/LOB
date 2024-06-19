@@ -35,6 +35,11 @@ using Syncfusion.Pdf.Grid;
 using DocumentFormat.OpenXml.Packaging;
 using Syncfusion.Pdf.Security;
 using DocumentFormat.OpenXml.Bibliography;
+using Org.BouncyCastle.Pqc.Crypto.Lms;
+using DocumentFormat.OpenXml.EMMA;
+using DocumentFormat.OpenXml.Office2010.Excel;
+using DocumentFormat.OpenXml.Wordprocessing;
+using Microsoft.Maps.MapControl.WPF;
 
 
 
@@ -3263,12 +3268,12 @@ namespace CETAP_LOB.Model
 
         public async Task<bool> addwriterToDBAsync()
         {
-            var task = false;
+            var taskCompleted = false;
             string logUser = "";
 
-            var DbWriters = new List<WriterList>();
-             var InDbWriters = new List<WritersBDO>();
-            var ApplicantsBDO = new List<WritersBDO>();
+            //var DbWriters = new List<WriterList>();
+            // var InDbWriters = new List<WritersBDO>();
+            //var ApplicantsBDO = new List<WritersBDO>();
 
 
             //Parallel.ForEach(WritersList1, (applic) =>
@@ -3277,83 +3282,111 @@ namespace CETAP_LOB.Model
             //    TranslateWebwritersToWritersBDO(applic, writer);
             //    ApplicantsBDO.Add(writer);
             //});
-            ApplicantsBDO = WritersList1.AsParallel()
-                                        .Select(applic =>
-                                        {
-                                            WritersBDO writer = new WritersBDO();
-                                            TranslateWebwritersToWritersBDO(applic, writer);
-                                            return writer;
-                                        })
-                                        .ToList();
-
-            //foreach (var applic in WritersList1)
-            //{
-            //    WritersBDO writer = new WritersBDO();
-            //    TranslateWebwritersToWritersBDO(applic, writer);
-            //    ApplicantsBDO.Add(writer);
-            //}
-
-            using (var context = new CETAPEntities())
+            try
             {
-                var mywriters = context.WriterLists
-                 .Where(x => x.DOT > DateTime.Today).ToList();
+                var ApplicantsBDO = WritersList1.AsParallel()
+                                           .Select(applic =>
+                                           {
+                                               WritersBDO writer = new WritersBDO();
+                                               TranslateWebwritersToWritersBDO(applic, writer);
+                                               return writer;
+                                           })
+                                           .ToList();
 
-                foreach(var mywriter in mywriters)
+                //foreach (var applic in WritersList1)
+                //{
+                //    WritersBDO writer = new WritersBDO();
+                //    TranslateWebwritersToWritersBDO(applic, writer);
+                //    ApplicantsBDO.Add(writer);
+                //}
+
+                using (var context = new CETAPEntities())
                 {
-                    WritersBDO writer = new WritersBDO();
-                    TranslatewritersDALToWritersBDO(mywriter, writer);
-                    InDbWriters.Add(writer);
-                }
-                // the writers not matching the ones in database
-                var result = ApplicantsBDO.Where(x => !InDbWriters.Any(y => y.NBT == x.NBT && //y.DOT == x.DOT && y.EMail == x.EMail && y.VenueID == x.VenueID &&
-                              y.TestLanguage == x.TestLanguage && y.TestType == x.TestType)).ToList();
-              
-                var result1 = ApplicantsBDO.Where(x => InDbWriters.Any(y => y.NBT == x.NBT && y.DOT == x.DOT && y.EMail == x.EMail && y.VenueID == x.VenueID &&
-              y.TestLanguage == x.TestLanguage && y.TestType == x.TestType)).ToList();
+                    var currentWriters = await context.WriterLists
+                     .Where(x => x.DOT > DateTime.Today).ToListAsync();
+
+                    //foreach(var mywriter in mywriters)
+                    //{
+                    //    WritersBDO writer = new WritersBDO();
+                    //    TranslatewritersDALToWritersBDO(mywriter, writer);
+                    //    InDbWriters.Add(writer);
+                    //}
+                    var inDbWriters = currentWriters.AsParallel()
+                                    .Select(mywriter =>
+                                    {
+                                        var writer = new WritersBDO();
+                                        TranslatewritersDALToWritersBDO(mywriter, writer);
+                                        return writer;
+                                    })
+                                    .ToList();
+
+                    // the writers not matching the ones in database
+                    var newApplicants = ApplicantsBDO.Where(x => !inDbWriters
+                                            .Any(y => y.NBT == x.NBT && y.DOT == x.DOT && //y.EMail == x.EMail && y.VenueID == x.VenueID &&
+                                            y.TestLanguage == x.TestLanguage && y.TestType == x.TestType))
+                                    .ToList();
+
+                    //  var result1 = ApplicantsBDO.Where(x => InDbWriters.Any(y => y.NBT == x.NBT && y.DOT == x.DOT && y.EMail == x.EMail && y.VenueID == x.VenueID &&
+                    //y.TestLanguage == x.TestLanguage && y.TestType == x.TestType)).ToList();
 
 
-                //   TranslateWebwritersToWritersBDO(WebWriters writer, WritersBDO writersBDO)
+                    //   TranslateWebwritersToWritersBDO(WebWriters writer, WritersBDO writersBDO)
 
-                using (var transScope = new TransactionScope(TransactionScopeOption.Required, System.TimeSpan.MaxValue))
-                {
+                    //using (var transScope = new TransactionScope(TransactionScopeOption.Required, System.TimeSpan.MaxValue))
+                    //{
 
-                    try
-                    {
-                        foreach (var applicant in result)
-                        {
+                    //    try
+                    //    {
+                            int recs = 0;
 
-                            logUser = "Writer not saved to Database : " + applicant.Name + " " + applicant.Surname + " " + applicant.NBT;
+                            foreach (var applicant in newApplicants)
+                            {
 
-                            var writerInDB = new WriterList();
-                            TranslatewritersBDOToWritersDAL(applicant, writerInDB);
-                            writerInDB.RowGuid = Guid.NewGuid();
-                            writerInDB.DateModified = DateTime.Now;
-                            context.WriterLists.Add(writerInDB);
-                           // DbWriters.Add(writerInDB);
+                                logUser = $"Writer not saved to Database : {applicant.Name} {applicant.Surname} {applicant.NBT}";
 
-                        }
+                                var writerInDB = new WriterList();
+                                TranslatewritersBDOToWritersDAL(applicant, writerInDB);
+                                writerInDB.RowGuid = Guid.NewGuid();
+                                writerInDB.DateModified = DateTime.Now;
+
+                                context.WriterLists.Add(writerInDB);
+                                recs++;
+                                if (recs == 200)
+                                {
+                                    await context.SaveChangesAsync();
+                                    recs = 0;
+                                }
+                                // DbWriters.Add(writerInDB);
+
+                            }
 
 
 
 
-                       // context.WriterLists.AddRange(DbWriters);
+                            // context.WriterLists.AddRange(DbWriters);
 
-                       // await context.SaveChangesAsync();
-                     context.SaveChanges();
-                        transScope.Complete();
-                        task = true;
+                       //     await context.SaveChangesAsync();
+                        //  //  context.SaveChanges();
+                        //    transScope.Complete();
+                        //    taskCompleted = true;
+                        //}
+                        //catch (Exception ex)
+                        //{
+                        //    taskCompleted = false;
+
+                        //    log.Error(logUser, ex);
+                        //    throw;
+                        //}
+
                     }
-                    catch (Exception ex)
-                    {
-                        task = false;
-
-                        log.Error(logUser, ex);
-                        throw ex;
-                    }
-
-                }
+                //}
             }
-            return task;
+            catch (Exception ex)
+            {
+                log.Error("An error occurred in AddWriterToDBAsync", ex);
+                taskCompleted = false;
+            }
+            return taskCompleted;
         }
 
         #endregion
@@ -3773,7 +3806,7 @@ namespace CETAP_LOB.Model
         }
         // generate collection of LOgistics data
 
-        private void CompositToLogisticsComposite()
+ private void CompositToLogisticsComposite()
         {
             if (AllScores != null)
             {
@@ -3857,7 +3890,7 @@ namespace CETAP_LOB.Model
         }
 
         // generate composite file from selected list
-        public bool GenerateSelectedComposite(ObservableCollection<CompositBDO> mySelection, string folder)
+ public bool GenerateSelectedComposite(ObservableCollection<CompositBDO> mySelection, string folder)
         {
             bool generated = false;
             //Composite.Clear();
@@ -3867,7 +3900,7 @@ namespace CETAP_LOB.Model
             generated = GenerateExcelComposite();
             return generated;
         }
-        public int GetCompositCount(IntakeYearsBDO yr)
+ public int GetCompositCount(IntakeYearsBDO yr)
         {
             int Total = 0;
             using (var context = new CETAPEntities())
@@ -3880,7 +3913,7 @@ namespace CETAP_LOB.Model
             return Total;
         }
 
-        public async Task<List<CompositBDO>> GetAllIntakeScoresAsync(IntakeYearsBDO yr)
+  public async Task<List<CompositBDO>> GetAllIntakeScoresAsync(IntakeYearsBDO yr)
         {
             var NBTScores = new List<CompositBDO>();
             if (ApplicationSettings.Default.DBAvailable)
@@ -3915,7 +3948,7 @@ namespace CETAP_LOB.Model
             AllScores = new ObservableCollection<CompositBDO>(NBTScores);
             return NBTScores;
         }
-        public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, IntakeYearsBDO yr)
+public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, IntakeYearsBDO yr)
         {
             var NBTScores = new List<CompositBDO>();
             if (ApplicationSettings.Default.DBAvailable)
@@ -3933,18 +3966,26 @@ namespace CETAP_LOB.Model
 
 
                         //Convert each score to CompositBDO
+                        int count = 0;
                         foreach (Composit score in scores)
                         {
+                            count++;
                             CompositBDO comp = new CompositBDO();
+                         //   CompositDALToCompositBDO(comp, score)
                             comp = Maps.CompositDALToCompositBDO(score);
                             //CompositDALToCompositBDO(comp, score);
                             //	testBDO.AllocatedTests = GetAllocatedTestsByTestID(testBDO.TestID);
                             NBTScores.Add(comp);
+                            if (count == 836)
+                            {
+                                Console.WriteLine(comp.Barcode);
+                            }
                         }
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
 
+                        Console.WriteLine(ex.Message);
                         throw;
                     }
 
@@ -4256,9 +4297,14 @@ namespace CETAP_LOB.Model
 
                     applicantInDB.DateModified = DateTime.Now;
 
-
-                    context.Composits.Add(applicantInDB);
-                    await context.SaveChangesAsync();
+                    var checkNBT = from p in context.Composits
+                                   where p.Barcode == applicantInDB.Barcode
+                                   select p;
+                    if (checkNBT.FirstOrDefault() == null)
+                    {
+                        context.Composits.Add(applicantInDB);
+                        await context.SaveChangesAsync();
+                    }
 
                     ret = true;
                     //message = "Writer added succesfully";
@@ -4804,8 +4850,8 @@ namespace CETAP_LOB.Model
                 var Compo = from mydata in Composite
                             select new
                             {
-                                RefNo = mydata.RefNo.ToString(),
-                                Barcode = mydata.Barcode.ToString(),
+                                RefNo = mydata.RefNo,
+                                Barcode = mydata.Barcode,
                                 LastName = mydata.Surname,
                                 FName = mydata.Name,
                                 Initials = mydata.Initials,
@@ -4828,8 +4874,8 @@ namespace CETAP_LOB.Model
                                 MatCode = mydata.MatCode,
                                 Faculty2 = HelperUtils.GetFacultyName(mydata.Faculty2),
                                 Faculty3 = HelperUtils.GetFacultyName(mydata.Faculty3),
-                                SessionID = mydata.Barcode.ToString(),
-                                NBTNumber = mydata.RefNo.ToString(),
+                                SessionID = mydata.Barcode,
+                                NBTNumber = mydata.RefNo,
                                 Surname = mydata.Surname,
                                 Name = mydata.Name,
                                 Initial = mydata.Initials,
@@ -4868,26 +4914,26 @@ namespace CETAP_LOB.Model
                             };
 
 
-                var UP = from mydata in Compo
-                         select new
-                         {
-                             NBT = mydata.NBTNumber,
-                             Surname = mydata.Surname,
-                             FName = mydata.FName,
-                             Initials = mydata.Initials,
-                             SaID = mydata.SAID,
-                             Passport = mydata.Passport,
-                             DOB = mydata.Birth,
-                             DOT = mydata.DateTest,
-                             Venue = mydata.VenueCode,
-                             ALScore = mydata.ALScore,
-                             ALLevel = mydata.ALLevel,
-                             QLScore = mydata.QLScore,
-                             QLLevel = mydata.QLLevel,
-                             MATScore = mydata.MatScore,
-                             MATLevel = mydata.MatLevel
+                //var UP = from mydata in Compo
+                //         select new
+                //         {
+                //             NBT = mydata.NBTNumber,
+                //             Surname = mydata.Surname,
+                //             FName = mydata.FName,
+                //             Initials = mydata.Initials,
+                //             SaID = mydata.SAID,
+                //             Passport = mydata.Passport,
+                //             DOB = mydata.Birth,
+                //             DOT = mydata.DateTest,
+                //             Venue = mydata.VenueCode,
+                //             ALScore = mydata.ALScore,
+                //             ALLevel = mydata.ALLevel,
+                //             QLScore = mydata.QLScore,
+                //             QLLevel = mydata.QLLevel,
+                //             MATScore = mydata.MatScore,
+                //             MATLevel = mydata.MatLevel
 
-                         };
+                //         };
 
                 var UCT = from C in Compo
                           select new
@@ -4953,88 +4999,138 @@ namespace CETAP_LOB.Model
                     UCTLoads.Add(UctRec);
                 }
 
+               
                 var NBTWeb = from Adata in Composite
 
                              select new
                              {
-                                 Barcode = Adata.Barcode.ToString(),
-                                 TestSessionID = Adata.Barcode.ToString(),
-                                 NBT = Adata.RefNo.ToString(),
+                                 NBT = Adata.RefNo,
+                                 Barcode = Adata.Barcode,                                 
                                  Surname = Adata.Surname,
                                  Name = Adata.Name,
                                  Initial = Adata.Initials,
-                                 SAID = Adata.SAID.ToString(),
+                                 SAID = Adata.SAID,
                                  Passport = Adata.ForeignID,
                                  DOB = String.Format("{0:dd/MM/yyyy}", Adata.DOB),
-                                 W_AL = Adata.WroteAL,
-                                 W_QL = Adata.WroteQL,
-                                 W_Maths = Adata.WroteMat,
-                                 StudentNumber = "",
-                                 Faculty = "",
-                                 Programme = "",
-                                 Date_of_Test = String.Format("{0:yyyyMMdd}", Adata.DOT),
-                                 Venue = GetWebSiteNameByVenueCode(Adata.VenueCode),
+                                 ID_Type = Adata.ID_Type,
+                                 Citizenship = Adata.Citizenship,
+                                 Classification = Adata.Classification,
                                  Gender = Adata.Gender,
-                                 Street1 = "",
-                                 Street2 = "",
-                                 Suburb = "",
-                                 City = "",
-                                 Province = "",
-                                 Postal = "",
-                                 Email = "",
-                                 Landline = "",
-                                 Mobile = "",
+                                 Faculty = Adata.Faculty,
+                                 Date_of_Test = String.Format("{0:yyyyMMdd}", Adata.DOT),
+                                 VenueCode = Adata.VenueCode,
+                                 VenueName = GetWebSiteNameByVenueCode(Adata.VenueCode),
+                                 HLanguage = Adata.HomeLanguage,
+                                 GLanguage = Adata.GR12Language,
+                                 AQLLanguage = Adata.AQLLanguage,
+                                 AQLCode = Adata.AQLCode,
+                                 MATLanguage = Adata.MatLanguage,
+                                 MatCode = Adata.MatCode,
                                  ALScore = (Adata.ALScore == null ? 0 : Adata.ALScore),
                                  ALLevel = Adata.ALLevel,
                                  QLScore = (Adata.QLScore == null ? 0 : Adata.QLScore),
                                  QLLevel = Adata.QLLevel,
                                  MatScore = (Adata.MATScore == null ? 0 : Adata.MATScore),
                                  MatLevel = Adata.MATLevel,
-                                 AQL_Lang = Adata.AQLLanguage,
-                                 Mat_Lang = Adata.MatLanguage
+                                 WroteAL = Adata.WroteAL,
+                                 WroteQL = Adata.WroteQL,
+                                 WroteMAT = Adata.WroteMat,
+                                
+                                 Faculty2 = Adata.Faculty2,
+                                 Faculty3 = Adata.Faculty3,
+                                 I_Barcode = Adata.Barcode,
+                                 TName = Adata.AQLCode,
+                                 AL_Cohesion = "",
+                                 AL_CommunicativeFunction = "",
+                                 AL_Discourse = "",
+                                 AL_Essential = "",
+                                 AL_Grammar = "",
+                                 AL_Inference = "",
+                                 AL_Metaphor = "",
+                                 AL_TextGenre = "",
+                                 AL_Vocabulary = "",
+                                 QL_C = "",
+                                 QL_D = "",
+                                 QL_P = "",
+                                 QL_Q = "",
+                                 QL_R = "",
+                                 QL_S = "",
+                                 MATTestName = Adata.MatCode.ToString(),
+                                 MAT_M1 = "",
+                                 MAT_M2 = "",
+                                 MAT_M3 = "",
+                                 MAT_M4 = "",
+                                 MAT_M5 = ""
                              };
+
+                //   ConcurrentBag<NBTWebUpload> webUploads = new ConcurrentBag<NBTWebUpload>();
+
                 List<NBTWebUpload> WebUploads = new List<NBTWebUpload>();
+
                 foreach (var web in NBTWeb)
                 {
-                    NBTWebUpload WebRec = new NBTWebUpload();
+                    var WebRec = new NBTWebUpload();
+                    WebRec.NBT = web.NBT;
+                    WebRec.Barcode = web.Barcode;
+                    WebRec.Surname = web.Surname;
+                    WebRec.Name = web.Name;
+                    WebRec.Initials = web.Initial;
+                    WebRec.SAID = web.SAID;
+                    WebRec.ForeignID = web.Passport;
+                    WebRec.DOB = web.DOB;
+                    WebRec.ID_Type = web.ID_Type.ToString();
+                    WebRec.Citizenship = web.Citizenship.ToString();
+                    WebRec.Classification = web.Classification;
+                    WebRec.Gender = web.Gender.ToString();
+                    WebRec.Faculty = web.Faculty;
+                    WebRec.DOT = web.Date_of_Test;
+                    WebRec.VenueCode = web.VenueCode.ToString();
+                    WebRec.VenueName = web.VenueName;
+                    WebRec.HomeLanguage = web.HLanguage.ToString();
+                    WebRec.GR12Language = web.GLanguage;
+                    WebRec.AQLLanguage = web.AQLLanguage;
+                    WebRec.AQLCode = web.AQLCode.ToString();
+                    WebRec.MATLanguage = web.MATLanguage != null ? web.MATLanguage.ToString() : string.Empty;
+                    WebRec.MATCode = web.MatCode.ToString();
                     WebRec.ALLevel = web.ALLevel;
                     WebRec.ALScore = web.ALScore;
-                    WebRec.AQLLang = web.AQL_Lang;
-                    WebRec.Barcode = web.Barcode;
-                    WebRec.Celephone = web.Mobile;
-                    WebRec.City = web.City;
-                    WebRec.DOB = web.DOB;
-                    WebRec.DOT = web.Date_of_Test;
-                    WebRec.EMail = web.Email;
-                    WebRec.Faculty = web.Faculty;
-                    WebRec.ForeignID = web.Passport;
-                    WebRec.Gender = web.Gender;
-                    WebRec.Initials = web.Initial;
-                    WebRec.MATLANG = web.Mat_Lang;
-                    WebRec.MATLevel = web.MatLevel;
-                    WebRec.MATScore = web.MatScore;
-                    WebRec.Name = web.Name;
-                    WebRec.NBT = web.NBT;
-                    WebRec.PostCode = web.Postal;
-                    WebRec.Programme = web.Programme;
-                    WebRec.Province = web.Province;
                     WebRec.QLLevel = web.QLLevel;
                     WebRec.QLScore = web.QLScore;
-                    WebRec.SAID = web.SAID;
-                    WebRec.SessionID = web.TestSessionID;
-                    WebRec.StreetName = web.Street2;
-                    WebRec.StreetNo = web.Street1;
-                    WebRec.StudentID = web.StudentNumber;
-                    WebRec.Suburb = web.Suburb;
-                    WebRec.Surname = web.Surname;
-                    WebRec.Telephone = web.Mobile;
-                    WebRec.Venue = web.Venue;
-                    WebRec.Wrote_AL = web.W_AL;
-                    WebRec.Wrote_Mat = web.W_Maths;
-                    WebRec.Wrote_QL = web.W_QL;
+                    WebRec.MATLevel = web.MatLevel;
+                    WebRec.MATScore = web.MatScore == null ? string.Empty : web.MatScore == 0 ? string.Empty: web.MatScore.ToString();
+                    WebRec.WroteAL = web.WroteAL;
+                    WebRec.WroteQL = web.WroteQL;
+                    WebRec.WroteMat = web.WroteMAT;
+                    WebRec.Faculty2 = web.Faculty2;
+                    WebRec.Faculty3 = web.Faculty3;
+                    WebRec.I_Barcode = web.I_Barcode;
+                    WebRec.TestName = web.TName.ToString();
+                    WebRec.AL_Cohesion = web.AL_Cohesion;
+                    WebRec.AL_CommunicativeFunction = web.AL_CommunicativeFunction;
+                    WebRec.AL_Discourse = web.AL_Discourse;
+                    WebRec.AL_Essential = web.AL_Essential;
+                    WebRec.AL_Grammar = web.AL_Grammar;
+                    WebRec.AL_Inference = web.AL_Inference;
+                    WebRec.AL_Metaphor = web.AL_Metaphor;
+                    WebRec.AL_TextGenre = web.AL_TextGenre;
+                    WebRec.AL_Vocabulary = web.AL_Vocabulary;
+                    WebRec.QL_C = web.QL_C;
+                    WebRec.QL_D = web.QL_D;
+                    WebRec.QL_P = web.QL_P;
+                    WebRec.QL_Q = web.QL_Q;
+                    WebRec.QL_R = web.QL_R;
+                    WebRec.QL_S = web.QL_S;
+                    WebRec.MatTestName =  web.MATTestName.ToString();
+                    WebRec.MAT_M1 = web.MAT_M1;
+                    WebRec.MAT_M2 = web.MAT_M2;
+                    WebRec.MAT_M3 = web.MAT_M3;
+                    WebRec.MAT_M4 = web.MAT_M4;
+                    WebRec.MAT_M5 = web.MAT_M5;
+
 
                     WebUploads.Add(WebRec);
                 }
+
                 // writing to excel files
 
                 // Get the date today
@@ -5128,88 +5224,7 @@ namespace CETAP_LOB.Model
 
                 ws.Cell(2, 1).Value = Compo.AsEnumerable();
 
-                // write the UP excel file
-                var wb = new XLWorkbook();
-                var ws1 = wb.Worksheets.Add("Sheet 1");
-                var ws_UP = wb.Worksheets.Add("Sheet2").SetTabColor(XLColor.BrightTurquoise);
-                ws_UP.Cell(1, 1).Value = "NBT_Ref_No";
-                ws_UP.Cell(1, 2).Value = "Surname";
-                ws_UP.Cell(1, 3).Value = "First_Name";
-                ws_UP.Cell(1, 4).Value = "Initials";
-                ws_UP.Cell(1, 5).Value = "South_African_ID_No";
-                ws_UP.Cell(1, 6).Value = "Foreign_Passport";
-                ws_UP.Cell(1, 7).Value = "Date_of_Birth";
-                ws_UP.Cell(1, 8).Value = "Date_of_Test";
-                ws_UP.Cell(1, 9).Value = "Venue";
-                ws_UP.Cell(1, 10).Value = "AL Score";
-                ws_UP.Cell(1, 11).Value = "AL Performance Level";
-                ws_UP.Cell(1, 12).Value = "QL Score";
-                ws_UP.Cell(1, 13).Value = "QL Performance Level";
-                ws_UP.Cell(1, 14).Value = "Maths Score";
-                ws_UP.Cell(1, 15).Value = "Maths Performance Level";
-                ws_UP.Cell(2, 1).Value = UP.AsEnumerable();
-
-
-
-
-                //var ws_UCT = workbook.Worksheets.Add("UCT Upload").SetTabColor(XLColor.DarkCoral);
-                //ws_UCT.Cell(1, 1).Value = "NBT_Ref_No";
-                //ws_UCT.Cell(1, 2).Value = "Surname";
-                //ws_UCT.Cell(1, 3).Value = "First_Name";
-                //ws_UCT.Cell(1, 4).Value = "Initials";
-                //ws_UCT.Cell(1, 5).Value = "South_African_ID_No";
-                //ws_UCT.Cell(1, 6).Value = "Foreign_Passport";
-                //ws_UCT.Cell(1, 7).Value = "Date_of_Birth";
-                //ws_UCT.Cell(1, 8).Value = "Date_of_Test";
-                //ws_UCT.Cell(1, 9).Value = "Venue";
-                //ws_UCT.Cell(1, 10).Value = "AL Score";
-                //ws_UCT.Cell(1, 11).Value = "AL Performance Level";
-                //ws_UCT.Cell(1, 12).Value = "QL Score";
-                //ws_UCT.Cell(1, 13).Value = "QL Performance Level";
-                //ws_UCT.Cell(1, 14).Value = "Maths Score";
-                //ws_UCT.Cell(1, 15).Value = "Maths Performance Level";
-                //ws_UCT.Cell(2, 1).Value = UCT.AsEnumerable();
-
-                //var ws_NBT = workbook.Worksheets.Add("NBT Website Upload").SetTabColor(XLColor.MintGreen);
-                //ws_NBT.Cell(1, 1).Value = "Barcode";
-                //ws_NBT.Cell(1, 2).Value = "Test Session ID";
-                //ws_NBT.Cell(1, 3).Value = "NBT Reference";
-                //ws_NBT.Cell(1, 4).Value = "Surname";
-                //ws_NBT.Cell(1, 5).Value = "First Name";
-                //ws_NBT.Cell(1, 6).Value = "Middle Initials";
-                //ws_NBT.Cell(1, 7).Value = "South African ID";
-                //ws_NBT.Cell(1, 8).Value = "Foreign ID";
-                //ws_NBT.Cell(1, 9).Value = "Date of Birth";
-                //ws_NBT.Cell(1, 10).Value = "Wrote AL";
-                //ws_NBT.Cell(1, 11).Value = "Wrote QL";
-                //ws_NBT.Cell(1, 12).Value = "Wrote Maths";
-                //ws_NBT.Cell(1, 13).Value = "Student Number";
-                //ws_NBT.Cell(1, 14).Value = "Faculty";
-                //ws_NBT.Cell(1, 15).Value = "Programme";
-                //ws_NBT.Cell(1, 16).Value = "Date_of_Test";
-                //ws_NBT.Cell(1, 17).Value = "Venue";
-                //ws_NBT.Cell(1, 18).Value = "Gender";
-                //ws_NBT.Cell(1, 19).Value = "Street and Number";
-                //ws_NBT.Cell(1, 20).Value = "Street Name";
-                //ws_NBT.Cell(1, 21).Value = "Suburb";
-                //ws_NBT.Cell(1, 22).Value = "City/Town";
-                //ws_NBT.Cell(1, 23).Value = "Province/Region";
-                //ws_NBT.Cell(1, 24).Value = "Postal Code";
-                //ws_NBT.Cell(1, 25).Value = "e-mail Address";
-                //ws_NBT.Cell(1, 26).Value = "Landline Number";
-                //ws_NBT.Cell(1, 27).Value = "Mobile Number";
-                //ws_NBT.Cell(1, 28).Value = "AL Score";
-                //ws_NBT.Cell(1, 29).Value = "AL Performance";
-                //ws_NBT.Cell(1, 30).Value = "QL Score";
-                //ws_NBT.Cell(1, 31).Value = "QL Performance";
-                //ws_NBT.Cell(1, 32).Value = "Maths Score";
-                //ws_NBT.Cell(1, 33).Value = "Maths Performance";
-                //ws_NBT.Cell(1, 34).Value = "AQL TEST LANGUAGE";
-                //ws_NBT.Cell(1, 35).Value = "MATHS TEST LANGUAGE";
-
-
-                //ws_NBT.Cell(2, 1).Value = NBT_Web.AsEnumerable();
-                //ws_NBT.Columns().AdjustToContents();
+                
 
                 #endregion
                 string path1 = myDir.Dir;
@@ -5218,10 +5233,7 @@ namespace CETAP_LOB.Model
                 string Combination = Path.Combine(path1, ExcelFileName);
                 workbook.SaveAs(Combination);
 
-                string UpFileName = "UP_Upload ";
-                UpFileName += myDay + n;
-                string Combination1 = Path.Combine(path1, UpFileName);
-                wb.SaveAs(Combination1);
+
 
                 //   writing to Csv files for UCT and website
                 CsvFileDescription outputDesc = new CsvFileDescription
