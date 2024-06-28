@@ -338,8 +338,8 @@ namespace CETAP_LOB.ViewModel.composite
             FolderBrowserDialog folderBrowserDialog = new FolderBrowserDialog();
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 folder = folderBrowserDialog.SelectedPath;
-            if (!string.IsNullOrWhiteSpace(folder))
-                flag = _service.GenerateSelectedComposite(IntakeScores, folder);
+            //if (!string.IsNullOrWhiteSpace(folder))
+            //    flag = _service.GenerateSelectedComposite(IntakeScores, folder);
             if (!flag)
                 return;
             ModernDialog.ShowMessage("Composite of " + IntakeYear + " Records created", "Intake Records!!!", MessageBoxButton.OK);
@@ -470,7 +470,7 @@ namespace CETAP_LOB.ViewModel.composite
                     results.Add(Messages);
             }
             await Refresh(_page);
-            getScores();
+          //  getScores();
             ModernDialog.ShowMessage("Scores loaded to DB !!!", Messages, MessageBoxButton.OK);
         }
 

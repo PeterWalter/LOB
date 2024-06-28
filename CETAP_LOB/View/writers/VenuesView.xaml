@@ -57,7 +57,7 @@
             </Grid.ColumnDefinitions>
             <Label Width="91" Height="27" Margin="-5,18,4,8" HorizontalAlignment="Right" VerticalAlignment="Center"
              HorizontalContentAlignment="Right" Content="Venue Code"/>
-            <TextBox Grid.Column="1" Grid.ColumnSpan="2" Width="48" Height="29" Margin="0,10,0,0"
+            <TextBox Grid.Column="1" Grid.ColumnSpan="2" Width="75" Height="21" Margin="0,18,0,0"
                HorizontalAlignment="Left" VerticalAlignment="Top" TextWrapping="Wrap"
                Text="{Binding Venues.SelectedVenue.VenueCode, StringFormat=\{0:D5\}}"/>
             <Label Grid.Column="3" Width="57" Height="26" Margin="0,20,106,7" HorizontalAlignment="Right"
@@ -68,7 +68,7 @@
             <Label Grid.Column="3" Height="28" Margin="97,15,6,10" VerticalAlignment="Center"
              HorizontalContentAlignment="Right" VerticalContentAlignment="Center" Content="Capacity"
              RenderTransformOrigin="0.565,0.1"/>
-            <TextBox Grid.Column="4" Width="108" Height="30" Margin="0,15,0,0" HorizontalAlignment="Left"
+            <TextBox Grid.Column="4" Width="108" Height="19" Margin="0,20,0,0" HorizontalAlignment="Center"
                VerticalAlignment="Top" TextWrapping="Wrap"
                Text="{Binding SelectedVenue.Capacity, Source={StaticResource Locator}}"/>
             <Label Grid.Row="1" Width="91" Height="24" Margin="-5,15,4,14" HorizontalAlignment="Right"
@@ -155,7 +155,8 @@
              HorizontalAlignment="Left" BorderBrush="#FFF31111" BorderThickness="0,1" Foreground="#FF1C82FB"
              IsSynchronizedWithCurrentItem="True" OpacityMask="Black"
              ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-             ItemsSource="{Binding Venues.TestVenues, Source={StaticResource Locator}}">
+             ItemsSource="{Binding Venues.TestVenues, Source={StaticResource Locator}}"
+                 SelectedItem="{Binding Venues.SelectedVenue, Mode=TwoWay, Source={StaticResource Locator}}">
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
                     <Border Margin="1">

@@ -3,20 +3,28 @@
   "WorkspaceRootPath": "D:\\projects\\source code\\LOB\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
-    },
-    {
-      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\bdo\\nbtwebupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\bdo\\nbtwebupload.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\view\\scoring\\scoringview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\scoring\\scoringview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
       "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
       "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\projects\\source code\\lob\\cetap_lob\\view\\composite\\compositeview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\composite\\compositeview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\projects\\source code\\LOB\\cetap_lob\\model\\idataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\model\\idataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     }
   ],
   "DocumentGroupContainers": [
@@ -25,8 +33,8 @@
       "VerticalTabListWidth": 256,
       "DocumentGroups": [
         {
-          "DockedHeight": 85,
-          "SelectedChildIndex": 41,
+          "DockedHeight": 126,
+          "SelectedChildIndex": 39,
           "Children": [
             {
               "$type": "Bookmark",
@@ -186,15 +194,65 @@
             },
             {
               "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataService.cs",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\Model\\DataService.cs",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
+              "RelativeToolTip": "CETAP_LOB\\Model\\DataService.cs",
+              "ViewState": "AQIAAJAUAAAAAAAAAAAQwIAUAAARAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-05T11:17:54.629Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "IDataService.cs",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\IDataService.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\Model\\IDataService.cs",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\IDataService.cs",
+              "RelativeToolTip": "CETAP_LOB\\Model\\IDataService.cs",
+              "ViewState": "AQIAAGYAAAAAAAAAAAAAAG8AAAAhAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-06-25T15:25:10.871Z"
+            },
+            {
+              "$type": "Document",
               "DocumentIndex": 2,
+              "Title": "ScoringView.xaml",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\scoring\\ScoringView.xaml",
+              "RelativeDocumentMoniker": "CETAP_LOB\\View\\scoring\\ScoringView.xaml",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\scoring\\ScoringView.xaml",
+              "RelativeToolTip": "CETAP_LOB\\View\\scoring\\ScoringView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-25T15:22:25.856Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "CompositeView.xaml",
+              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\Composite\\CompositeView.xaml",
+              "RelativeDocumentMoniker": "CETAP_LOB\\View\\Composite\\CompositeView.xaml",
+              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\View\\Composite\\CompositeView.xaml",
+              "RelativeToolTip": "CETAP_LOB\\View\\Composite\\CompositeView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2024-06-24T10:03:48.205Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
               "Title": "ScoringViewModel.cs",
               "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
               "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
               "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
               "RelativeToolTip": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
-              "ViewState": "AQIAAMkAAAAAAAAAAAAAAMQAAAAZAAAA",
+              "ViewState": "AQIAAK4AAAAAAAAAAAAEwMQAAAAmAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-18T07:45:39.886Z"
+              "WhenOpened": "2024-06-18T07:45:39.886Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -204,39 +262,15 @@
               "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
               "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
               "RelativeToolTip": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
-              "ViewState": "AQIAALUBAAAAAAAAAAAkwNMBAAAsAAAA",
+              "ViewState": "AQIAAL8BAAAAAAAAAAASwNMBAAAuAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-14T11:24:53.823Z"
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "DataService.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\Model\\DataService.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\Model\\DataService.cs",
-              "RelativeToolTip": "CETAP_LOB\\Model\\DataService.cs",
-              "ViewState": "AQIAAOoTAAAAAAAAAAAIwPsTAAA9AAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-05T11:17:54.629Z",
+              "WhenOpened": "2024-06-14T11:24:53.823Z",
               "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "NBTWebUpload.cs",
-              "DocumentMoniker": "D:\\projects\\source code\\LOB\\CETAP_LOB\\BDO\\NBTWebUpload.cs",
-              "RelativeDocumentMoniker": "CETAP_LOB\\BDO\\NBTWebUpload.cs",
-              "ToolTip": "D:\\projects\\source code\\LOB\\CETAP_LOB\\BDO\\NBTWebUpload.cs",
-              "RelativeToolTip": "CETAP_LOB\\BDO\\NBTWebUpload.cs",
-              "ViewState": "AQIAAEQAAAAAAAAAAAAUwE4AAAAAAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-06-18T13:12:11.62Z"
             }
           ]
         },
         {
-          "DockedHeight": 171,
+          "DockedHeight": 44,
           "SelectedChildIndex": -1,
           "Children": [
             {
@@ -250,6 +284,14 @@
             {
               "$type": "Bookmark",
               "Name": "ST:0:0:{0ad07096-bba9-4900-a651-0598d26f6d24}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{4a9b7e51-aa16-11d0-a8c5-00a0c921a4d2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{605322a2-17ae-43f4-b60f-766556e46c87}"
             }
           ]
         }

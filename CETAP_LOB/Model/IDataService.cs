@@ -110,6 +110,7 @@ namespace CETAP_LOB.Model
         ObservableCollection<ScoreStats> GetAQLStats();
         ObservableCollection<ScoreStats> GetMATStats();
         bool GenerateComposite();
+        bool GenerateCompositeForSession();
         bool RecordsTrackedScores(string Batch, int amount);
 
         // Composit

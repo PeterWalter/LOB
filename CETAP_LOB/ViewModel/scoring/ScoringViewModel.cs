@@ -194,7 +194,7 @@ namespace CETAP_LOB.ViewModel.scoring
     private void GenerateComposite()
     {
       string text;
-      if (_service.GenerateComposite())
+      if (_service.GenerateCompositeForSession())
       {
         text = "Composite files have been generated !!";
         int num = (int) ModernDialog.ShowMessage(text, "Composite", MessageBoxButton.OK, (Window) null);
