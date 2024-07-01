@@ -3898,7 +3898,7 @@ namespace CETAP_LOB.Model
             Composite = mySelection;
             myDir = new Dir_categories(folder);
             //myDir.Dir = Path.GetDirectoryName(folder);
-            generated = GenerateExcelComposite();
+            generated = GenerateExcelComposite(folder);
             return generated;
         }
  public int GetCompositCount(IntakeYearsBDO yr)
@@ -5253,11 +5253,12 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
 
             return session;
         }
-        public bool GenerateComposite()
+        public bool GenerateComposite(string path)
 
         {
             //  string resultpath = Path.Combine(ApplicationSettings.Default.ScoreFolder, "Composit.csv") ;
-            string filepath = Path.Combine(myDir.Dir, "Composit.csv");
+            //   string filepath = Path.Combine(path, "Composit.csv");
+            //myDir.Dir = path;
             bool gen = false;
 
             //using (var streamWriter = new StreamWriter(filepath))
@@ -5271,16 +5272,19 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
             //    }
             //}
             //   File.Copy(filepath, resultpath);
-            gen = GenerateExcelComposite();
+            gen = GenerateExcelComposite( path);
             return gen;
         }
-        private bool GenerateExcelComposite()
+        private bool GenerateExcelComposite(string directory)
         {
             bool done = false;
             string ExcelFileName = "NBT_Composite";
-            if (Composite.Count > 0)
+
+            string intake = ApplicationSettings.Default.IntakeYear.ToString();
+            string writerListFileName = intake + " Intake Cycle writerlist";
+            if (AllScores.Count > 0)
             {
-                var Compo = from mydata in Composite
+                var Compo = from mydata in AllScores
                             select new
                             {
                                 RefNo = mydata.RefNo,
@@ -5314,8 +5318,8 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
                                 Initial = mydata.Initials,
                                 SouthAfricanID = HelperUtils.ToSAID(mydata.SAID),
                                 Passport = mydata.ForeignID,
-                                Birth = string.Format("{0:dd/MM/yyyy}", mydata.DOB),
-
+                               // Birth = string.Format("{0:dd/MM/yyyy}", mydata.DOB),
+                                Birth = String.Format("{0:yyyyMMdd}", mydata.DOB),
                                 W_AL = mydata.WroteAL,
                                 W_QL = mydata.WroteQL,
                                 W_Mat = mydata.WroteMat,
@@ -5324,8 +5328,9 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
                                 Programme = "",
                                 DateTest = String.Format("{0:yyyyMMdd}", mydata.DOT),
                                 Venue = mydata.VenueName,
-                                Sex = (mydata.Gender == "1" ? "M" :
-                                       mydata.Gender == "2" ? "F" : mydata.Gender),
+                                //Sex = (mydata.Gender == "1" ? "M" :
+                                //       mydata.Gender == "2" ? "F" : mydata.Gender),
+                                Sex = mydata.Gender,
                                 street1 = "",
                                 street2 = "",
                                 Suburb = "",
@@ -5345,7 +5350,121 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
                                 Mat_Lang = mydata.MatLanguage
 
                             };
+                var writerlist1 = from w in Compo
+                                 select new
+                                 {
+                                     //RefNo = mydata.RefNo,
+                                     //Barcode = mydata.Barcode,
+                                     //LastName = mydata.Surname,
+                                     //FName = mydata.Name,
+                                     //Initials = mydata.Initials,
+                                     //SAID = HelperUtils.ToSAID(mydata.SAID),
+                                     //FID = mydata.ForeignID,
+                                     //DOB = String.Format("{0:yyyyMMdd}", mydata.DOB),
+                                     //IDType = mydata.ID_Type,
+                                     //Citizenship = mydata.Citizenship,
+                                     //Classification = mydata.Classification,
+                                     //Gender = mydata.Gender,
+                                     //faculty1 = HelperUtils.GetFacultyName(mydata.Faculty),
+                                     //Testdate = String.Format("{0:yyyyMMdd}", mydata.DOT),
+                                     //VenueCode = mydata.VenueCode.ToString("D5"),
+                                     //VenueName = mydata.VenueName,
+                                     //Hlanguage = mydata.HomeLanguage,
+                                     //G12L = mydata.GR12Language,
+                                     //AQLLang = mydata.AQLLanguage,
+                                     //AQLCode = mydata.AQLCode,
+                                     //MatLang = mydata.MatLanguage,
+                                     //MatCode = mydata.MatCode,
+                                     //Faculty2 = HelperUtils.GetFacultyName(mydata.Faculty2),
+                                     //Faculty3 = HelperUtils.GetFacultyName(mydata.Faculty3),
+                                     SessionID = w.Barcode,
+                                     NBTNumber = w.RefNo,
+                                     Surname = w.Surname,
+                                     Name = w.Name,
+                                     Initial = w.Initials,
+                                     SouthAfricanID = w.SAID,
+                                     Passport = w.Passport,
+                                     // Birth = string.Format("{0:dd/MM/yyyy}", mydata.DOB),
+                                     Birth = w.Birth,
+                                     W_AL = w.W_AL,
+                                     W_QL = w.W_QL,
+                                     W_Mat = w.W_Mat,
+                                     StNo = "",
+                                     Faculty = "",
+                                     Programme = "",
+                                     DateTest = w.DateTest,
+                                     Venue = w.VenueName,
+                                     //Sex = (mydata.Gender == "1" ? "M" :
+                                     //       mydata.Gender == "2" ? "F" : mydata.Gender),
+                                     Sex = w.Sex,
+                                     street1 = "",
+                                     street2 = "",
+                                     Suburb = "",
+                                     City = "",
+                                     Province = "",
+                                     Postal = "",
+                                     Email = "",
+                                     Landline = "",
+                                     Mobile = "",
+                                     ALScore = "",
+                                     ALLevel = "",
+                                     QLScore = "",
+                                     QLLevel = "",
+                                     MatScore = "",
+                                     MatLevel = "",
+                                     AQL_Lang = "",
+                                     Mat_Lang = ""
+                                 };
 
+                var ufs = from u in Compo
+                                  select new
+                                  {
+                                      SessionID = u.Barcode,
+                                      NBTNumber = u.RefNo,
+                                      Surname = u.Surname,
+                                      Name = u.Name,
+                                      Initial = u.Initials,
+                                      SouthAfricanID = u.SAID,
+                                      Passport = u.Passport,
+                                      // Birth = string.Format("{0:dd/MM/yyyy}", mydata.DOB),
+                                      Birth = u.Birth,
+                                      W_AL = u.W_AL,
+                                      W_QL = u.W_QL,
+                                      W_Mat = u.W_Mat,
+                                      StNo = "",
+                                      Faculty = "",
+                                      Programme = "",
+                                      DateTest = u.DateTest,
+                                      Venue = u.VenueName.Length > 50 ? u.VenueName.Substring(0,50):u.VenueName,
+                                      //Sex = (mydata.Gender == "1" ? "M" :
+                                      //       mydata.Gender == "2" ? "F" : mydata.Gender),
+                                      Sex = u.Sex,
+                                      street1 = "",
+                                      street2 = "",
+                                      Suburb = "",
+                                      City = "",
+                                      Province = "",
+                                      Postal = "",
+                                      Email = "",
+                                      Landline = "",
+                                      Mobile = "",
+                                      ALScore = "",
+                                      ALLevel = "",
+                                      QLScore = "",
+                                      QLLevel = "",
+                                      MatScore = "",
+                                      MatLevel = "",
+                                      AQL_Lang = "",
+                                      Mat_Lang = ""
+                                  };
+                var ufs1 = ufs
+                    .Where(a => string.IsNullOrEmpty(a.Passport) || a.Passport.Trim().Length <= 15)
+                    .Select( a => a).ToList();
+                var ufs2 =ufs
+                    .Where(a => !string.IsNullOrEmpty(a.Passport) && a.Passport.Trim().Length > 15)
+                    .Select(a => a).ToList();
+                
+                ufs = null;
 
                 var UCT = from C in Compo
                           select new
@@ -5410,7 +5529,7 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
                 }
 
                
-                var NBTWeb = from Adata in Composite
+                var NBTWeb = from Adata in AllScores
 
                              select new
                              {
@@ -5633,16 +5752,250 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
 
                 ws.Cell(2, 1).Value = Compo.AsEnumerable();
 
-                
+                string path1 = directory;
 
                 #endregion
-                string path1 = myDir.Dir;
+                //if (string.IsNullOrWhiteSpace(myDir.Dir))
+                //{
+                //    path1 = directory;
+                //}
+                //else
+                //{
+                //    path1 = myDir.Dir;
+                //}
 
                 ExcelFileName += "_" + myDay + n;
                 string Combination = Path.Combine(path1, ExcelFileName);
                 workbook.SaveAs(Combination);
+          
+                #region Forwriterlist
+                //----------------------------------------------------------------------------------------------
+                //writerlist to excel
+                //----------------------------------------------------------------------------------------------
+                var workbook1 = new XLWorkbook();
 
 
+                var ws1 = workbook1.Worksheets.Add("Writerlist").SetTabColor(XLColor.Almond);
+                var AllColumns1 = ws1.Columns("A1:BF1");
+                AllColumns1.Width = 13;
+               // ws1.Range("A1:X1").Style.Fill.BackgroundColor = XLColor.TealBlue;
+                ws1.Range("A1:B1").Style.Fill.BackgroundColor = XLColor.Orange;
+                ws1.Range("C1:K1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                ws1.Range("L1:N1").Style.Fill.BackgroundColor = XLColor.Magenta;
+                ws1.Range("O1:Z1").Style.Fill.BackgroundColor = XLColor.GreenYellow;
+                ws1.Range("AA1:AF1").Style.Fill.BackgroundColor = XLColor.LightGray;
+                ws1.Range("AG1:AH1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                var Row11 = ws1.Row(1);
+
+                Row11.Height = 30;
+                Row11.Style.Font.Bold = true;
+                Row11.Style.Font.FontSize = 9;
+                Row11.Style.Alignment.WrapText = true;
+                Row11.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                Row11.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+                //ws1.Cell(1, 1).Value = "Ref No";
+                //ws1.Cell(1, 2).Value = "Barcode";
+                //ws1.Cell(1, 3).Value = "Last Name";
+                //ws1.Cell(1, 4).Value = "First_Name";
+                //ws1.Cell(1, 5).Value = "INITIALS";
+                //ws.Cell(1, 6).Value = "ID NUMBER";
+                //ws.Cell(1, 7).Value = "ID_Foreign";
+                //ws.Cell(1, 8).Value = "Date of Birth";
+                //ws.Cell(1, 9).Value = "ID Type";
+                //ws.Cell(1, 10).Value = "Citizenship";
+                //ws.Cell(1, 11).Value = "Classification";
+                //ws.Cell(1, 12).Value = "Gender 1";
+                //ws.Cell(1, 13).Value = "Faculty 1";
+                //ws.Cell(1, 14).Value = "DATE";
+                //ws.Cell(1, 15).Value = "Test Centre Code";
+                //ws.Cell(1, 16).Value = "Venue Name";
+                //ws.Cell(1, 17).Value = "Home Lang";
+                //ws.Cell(1, 18).Value = "GR12 Language";
+                //ws.Cell(1, 19).Value = "AQL LANG";
+                //ws.Cell(1, 20).Value = "AQL CODE";
+                //ws.Cell(1, 21).Value = "MAT LANG";
+                //ws.Cell(1, 22).Value = "MAT CODE";
+                //ws.Cell(1, 23).Value = "Faculty 2";
+                //ws.Cell(1, 24).Value = "Faculty 3";
+                ws1.Cell(1, 1).Value = "Test Session ID";
+                ws1.Cell(1, 2).Value = "NBT Reference";
+                ws1.Cell(1, 3).Value = "Surname";
+                ws1.Cell(1, 4).Value = "First Name";
+                ws1.Cell(1, 5).Value = "Middle Initials";
+                ws1.Cell(1, 6).Value = "South African ID";
+                ws1.Cell(1, 7).Value = "Foreign ID";
+                ws1.Cell(1, 8).Value = "Date of Birth";
+                ws1.Cell(1, 9).Value = "Wrote AL";
+                ws1.Cell(1, 10).Value = "Wrote QL";
+                ws1.Cell(1, 11).Value = "Wrote Maths";
+                ws1.Cell(1, 12).Value = "Student Number";
+                ws1.Cell(1, 13).Value = "Faculty";
+                ws1.Cell(1, 14).Value = "Programme";
+                ws1.Cell(1, 15).Value = "Date_of_Test";
+                ws1.Cell(1, 16).Value = "Venue";
+                ws1.Cell(1, 17).Value = "Gender";
+                ws1.Cell(1, 18).Value = "Street and Number";
+                ws1.Cell(1, 19).Value = "Street Name";
+                ws1.Cell(1, 20).Value = "Suburb";
+                ws1.Cell(1, 21).Value = "City/Town";
+                ws1.Cell(1, 22).Value = "Province/Region";
+                ws1.Cell(1, 23).Value = "Postal Code";
+                ws1.Cell(1, 24).Value = "e-mail Address";
+                ws1.Cell(1, 25).Value = "Landline Number";
+                ws1.Cell(1, 26).Value = "Mobile Number";
+                ws1.Cell(1, 27).Value = "AL Score";
+                ws1.Cell(1, 28).Value = "AL Performance";
+                ws1.Cell(1, 29).Value = "QL Score";
+                ws1.Cell(1, 30).Value = "QL Performance";
+                ws1.Cell(1, 31).Value = "Maths Score";
+                ws1.Cell(1,32).Value = "Maths Performance";
+                ws1.Cell(1, 33).Value = "AQL TEST LANGUAGE";
+                ws1.Cell(1, 34).Value = "MATHS TEST LANGUAGE";
+
+
+                ws1.Cell(2, 1).Value = writerlist1.AsEnumerable();
+
+
+
+          #endregion
+               // string path2 = myDir.Dir;
+
+                writerListFileName += "_" + myDay + n;
+                string Combination1 = Path.Combine(directory, writerListFileName);
+                workbook.SaveAs(Combination1);
+
+                //---------------------------------------------------------------------------------------------------------------------------------------------------------
+                //----------------------------------------------------------------------------------------------
+                //writerlist to for UFS excel
+                //----------------------------------------------------------------------------------------------
+                var wb = new XLWorkbook();
+
+
+                var wsu = wb.Worksheets.Add("Writerlist").SetTabColor(XLColor.Almond);
+                var wsu1 = wb.Worksheets.Add("ForeignID").SetTabColor(XLColor.Orange);
+                var AllColumns_u = wsu.Columns("A1:BF1");
+                AllColumns_u.Width = 13;
+                // ws1.Range("A1:X1").Style.Fill.BackgroundColor = XLColor.TealBlue;
+                wsu.Range("A1:B1").Style.Fill.BackgroundColor = XLColor.Orange;
+                wsu.Range("C1:K1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                wsu.Range("L1:N1").Style.Fill.BackgroundColor = XLColor.Magenta;
+                wsu.Range("O1:Z1").Style.Fill.BackgroundColor = XLColor.GreenYellow;
+                wsu.Range("AA1:AF1").Style.Fill.BackgroundColor = XLColor.LightGray;
+                wsu.Range("AG1:AH1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                var Row_u = wsu.Row(1);
+
+                Row_u.Style.Font.Bold = true;
+                Row_u.Style.Font.FontSize = 9;
+                Row_u.Style.Alignment.WrapText = true;
+                Row_u.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                Row_u.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+               
+                wsu.Cell(1, 1).Value = "Test Session ID";
+                wsu.Cell(1, 2).Value = "NBT Reference";
+                wsu.Cell(1, 3).Value = "Surname";
+                wsu.Cell(1, 4).Value = "First Name";
+                wsu.Cell(1, 5).Value = "Middle Initials";
+                wsu.Cell(1, 6).Value = "South African ID";
+                wsu.Cell(1, 7).Value = "Foreign ID";
+                wsu.Cell(1, 8).Value = "Date of Birth";
+                wsu.Cell(1, 9).Value = "Wrote AL";
+                wsu.Cell(1, 10).Value = "Wrote QL";
+                wsu.Cell(1, 11).Value = "Wrote Maths";
+                wsu.Cell(1, 12).Value = "Student Number";
+                wsu.Cell(1, 13).Value = "Faculty";
+                wsu.Cell(1, 14).Value = "Programme";
+                wsu.Cell(1, 15).Value = "Date_of_Test";
+                wsu.Cell(1, 16).Value = "Venue";
+                wsu.Cell(1, 17).Value = "Gender";
+                wsu.Cell(1, 18).Value = "Street and Number";
+                wsu.Cell(1, 19).Value = "Street Name";
+                wsu.Cell(1, 20).Value = "Suburb";
+                wsu.Cell(1, 21).Value = "City/Town";
+                wsu.Cell(1, 22).Value = "Province/Region";
+                wsu.Cell(1, 23).Value = "Postal Code";
+                wsu.Cell(1, 24).Value = "e-mail Address";
+                wsu.Cell(1, 25).Value = "Landline Number";
+                wsu.Cell(1, 26).Value = "Mobile Number";
+                wsu.Cell(1, 27).Value = "AL Score";
+                wsu.Cell(1, 28).Value = "AL Performance";
+                wsu.Cell(1, 29).Value = "QL Score";
+                wsu.Cell(1, 30).Value = "QL Performance";
+                wsu.Cell(1, 31).Value = "Maths Score";
+                wsu.Cell(1, 32).Value = "Maths Performance";
+                wsu.Cell(1, 33).Value = "AQL TEST LANGUAGE";
+                wsu.Cell(1, 34).Value = "MATHS TEST LANGUAGE";
+
+
+                wsu.Cell(2, 1).Value = ufs1.AsEnumerable();
+
+
+                var AllColumns_u1 = wsu1.Columns("A1:BF1");
+                AllColumns_u1.Width = 13;
+                // ws1.Range("A1:X1").Style.Fill.BackgroundColor = XLColor.TealBlue;
+                wsu1.Range("A1:B1").Style.Fill.BackgroundColor = XLColor.Orange;
+                wsu1.Range("C1:K1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                wsu1.Range("L1:N1").Style.Fill.BackgroundColor = XLColor.Magenta;
+                wsu1.Range("O1:Z1").Style.Fill.BackgroundColor = XLColor.GreenYellow;
+                wsu1.Range("AA1:AF1").Style.Fill.BackgroundColor = XLColor.LightGray;
+                wsu1.Range("AG1:AH1").Style.Fill.BackgroundColor = XLColor.Yellow;
+                var Row_u1 = wsu1.Row(1);
+
+                Row_u1.Style.Font.Bold = true;
+                Row_u1.Style.Font.FontSize = 9;
+                Row_u1.Style.Alignment.WrapText = true;
+                Row_u1.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Center;
+                Row_u1.Style.Alignment.Vertical = XLAlignmentVerticalValues.Center;
+
+                wsu1.Cell(1, 1).Value = "Test Session ID";
+                wsu1.Cell(1, 2).Value = "NBT Reference";
+                wsu1.Cell(1, 3).Value = "Surname";
+                wsu1.Cell(1, 4).Value = "First Name";
+                wsu1.Cell(1, 5).Value = "Middle Initials";
+                wsu1.Cell(1, 6).Value = "South African ID";
+                wsu1.Cell(1, 7).Value = "Foreign ID";
+                wsu1.Cell(1, 8).Value = "Date of Birth";
+                wsu1.Cell(1, 9).Value = "Wrote AL";
+                wsu1.Cell(1, 10).Value = "Wrote QL";
+                wsu1.Cell(1, 11).Value = "Wrote Maths";
+                wsu1.Cell(1, 12).Value = "Student Number";
+                wsu1.Cell(1, 13).Value = "Faculty";
+                wsu1.Cell(1, 14).Value = "Programme";
+                wsu1.Cell(1, 15).Value = "Date_of_Test";
+                wsu1.Cell(1, 16).Value = "Venue";
+                wsu1.Cell(1, 17).Value = "Gender";
+                wsu1.Cell(1, 18).Value = "Street and Number";
+                wsu1.Cell(1, 19).Value = "Street Name";
+                wsu1.Cell(1, 20).Value = "Suburb";
+                wsu1.Cell(1, 21).Value = "City/Town";
+                wsu1.Cell(1, 22).Value = "Province/Region";
+                wsu1.Cell(1, 23).Value = "Postal Code";
+                wsu1.Cell(1, 24).Value = "e-mail Address";
+                wsu1.Cell(1, 25).Value = "Landline Number";
+                wsu1.Cell(1, 26).Value = "Mobile Number";
+                wsu1.Cell(1, 27).Value = "AL Score";
+                wsu1.Cell(1, 28).Value = "AL Performance";
+                wsu1.Cell(1, 29).Value = "QL Score";
+                wsu1.Cell(1, 30).Value = "QL Performance";
+                wsu1.Cell(1, 31).Value = "Maths Score";
+                wsu1.Cell(1, 32).Value = "Maths Performance";
+                wsu1.Cell(1, 33).Value = "AQL TEST LANGUAGE";
+                wsu1.Cell(1, 34).Value = "MATHS TEST LANGUAGE";
+
+
+                wsu1.Cell(2, 1).Value = ufs2.AsEnumerable();
+
+                #endregion
+                // string path2 = myDir.Dir;
+                string ufsfile = "UFS " + writerListFileName;
+                ufsfile += "_" + myDay + n;
+                string Combination3 = Path.Combine(directory, ufsfile);
+                wb.SaveAs(Combination3);
+
+
+
+
+
+//--------------------------------------------------------------------------------------------------------------------------------------------------------                
 
                 //   writing to Csv files for UCT and website
                 CsvFileDescription outputDesc = new CsvFileDescription
@@ -5660,11 +6013,11 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
 
                 //	CsvContext ccw = new CsvContext();
                 string WebFilename = "WEB_Upload " + myDay + n1;
-                string Combination3 = Path.Combine(path1, WebFilename);
-                cc.Write(WebUploads, Combination3, outputDesc);
+                string Combination4 = Path.Combine(path1, WebFilename);
+                cc.Write(WebUploads, Combination4, outputDesc);
 
 
-                //write to UFS
+
 
 
                 done = true;
@@ -5787,7 +6140,7 @@ public async Task<List<CompositBDO>> GetAllNBTScoresAsync(int page, int size, In
 
             return istracked;
         }
-        #endregion
+ 
 
         #region  Moderation
 

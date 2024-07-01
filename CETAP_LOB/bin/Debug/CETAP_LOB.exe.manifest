@@ -79,14 +79,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="5809064">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="5823400">
       <assemblyIdentity name="CETAP_LOB" version="1.1.0.1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>OfUviCrXUCsIxaFUKpz1MqpD6YzH57J/qlLrQMe/Dzw=</dsig:DigestValue>
+        <dsig:DigestValue>LUMIytPq/DraXVGUZlquh1PH2g5086BJuQ4j1ndWRzw=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>

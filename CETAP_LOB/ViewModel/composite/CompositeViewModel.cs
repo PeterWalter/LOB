@@ -339,7 +339,7 @@ namespace CETAP_LOB.ViewModel.composite
             if (folderBrowserDialog.ShowDialog() == DialogResult.OK)
                 folder = folderBrowserDialog.SelectedPath;
             //if (!string.IsNullOrWhiteSpace(folder))
-            //    flag = _service.GenerateSelectedComposite(IntakeScores, folder);
+                flag = _service.GenerateComposite(folder);
             if (!flag)
                 return;
             ModernDialog.ShowMessage("Composite of " + IntakeYear + " Records created", "Intake Records!!!", MessageBoxButton.OK);

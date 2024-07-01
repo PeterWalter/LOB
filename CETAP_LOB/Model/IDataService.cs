@@ -109,7 +109,7 @@ namespace CETAP_LOB.Model
         ObservableCollection<CompositBDO> MatchScores();
         ObservableCollection<ScoreStats> GetAQLStats();
         ObservableCollection<ScoreStats> GetMATStats();
-        bool GenerateComposite();
+        bool GenerateComposite(string folder);
         bool GenerateCompositeForSession();
         bool RecordsTrackedScores(string Batch, int amount);
 
