@@ -267,6 +267,7 @@
     <Compile Include="BDO\TestBDO.cs" />
     <Compile Include="BDO\TestProfileBDO.cs" />
     <Compile Include="BDO\UCT_Upload.cs" />
+    <Compile Include="BDO\UFS_Upload.cs" />
     <Compile Include="BDO\UserBDO.cs" />
     <Compile Include="BDO\VenueBDO.cs" />
     <Compile Include="BDO\WritersBDO.cs" />
