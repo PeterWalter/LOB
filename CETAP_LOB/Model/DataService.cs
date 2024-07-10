@@ -4781,54 +4781,248 @@ namespace CETAP_LOB.Model
             //        Composite.Add(record);
             //    }
             //    );
-
-            foreach (var x in matched)
+            try
             {
-                CompositBDO record = new CompositBDO();
-                record.Barcode = x.Barcode;
-                record.RefNo = x.NBT;
-                record.Surname = x.Surname;
-                record.Name = x.Name;
-                record.Initials = x.Initials;
-                record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
-                record.ForeignID = x.ForeignID;
-                record.ID_Type = x.ID_Type.ToString();
-                record.Gender = x.Gender.ToString();
-                record.DOB = x.DOB;
+                foreach (var x in matched)
+                {
+                    CompositBDO record = new CompositBDO();
+                    record.Barcode = x.Barcode;
+                    record.RefNo = x.NBT;
+                    record.Surname = x.Surname;
+                    record.Name = x.Name;
+                    record.Initials = x.Initials;
+                    record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
+                    record.ForeignID = x.ForeignID;
+                    record.ID_Type = x.ID_Type.ToString();
+                    record.Gender = x.Gender.ToString();
+                    record.DOB = x.DOB;
 
-                record.HomeLanguage = x.HomeLanguage;
-                record.GR12Language = x.GR12Language.ToString();
-                record.Citizenship = x.Citizenship;
-                record.Classification = x.Classification.ToString();
+                    record.HomeLanguage = x.HomeLanguage;
+                    record.GR12Language = x.GR12Language.ToString();
+                    record.Citizenship = x.Citizenship;
+                    record.Classification = x.Classification.ToString();
 
-                record.ALScore = x.AL;
-                record.QLScore = x.QL;
-                record.MATScore = x.MAT;
-                record.ALLevel = x.AL_Level;
-                record.QLLevel = x.QL_Level;
-                record.MATLevel = x.mat_level;
-                record.WroteAL = x.wroteAL;
-                record.WroteQL = x.wroteQL;
-                record.WroteMat = x.wroteMat;
-                record.DOT = x.DOT;
-                record.VenueCode = x.VenueCode;
-                record.VenueName = x.VenueName;
-                record.AQLCode = x.AQLCode;
-                record.MatCode = x.MATCode;
-                record.AQLLanguage = x.AQL_Language;
-                record.MatLanguage = x.MAT_Language;
-                record.Faculty = x.Faculty1;
-                record.Faculty2 = x.Faculty2;
-                record.Faculty3 = x.faculty3;
-                record.Batch = x.Batch;
-                record.RowGuid = Guid.NewGuid();
-                record.DateModified = DateTime.Now;
+                    record.ALScore = x.AL;
+                    record.QLScore = x.QL;
+                    record.MATScore = x.MAT;
+                    record.ALLevel = x.AL_Level;
+                    record.QLLevel = x.QL_Level;
+                    record.MATLevel = x.mat_level;
+                    record.WroteAL = x.wroteAL;
+                    record.WroteQL = x.wroteQL;
+                    record.WroteMat = x.wroteMat;
+                    record.DOT = x.DOT;
+                    record.VenueCode = x.VenueCode;
+                    record.VenueName = x.VenueName;
+                    record.AQLCode = x.AQLCode;
+                    record.MatCode = x.MATCode;
+                    record.AQLLanguage = x.AQL_Language;
+                    record.MatLanguage = x.MAT_Language;
+                    record.Faculty = x.Faculty1;
+                    record.Faculty2 = x.Faculty2;
+                    record.Faculty3 = x.faculty3;
+                    record.Batch = x.Batch;
+                    record.RowGuid = Guid.NewGuid();
+                    record.DateModified = DateTime.Now;
 
-                Composite.Add(record);
-                //if (Composite.Count() % 315 == 0)
-                //{
-                //    MessageBox.Show("Hi there!!");
-                //}
+                    Composite.Add(record);
+                    //if (Composite.Count() % 315 == 0)
+                    //{
+                    //    MessageBox.Show("Hi there!!");
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
+            }
+            return Composite;
+        }
+        public ObservableCollection<CompositBDO> MatchOnlineScores()
+        {
+            BenchMarkLevelsBDO degbenchmark = new BenchMarkLevelsBDO();
+            ObservableCollection<VenueBDO> venues = new ObservableCollection<VenueBDO>();
+
+            GetIntakeBenchmarks();
+            using (var context = new CETAPEntities())
+            {
+                var venuesdb = context.TestVenues.ToList();
+                foreach (var v in venuesdb)
+                {
+                    VenueBDO Venue = new VenueBDO();
+                    TestVenueToVenueBDO(Venue, v);
+                    venues.Add(Venue);
+                }
+            }
+            degbenchmark = benchmarkLevels.Where(rec => rec.Type == "Degree    ").Select(x => x).FirstOrDefault();
+
+            Composite = new ObservableCollection<CompositBDO>();
+            var matched = (from b in BIO
+                           join a in AQL on b.NBT equals a.ID into ab_j
+                           join m in MAT on b.NBT equals m.ID into bm_j
+                           join c in venues on b.VenueCode equals c.VenueCode into venue_j
+                           from ab in ab_j.DefaultIfEmpty(new AQL_Score())
+                           from bm in bm_j.DefaultIfEmpty(new MAT_Score())
+                           select new
+                           {
+                               Barcode = b.Barcode, // changed because of Online using NBT RefNo instead of Barcode
+                               NBT = b.NBT,
+                               Surname = b.Surname,
+                               Name = b.Name,
+                               Initials = b.Initials,
+                               SAID = b.SAID,
+                               ForeignID = b.ForeignID,
+                               ID_Type = b.ID_Type,
+                               //DOB = b.DOB != null ? b.DOB: HelperUtils.BioDate("19000101"),
+                               DOB = b.DOB,
+                               Gender = b.Gender,
+                               Classification = b.Classification,
+                               Citizenship = b.Citizenship,
+                               GR12Language = b.Grade12_Language,
+                               HomeLanguage = b.HomeLanguage,
+
+                               DOT = b.DOT,
+                               VenueCode = b.VenueCode,
+                               VenueName = venue_j.FirstOrDefault()?.ShortName,
+
+                               MATCode = b.MatCode,
+                               MAT_Language = b.Mat_Language,
+                               AQLCode = b.AQLCode,
+                               AQL_Language = b.AQL_Language,
+
+                               Faculty1 = b.Faculty1,
+                               Faculty2 = b.Faculty2,
+                               faculty3 = b.faculty3,
+                               AL = ab.AL == 0 ? (int?)null : ab.AL,
+                               wroteAL = ab.AL == null ? "NO" :
+                                          ab.AL == 0 ? "NO" : "YES",
+                               AL_Level = ab.AL >= degbenchmark.AL_PU ? "Proficient Upper" :
+                                          ab.AL >= degbenchmark.AL_PL ? "Proficient Lower" :
+                                          ab.AL >= degbenchmark.AL_IU ? "Intermediate Upper" :
+                                          ab.AL >= degbenchmark.AL_IL ? "Intermediate Lower" :
+                                          ab.AL >= degbenchmark.AL_BU ? "Basic Upper" :
+                                          ab.AL > degbenchmark.AL_BL ? "Basic Lower" : "",
+
+                               QL = ab.QL == 0 ? (int?)null : ab.QL,
+                               wroteQL = ab.QL == null ? "NO" :
+                                          ab.QL == 0 ? "NO" : "YES",
+                               QL_Level = ab.QL >= degbenchmark.QL_PU ? "Proficient Upper" :
+                                          ab.QL >= degbenchmark.QL_PL ? "Proficient Lower" :
+                                          ab.QL >= degbenchmark.QL_IU ? "Intermediate Upper" :
+                                          ab.QL >= degbenchmark.QL_IL ? "Intermediate Lower" :
+                                          ab.QL >= degbenchmark.QL_BU ? "Basic Upper" :
+                                          ab.QL > degbenchmark.QL_BL ? "Basic Lower" : "",
+                               MAT = bm.MAT != null ? (int?)bm.MAT : null,
+                               //MAT = bm.MAT,
+                               wroteMat = bm.MAT != null ? "YES" : "NO",
+                               mat_level = bm.MAT >= degbenchmark.MAT_PU ? "Proficient Upper" :
+                                          bm.MAT >= degbenchmark.MAT_PL ? "Proficient Lower" :
+                                          bm.MAT >= degbenchmark.MAT_IU ? "Intermediate Upper" :
+                                          bm.MAT >= degbenchmark.MAT_IL ? "Intermediate Lower" :
+                                          bm.MAT >= degbenchmark.MAT_BU ? "Basic Upper" :
+                                          bm.MAT > degbenchmark.MAT_BL ? "Basic Lower" : "",
+                               Batch = b.BatchFile
+                           }).Distinct().ToList();
+
+            //Parallel.ForEach( matched, x =>
+            //    {
+            //        CompositBDO record = new CompositBDO();
+            //        record.Barcode = x.Barcode;
+            //        record.RefNo = x.NBT;
+            //        record.Surname = x.Surname;
+            //        record.Name = x.Name;
+            //        record.Initials = x.Initials;
+            //        record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
+            //        record.ForeignID = x.ForeignID;
+            //        record.ID_Type = x.ID_Type.ToString();
+            //        record.Gender = x.Gender.ToString();
+            //        record.DOB = x.DOB;
+
+            //        record.HomeLanguage = x.HomeLanguage;
+            //        record.GR12Language = x.GR12Language.ToString();
+            //        record.Citizenship = x.Citizenship;
+            //        record.Classification = x.Classification.ToString();
+
+            //        record.ALScore = x.AL;
+            //        record.QLScore = x.QL;
+            //        record.MATScore = x.MAT;
+            //        record.ALLevel = x.AL_Level;
+            //        record.QLLevel = x.QL_Level;
+            //        record.MATLevel = x.mat_level;
+            //        record.WroteAL = x.wroteAL;
+            //        record.WroteQL = x.wroteQL;
+            //        record.WroteMat = x.wroteMat;
+            //        record.DOT = x.DOT;
+            //        record.VenueCode = x.VenueCode;
+            //        record.VenueName = x.VenueName;
+            //        record.AQLCode = x.AQLCode;
+            //        record.MatCode = x.MATCode;
+            //        record.AQLLanguage = x.AQL_Language;
+            //        record.MatLanguage = x.MAT_Language;
+            //        record.Faculty = x.Faculty1;
+            //        record.Faculty2 = x.Faculty2;
+            //        record.Faculty3 = x.faculty3;
+            //        record.Batch = x.Batch;
+            //        record.RowGuid = Guid.NewGuid();
+            //        record.DateModified = DateTime.Now;
+
+            //        Composite.Add(record);
+            //    }
+            //    );
+            try
+            {
+                foreach (var x in matched)
+                {
+                    CompositBDO record = new CompositBDO();
+                    record.Barcode = x.Barcode;
+                    record.RefNo = x.NBT;
+                    record.Surname = x.Surname;
+                    record.Name = x.Name;
+                    record.Initials = x.Initials;
+                    record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
+                    record.ForeignID = x.ForeignID;
+                    record.ID_Type = x.ID_Type.ToString();
+                    record.Gender = x.Gender.ToString();
+                    record.DOB = x.DOB;
+
+                    record.HomeLanguage = x.HomeLanguage;
+                    record.GR12Language = x.GR12Language.ToString();
+                    record.Citizenship = x.Citizenship;
+                    record.Classification = x.Classification.ToString();
+
+                    record.ALScore = x.AL;
+                    record.QLScore = x.QL;
+                    record.MATScore = x.MAT;
+                    record.ALLevel = x.AL_Level;
+                    record.QLLevel = x.QL_Level;
+                    record.MATLevel = x.mat_level;
+                    record.WroteAL = x.wroteAL;
+                    record.WroteQL = x.wroteQL;
+                    record.WroteMat = x.wroteMat;
+                    record.DOT = x.DOT;
+                    record.VenueCode = x.VenueCode;
+                    record.VenueName = x.VenueName;
+                    record.AQLCode = x.AQLCode;
+                    record.MatCode = x.MATCode;
+                    record.AQLLanguage = x.AQL_Language;
+                    record.MatLanguage = x.MAT_Language;
+                    record.Faculty = x.Faculty1;
+                    record.Faculty2 = x.Faculty2;
+                    record.Faculty3 = x.faculty3;
+                    record.Batch = x.Batch;
+                    record.RowGuid = Guid.NewGuid();
+                    record.DateModified = DateTime.Now;
+
+                    Composite.Add(record);
+                    //if (Composite.Count() % 315 == 0)
+                    //{
+                    //    MessageBox.Show("Hi there!!");
+                    //}
+                }
+            }
+            catch (Exception ex)
+            {
+                string msg = ex.Message;
             }
             return Composite;
         }

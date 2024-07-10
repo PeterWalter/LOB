@@ -55,9 +55,11 @@ namespace CETAP_LOB.Model.scoring
       {
         AnswerSheetBio myBio = new AnswerSheetBio();
         myBio.NBT = Convert.ToInt64(row.Field("RefNo").GetString());
+        if(!row.Field("Barcode").IsEmpty())
         myBio.Barcode = Convert.ToInt64(row.Field("Barcode").GetString());
         myBio.Surname = row.Field("SURNAME").GetString();
-        myBio.Name = row.Field("FIRST_NAME").GetString();
+        if (!row.Field("FIRST_NAME").IsEmpty())
+         myBio.Name = row.Field("FIRST_NAME").GetString();
         if (!row.Field("INITALS").IsEmpty())
           myBio.Initials = row.Field("INITALS").GetString();
         if (!row.Field("ID_NUMBER").IsEmpty())
@@ -97,8 +99,10 @@ namespace CETAP_LOB.Model.scoring
         //myBio.BatchFile = row.Field("BatchFile").GetString();
         myBio.VenueCode = Convert.ToInt32(row.Field("Test_Cen_Code").GetString().Trim());
         myBio.VenueName = _venues.Where<VenueBDO>((Func<VenueBDO, bool>) (x => x.VenueCode == myBio.VenueCode)).Select<VenueBDO, string>((Func<VenueBDO, string>) (x => x.ShortName)).FirstOrDefault<string>();
-        myBio.aqltestname = row.Field("AQL_TestNo").GetString();
-        myBio.matTestname = row.Field("MAT_TestNo").GetString();
+                if (!row.Field("AQL_TestNo").IsEmpty())
+                    myBio.aqltestname = row.Field("AQL_TestNo").GetString();
+                if (!row.Field("MAT_TestNo").IsEmpty())
+                    myBio.matTestname = row.Field("MAT_TestNo").GetString();
         bio.Add(myBio);
       }
     }

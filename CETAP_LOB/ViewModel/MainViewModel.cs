@@ -337,7 +337,41 @@ namespace CETAP_LOB.ViewModel
                     }
                     MenuLinkGroups.Add(linkGroup12);
                     break;
-            }
+
+                case '6':
+                        LinkGroup linkGroup13 = new LinkGroup();
+                        linkGroup13.DisplayName = "Utilities";
+                       // LinkGroup linkGroup14 = linkGroup13;
+                        foreach (char ch2 in strArray[6].ToCharArray())
+                        {
+                            switch (ch2)
+                            {
+                                case '1':
+                                    Link link15 = new Link();
+                                    link15.DisplayName = "Online tests";
+                                    link15.Source = new Uri("/View/Utilities/OnlineView.xaml", UriKind.Relative);
+                                   // Link link16 = link15;
+                                    linkGroup13.Links.Add(link15);
+                                    break;
+                                case '2':
+                                    Link link16 = new Link();
+                                    link16.DisplayName = "Subdomains";
+                                    link16.Source = new Uri("/View/Utilities/SubdomainsView.xaml", UriKind.Relative);
+                                   // Link link10 = link9;
+                                    linkGroup13.Links.Add(link16);
+                                    break;
+                                case '3':
+                                    Link link17 = new Link();
+                                    link17.DisplayName = "Barcode Generation";
+                                    link17.Source = new Uri("/View/Utilities/BarcodesView.xaml", UriKind.Relative);
+                                    // Link link10 = link9;
+                                    linkGroup13.Links.Add(link17);
+                                    break;
+                            }
+                        }
+                        MenuLinkGroups.Add(linkGroup13);
+                        break;
+                }
         }
     }
 }

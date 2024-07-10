@@ -23,6 +23,7 @@ using CETAP_LOB.ViewModel.scoring;
 using CETAP_LOB.ViewModel.writers;
 using CETAP_LOB.ViewModel.Introduction;
 using CETAP_LOB.ViewModel.composite;
+using CETAP_LOB.ViewModel.Utilities;
 using Microsoft.SqlServer.Types;
 using CETAP_LOB.ViewModel;
 
@@ -82,6 +83,9 @@ namespace CETAP_LOB.ViewModel
             SimpleIoc.Default.Register<FakeEasyPayViewModel>();
             SimpleIoc.Default.Register<EditCompositeViewModel>();
             SimpleIoc.Default.Register<ErrorViewModel>();
+            SimpleIoc.Default.Register<OnlineViewModel>();
+            SimpleIoc.Default.Register<SubdomainsViewModel>();
+            SimpleIoc.Default.Register<BarcodesViewModel>();
         }
 
         public MainViewModel Main
@@ -427,7 +431,36 @@ namespace CETAP_LOB.ViewModel
             }
         }
 
-
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+         "CA1822:MarkMembersAsStatic",
+         Justification = "This non-static member is needed for data binding purposes.")]
+        public OnlineViewModel Online
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<OnlineViewModel>();
+            }
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+         "CA1822:MarkMembersAsStatic",
+         Justification = "This non-static member is needed for data binding purposes.")]
+        public SubdomainsViewModel Subdomain
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<SubdomainsViewModel>();
+            }
+        }
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance",
+         "CA1822:MarkMembersAsStatic",
+         Justification = "This non-static member is needed for data binding purposes.")]
+        public BarcodesViewModel Barcode
+        {
+            get
+            {
+                return ServiceLocator.Current.GetInstance<BarcodesViewModel>();
+            }
+        }
 
         public static void Cleanup()
         {

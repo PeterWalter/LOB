@@ -58,8 +58,8 @@ namespace CETAP_LOB.Model.scoring
 
     private void ReadExcelFile()
     {
-      IXLWorksheet xlWorksheet = new XLWorkbook(_filename).Worksheet(1);
-      foreach (IXLTableRow row in (IEnumerable<IXLTableRow>) xlWorksheet.Range(xlWorksheet.FirstCellUsed().Address, xlWorksheet.LastCellUsed().Address).AsTable().DataRange.Rows((Func<IXLTableRow, bool>) null))
+      IXLWorksheet Worksheet = new XLWorkbook(_filename).Worksheet(1);
+      foreach (IXLTableRow row in (IEnumerable<IXLTableRow>) Worksheet.Range(Worksheet.FirstCellUsed().Address, Worksheet.LastCellUsed().Address).AsTable().DataRange.Rows((Func<IXLTableRow, bool>) null))
       {
         if (!row.Field("ID").IsEmpty())
         {

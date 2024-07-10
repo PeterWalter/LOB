@@ -847,3 +847,5 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.application
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.csproj.Up2Date
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.exe
 D:\projects\source code\LOB\CETAP_LOB\obj\Release\CETAP_LOB.pdb
+D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Utilities\OnlineView.g.cs
+D:\projects\source code\LOB\CETAP_LOB\obj\Release\View\Utilities\OnlineView.baml

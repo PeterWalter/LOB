@@ -455,6 +455,9 @@
     <Compile Include="ViewModel\scoring\ScoringViewModel.cs" />
     <Compile Include="ViewModel\SettingsAppearanceViewModel.cs" />
     <Compile Include="ViewModel\SettingsViewModel.cs" />
+    <Compile Include="ViewModel\Utilities\BarcodesViewModel.cs" />
+    <Compile Include="ViewModel\Utilities\OnlineViewModel.cs" />
+    <Compile Include="ViewModel\Utilities\SubdomainsViewModel.cs" />
     <Compile Include="ViewModel\ViewModelbase1.cs" />
     <Compile Include="ViewModel\ViewModelLocator.cs" />
     <Compile Include="ViewModel\writers\LoadWritersViewModel.cs" />
@@ -537,6 +540,9 @@
     </Compile>
     <Compile Include="View\SplitPage1.xaml.cs">
       <DependentUpon>splitpage1.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="View\Utilities\OnlineView.xaml.cs">
+      <DependentUpon>OnlineView.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\writers\LoadFileView.xaml.cs">
       <DependentUpon>LoadFileView.xaml</DependentUpon>
@@ -675,6 +681,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\splitpage1.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="View\Utilities\OnlineView.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>

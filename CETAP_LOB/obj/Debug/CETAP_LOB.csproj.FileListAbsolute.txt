@@ -722,3 +722,5 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.pdb
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Dumpify.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.xml
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.g.cs
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.baml

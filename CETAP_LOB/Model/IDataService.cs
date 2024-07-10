@@ -107,6 +107,7 @@ namespace CETAP_LOB.Model
         ObservableCollection<AQL_Score> GetAQL();
         ObservableCollection<MAT_Score> GetMat();
         ObservableCollection<CompositBDO> MatchScores();
+        ObservableCollection<CompositBDO> MatchOnlineScores();
         ObservableCollection<ScoreStats> GetAQLStats();
         ObservableCollection<ScoreStats> GetMATStats();
         bool GenerateComposite(string folder);
