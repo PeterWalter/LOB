@@ -42,7 +42,8 @@
         <EntityTypeShape EntityType="NBT_ProductionModel.QA" Width="1.5" PointX="10" PointY="6.125" />
         <AssociationConnector Association="NBT_ProductionModel.FK_QA_Batch" />
         <EntityTypeShape EntityType="NBT_ProductionModel.School" Width="1.5" PointX="12.375" PointY="16.75" />
-        <EntityTypeShape EntityType="NBT_ProductionModel.Cleaned_batch" Width="1.5" PointX="19.25" PointY="15.875" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.Cleaned_batch" Width="1.5" PointX="20.25" PointY="10.25" />
+        <EntityTypeShape EntityType="NBT_ProductionModel.OnlineComposit" Width="1.5" PointX="14.375" PointY="16.75" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

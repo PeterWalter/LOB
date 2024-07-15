@@ -382,6 +382,7 @@
     <EntitySetMapping Name="Users">
       <EntityTypeMapping TypeName="NBT_ProductionModel.User">
         <MappingFragment StoreEntitySet="Users">
+          <ScalarProperty Name="email" ColumnName="email" />
           <ScalarProperty Name="StaffID" ColumnName="StaffID" />
           <ScalarProperty Name="Name" ColumnName="Name" />
           <ScalarProperty Name="Areas" ColumnName="Areas" />
@@ -524,6 +525,48 @@
           <ScalarProperty Name="CSX" ColumnName="CSX" />
           <ScalarProperty Name="CSX_type_id" ColumnName="CSX_type_id" />
           <ScalarProperty Name="rec_id" ColumnName="rec_id" />
+        </MappingFragment>
+      </EntityTypeMapping>
+    </EntitySetMapping>
+    <EntitySetMapping Name="OnlineComposits">
+      <EntityTypeMapping TypeName="NBT_ProductionModel.OnlineComposit">
+        <MappingFragment StoreEntitySet="OnlineComposit">
+          <ScalarProperty Name="Description" ColumnName="Description" />
+          <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+          <ScalarProperty Name="Batch" ColumnName="Batch" />
+          <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+          <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+          <ScalarProperty Name="WroteMat" ColumnName="WroteMat" />
+          <ScalarProperty Name="WroteQL" ColumnName="WroteQL" />
+          <ScalarProperty Name="WroteAL" ColumnName="WroteAL" />
+          <ScalarProperty Name="MATLevel" ColumnName="MATLevel" />
+          <ScalarProperty Name="MATScore" ColumnName="MATScore" />
+          <ScalarProperty Name="QLLevel" ColumnName="QLLevel" />
+          <ScalarProperty Name="QLScore" ColumnName="QLScore" />
+          <ScalarProperty Name="ALLevel" ColumnName="ALLevel" />
+          <ScalarProperty Name="ALScore" ColumnName="ALScore" />
+          <ScalarProperty Name="MatCode" ColumnName="MatCode" />
+          <ScalarProperty Name="MatLanguage" ColumnName="MatLanguage" />
+          <ScalarProperty Name="AQLCode" ColumnName="AQLCode" />
+          <ScalarProperty Name="AQLLanguage" ColumnName="AQLLanguage" />
+          <ScalarProperty Name="GR12Language" ColumnName="GR12Language" />
+          <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+          <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+          <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+          <ScalarProperty Name="DOT" ColumnName="DOT" />
+          <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+          <ScalarProperty Name="Gender" ColumnName="Gender" />
+          <ScalarProperty Name="Classification" ColumnName="Classification" />
+          <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+          <ScalarProperty Name="ID_Type" ColumnName="ID_Type" />
+          <ScalarProperty Name="DOB" ColumnName="DOB" />
+          <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+          <ScalarProperty Name="SAID" ColumnName="SAID" />
+          <ScalarProperty Name="Initials" ColumnName="Initials" />
+          <ScalarProperty Name="Name" ColumnName="Name" />
+          <ScalarProperty Name="Surname" ColumnName="Surname" />
+          <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+          <ScalarProperty Name="RefNo" ColumnName="RefNo" />
         </MappingFragment>
       </EntityTypeMapping>
     </EntitySetMapping>

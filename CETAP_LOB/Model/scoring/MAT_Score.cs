@@ -6,7 +6,8 @@ namespace CETAP_LOB.Model.scoring
   {
     private long _id;
     private int? mat;
-
+    private string _language;
+    private int? _testcode;
     public long ID
     {
       get
@@ -30,5 +31,28 @@ namespace CETAP_LOB.Model.scoring
         mat = value;
       }
     }
-  }
+        public string Language
+        {
+            get
+            {
+                return _language;
+            }
+            set
+            {
+                _language = value;
+            }
+        }
+        public int? TestCode
+        {
+            get
+            {
+                return _testcode;
+            }
+            set
+            {
+                _testcode = value;
+            }
+        }
+      
+    }
 }

@@ -7,8 +7,9 @@ namespace CETAP_LOB.Model.scoring
     private long _id;
     private int? al;
     private int? ql;
-
-    public long ID
+    private string _language;
+    private int? _testcode;
+        public long ID
     {
       get
       {
@@ -31,8 +32,18 @@ namespace CETAP_LOB.Model.scoring
         al = value;
       }
     }
-
-    public int? QL
+        public int? TestCode
+        {
+            get
+            {
+                return _testcode;
+            }
+            set
+            {
+                _testcode = value;
+            }
+        }
+        public int? QL
     {
       get
       {
@@ -43,5 +54,15 @@ namespace CETAP_LOB.Model.scoring
         ql = value;
       }
     }
-  }
+        public string Language 
+        { get
+            {
+                return _language;
+            }
+            set
+            {
+                _language = value;
+            }
+        }
+    }
 }

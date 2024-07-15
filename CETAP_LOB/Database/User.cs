@@ -17,5 +17,6 @@ namespace CETAP_LOB.Database
         public string StaffID { get; set; }
         public string Name { get; set; }
         public string Areas { get; set; }
+        public string email { get; set; }
     }
 }

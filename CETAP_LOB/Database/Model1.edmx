@@ -47,6 +47,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Users' does not have a primary 
           <Property Name="StaffID" Type="nchar" MaxLength="8" Nullable="false" />
           <Property Name="Name" Type="nchar" MaxLength="20" Nullable="false" />
           <Property Name="Areas" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="email" Type="nvarchar" MaxLength="50" />
         </EntityType>
         <EntityType Name="EasyPayFile">
           <Key>
@@ -494,6 +495,60 @@ warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a 
           <Property Name="date_modified" Type="datetime" />
         </EntityType>
         <!--Errors Found During Generation:
+warning 6002: The table/view 'NBT_Production.scoring.OnlineComposit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
+        <EntityType Name="OnlineComposit">
+          <Key>
+            <PropertyRef Name="RefNo" />
+            <PropertyRef Name="Barcode" />
+            <PropertyRef Name="Surname" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="DOB" />
+            <PropertyRef Name="DOT" />
+            <PropertyRef Name="VenueCode" />
+            <PropertyRef Name="WroteAL" />
+            <PropertyRef Name="WroteQL" />
+            <PropertyRef Name="WroteMat" />
+            <PropertyRef Name="Batch" />
+            <PropertyRef Name="DateModified" />
+          </Key>
+          <Property Name="RefNo" Type="bigint" Nullable="false" />
+          <Property Name="Barcode" Type="bigint" Nullable="false" />
+          <Property Name="Surname" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Name" Type="nchar" MaxLength="50" Nullable="false" />
+          <Property Name="Initials" Type="nchar" MaxLength="3" />
+          <Property Name="SAID" Type="bigint" />
+          <Property Name="ForeignID" Type="nvarchar" MaxLength="20" />
+          <Property Name="DOB" Type="date" Nullable="false" />
+          <Property Name="ID_Type" Type="nchar" MaxLength="1" />
+          <Property Name="Citizenship" Type="int" />
+          <Property Name="Classification" Type="nchar" MaxLength="1" />
+          <Property Name="Gender" Type="nchar" MaxLength="1" />
+          <Property Name="Faculty" Type="nchar" MaxLength="50" />
+          <Property Name="DOT" Type="date" Nullable="false" />
+          <Property Name="VenueCode" Type="int" Nullable="false" />
+          <Property Name="VenueName" Type="nchar" MaxLength="100" />
+          <Property Name="HomeLanguage" Type="nchar" MaxLength="2" />
+          <Property Name="GR12Language" Type="nchar" MaxLength="1" />
+          <Property Name="AQLLanguage" Type="nchar" MaxLength="1" />
+          <Property Name="AQLCode" Type="nchar" MaxLength="10" />
+          <Property Name="MatLanguage" Type="nchar" MaxLength="1" />
+          <Property Name="MatCode" Type="nchar" MaxLength="10" />
+          <Property Name="ALScore" Type="int" />
+          <Property Name="ALLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="QLScore" Type="int" />
+          <Property Name="QLLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="MATScore" Type="int" />
+          <Property Name="MATLevel" Type="nvarchar" MaxLength="20" />
+          <Property Name="WroteAL" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="WroteQL" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="WroteMat" Type="nchar" MaxLength="3" Nullable="false" />
+          <Property Name="Faculty2" Type="nchar" MaxLength="50" />
+          <Property Name="Faculty3" Type="nchar" MaxLength="50" />
+          <Property Name="Batch" Type="nchar" MaxLength="22" Nullable="false" />
+          <Property Name="DateModified" Type="datetime" Nullable="false" />
+          <Property Name="Description" Type="nvarchar" MaxLength="200" />
+        </EntityType>
+        <!--Errors Found During Generation:
 warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
         <EntityType Name="Vw_EasyPayRecords">
           <Key>
@@ -667,7 +722,8 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
             <DefiningQuery>SELECT 
     [Users].[StaffID] AS [StaffID], 
     [Users].[Name] AS [Name], 
-    [Users].[Areas] AS [Areas]
+    [Users].[Areas] AS [Areas], 
+    [Users].[email] AS [email]
     FROM [dbo].[Users] AS [Users]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Schools" EntityType="Self.Schools" store:Type="Tables" store:Schema="Process">
@@ -693,6 +749,46 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     [TestRooms].[RoomName] AS [RoomName], 
     [TestRooms].[TestRoom_TestVenue] AS [TestRoom_TestVenue]
     FROM [Process].[TestRooms] AS [TestRooms]</DefiningQuery>
+          </EntitySet>
+          <EntitySet Name="OnlineComposit" EntityType="Self.OnlineComposit" store:Type="Tables" store:Schema="scoring">
+            <DefiningQuery>SELECT 
+    [OnlineComposit].[RefNo] AS [RefNo], 
+    [OnlineComposit].[Barcode] AS [Barcode], 
+    [OnlineComposit].[Surname] AS [Surname], 
+    [OnlineComposit].[Name] AS [Name], 
+    [OnlineComposit].[Initials] AS [Initials], 
+    [OnlineComposit].[SAID] AS [SAID], 
+    [OnlineComposit].[ForeignID] AS [ForeignID], 
+    [OnlineComposit].[DOB] AS [DOB], 
+    [OnlineComposit].[ID_Type] AS [ID_Type], 
+    [OnlineComposit].[Citizenship] AS [Citizenship], 
+    [OnlineComposit].[Classification] AS [Classification], 
+    [OnlineComposit].[Gender] AS [Gender], 
+    [OnlineComposit].[Faculty] AS [Faculty], 
+    [OnlineComposit].[DOT] AS [DOT], 
+    [OnlineComposit].[VenueCode] AS [VenueCode], 
+    [OnlineComposit].[VenueName] AS [VenueName], 
+    [OnlineComposit].[HomeLanguage] AS [HomeLanguage], 
+    [OnlineComposit].[GR12Language] AS [GR12Language], 
+    [OnlineComposit].[AQLLanguage] AS [AQLLanguage], 
+    [OnlineComposit].[AQLCode] AS [AQLCode], 
+    [OnlineComposit].[MatLanguage] AS [MatLanguage], 
+    [OnlineComposit].[MatCode] AS [MatCode], 
+    [OnlineComposit].[ALScore] AS [ALScore], 
+    [OnlineComposit].[ALLevel] AS [ALLevel], 
+    [OnlineComposit].[QLScore] AS [QLScore], 
+    [OnlineComposit].[QLLevel] AS [QLLevel], 
+    [OnlineComposit].[MATScore] AS [MATScore], 
+    [OnlineComposit].[MATLevel] AS [MATLevel], 
+    [OnlineComposit].[WroteAL] AS [WroteAL], 
+    [OnlineComposit].[WroteQL] AS [WroteQL], 
+    [OnlineComposit].[WroteMat] AS [WroteMat], 
+    [OnlineComposit].[Faculty2] AS [Faculty2], 
+    [OnlineComposit].[Faculty3] AS [Faculty3], 
+    [OnlineComposit].[Batch] AS [Batch], 
+    [OnlineComposit].[DateModified] AS [DateModified], 
+    [OnlineComposit].[Description] AS [Description]
+    FROM [scoring].[OnlineComposit] AS [OnlineComposit]</DefiningQuery>
           </EntitySet>
           <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" store:Type="Views" store:Schema="dbo">
             <DefiningQuery>SELECT 
@@ -1139,6 +1235,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="StaffID" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
           <Property Name="Areas" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
         </EntityType>
         <EntityType Name="TestRoom">
           <Key>
@@ -1368,6 +1465,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           </AssociationSet>
           <EntitySet Name="Schools" EntityType="NBT_ProductionModel.School" />
           <EntitySet Name="Cleaned_batch" EntityType="NBT_ProductionModel.Cleaned_batch" />
+          <EntitySet Name="OnlineComposits" EntityType="NBT_ProductionModel.OnlineComposit" />
         </EntityContainer>
         <EntityType Name="QA">
           <Key>
@@ -1481,6 +1579,58 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
           <Property Name="modified_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
           <Property Name="date_modified" Type="DateTime" Precision="3" />
+        </EntityType>
+        <EntityType Name="OnlineComposit">
+          <Key>
+            <PropertyRef Name="RefNo" />
+            <PropertyRef Name="Barcode" />
+            <PropertyRef Name="Surname" />
+            <PropertyRef Name="Name" />
+            <PropertyRef Name="DOB" />
+            <PropertyRef Name="DOT" />
+            <PropertyRef Name="VenueCode" />
+            <PropertyRef Name="WroteAL" />
+            <PropertyRef Name="WroteQL" />
+            <PropertyRef Name="WroteMat" />
+            <PropertyRef Name="Batch" />
+            <PropertyRef Name="DateModified" />
+          </Key>
+          <Property Name="RefNo" Type="Int64" Nullable="false" />
+          <Property Name="Barcode" Type="Int64" Nullable="false" />
+          <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="SAID" Type="Int64" />
+          <Property Name="ForeignID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="ID_Type" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Citizenship" Type="Int32" />
+          <Property Name="Classification" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+          <Property Name="VenueCode" Type="Int32" Nullable="false" />
+          <Property Name="VenueName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+          <Property Name="HomeLanguage" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+          <Property Name="GR12Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="AQLLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="AQLCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="MatLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+          <Property Name="MatCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+          <Property Name="ALScore" Type="Int32" />
+          <Property Name="ALLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="QLScore" Type="Int32" />
+          <Property Name="QLLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="MATScore" Type="Int32" />
+          <Property Name="MATLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+          <Property Name="WroteAL" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="WroteQL" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="WroteMat" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty2" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Faculty3" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+          <Property Name="Batch" Type="String" Nullable="false" MaxLength="22" FixedLength="true" Unicode="true" />
+          <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+          <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -1869,6 +2019,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
           <EntitySetMapping Name="Users">
             <EntityTypeMapping TypeName="NBT_ProductionModel.User">
               <MappingFragment StoreEntitySet="Users">
+                <ScalarProperty Name="email" ColumnName="email" />
                 <ScalarProperty Name="StaffID" ColumnName="StaffID" />
                 <ScalarProperty Name="Name" ColumnName="Name" />
                 <ScalarProperty Name="Areas" ColumnName="Areas" />
@@ -2011,6 +2162,48 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
                 <ScalarProperty Name="CSX" ColumnName="CSX" />
                 <ScalarProperty Name="CSX_type_id" ColumnName="CSX_type_id" />
                 <ScalarProperty Name="rec_id" ColumnName="rec_id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="OnlineComposits">
+            <EntityTypeMapping TypeName="NBT_ProductionModel.OnlineComposit">
+              <MappingFragment StoreEntitySet="OnlineComposit">
+                <ScalarProperty Name="Description" ColumnName="Description" />
+                <ScalarProperty Name="DateModified" ColumnName="DateModified" />
+                <ScalarProperty Name="Batch" ColumnName="Batch" />
+                <ScalarProperty Name="Faculty3" ColumnName="Faculty3" />
+                <ScalarProperty Name="Faculty2" ColumnName="Faculty2" />
+                <ScalarProperty Name="WroteMat" ColumnName="WroteMat" />
+                <ScalarProperty Name="WroteQL" ColumnName="WroteQL" />
+                <ScalarProperty Name="WroteAL" ColumnName="WroteAL" />
+                <ScalarProperty Name="MATLevel" ColumnName="MATLevel" />
+                <ScalarProperty Name="MATScore" ColumnName="MATScore" />
+                <ScalarProperty Name="QLLevel" ColumnName="QLLevel" />
+                <ScalarProperty Name="QLScore" ColumnName="QLScore" />
+                <ScalarProperty Name="ALLevel" ColumnName="ALLevel" />
+                <ScalarProperty Name="ALScore" ColumnName="ALScore" />
+                <ScalarProperty Name="MatCode" ColumnName="MatCode" />
+                <ScalarProperty Name="MatLanguage" ColumnName="MatLanguage" />
+                <ScalarProperty Name="AQLCode" ColumnName="AQLCode" />
+                <ScalarProperty Name="AQLLanguage" ColumnName="AQLLanguage" />
+                <ScalarProperty Name="GR12Language" ColumnName="GR12Language" />
+                <ScalarProperty Name="HomeLanguage" ColumnName="HomeLanguage" />
+                <ScalarProperty Name="VenueName" ColumnName="VenueName" />
+                <ScalarProperty Name="VenueCode" ColumnName="VenueCode" />
+                <ScalarProperty Name="DOT" ColumnName="DOT" />
+                <ScalarProperty Name="Faculty" ColumnName="Faculty" />
+                <ScalarProperty Name="Gender" ColumnName="Gender" />
+                <ScalarProperty Name="Classification" ColumnName="Classification" />
+                <ScalarProperty Name="Citizenship" ColumnName="Citizenship" />
+                <ScalarProperty Name="ID_Type" ColumnName="ID_Type" />
+                <ScalarProperty Name="DOB" ColumnName="DOB" />
+                <ScalarProperty Name="ForeignID" ColumnName="ForeignID" />
+                <ScalarProperty Name="SAID" ColumnName="SAID" />
+                <ScalarProperty Name="Initials" ColumnName="Initials" />
+                <ScalarProperty Name="Name" ColumnName="Name" />
+                <ScalarProperty Name="Surname" ColumnName="Surname" />
+                <ScalarProperty Name="Barcode" ColumnName="Barcode" />
+                <ScalarProperty Name="RefNo" ColumnName="RefNo" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

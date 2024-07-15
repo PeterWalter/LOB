@@ -314,6 +314,33 @@ namespace CETAP_LOB.Helper
       return str;
     }
 
+        public static int getTestCode(string testName)
+        {
+            
+            int code = 0;
+            if (testName.Length > 8)
+            {
+                int indexOfLastNonDigit = -1;
+                // Loop from the end to the beginning of the first word
+                for (int i = testName.Length - 1; i >= 0; i--)
+                {
+                    if (!char.IsDigit(testName[i]))
+                    {
+                        indexOfLastNonDigit = i;
+                        break;
+                    }
+                }
+
+
+                if (indexOfLastNonDigit != -1)
+                {
+                    // Extract the digits after the last non-digit character
+                    code = Convert.ToInt32(testName.Substring(indexOfLastNonDigit + 1));
+                   // Console.WriteLine("Digits at the end of the first word: " + digitsAtEnd);
+                }
+            }
+            return code;
+        }
     public static bool IsValidEmail(string emailaddress)
     {
       try

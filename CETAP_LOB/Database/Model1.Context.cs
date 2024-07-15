@@ -53,5 +53,6 @@ namespace CETAP_LOB.Database
         public virtual DbSet<QA> QAs { get; set; }
         public virtual DbSet<School> Schools { get; set; }
         public virtual DbSet<Cleaned_batch> Cleaned_batch { get; set; }
+        public virtual DbSet<OnlineComposit> OnlineComposits { get; set; }
     }
 }

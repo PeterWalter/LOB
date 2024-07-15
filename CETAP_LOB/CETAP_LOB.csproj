@@ -325,6 +325,9 @@
     <Compile Include="Database\NewNBTNumber.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>
+    <Compile Include="Database\OnlineComposit.cs">
+      <DependentUpon>Model1.tt</DependentUpon>
+    </Compile>
     <Compile Include="Database\Province.cs">
       <DependentUpon>Model1.tt</DependentUpon>
     </Compile>

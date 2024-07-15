@@ -4577,6 +4577,16 @@ namespace CETAP_LOB.Model
                 List<ScoreStats> AQLStats = new List<ScoreStats>();
                 foreach (var a in myDir.AQLScorefiles)
                 {
+                    string filename = Path.GetFileNameWithoutExtension(a);
+                    string testLanguage = "";
+                    int? testCode = null;
+                    string[] words = filename.Split(' ');
+                    string test = words[0];
+                    if (test.Length >= 4)
+                    {
+                        testLanguage = test[3].ToString();
+                    }
+                    testCode = HelperUtils.getTestCode(test);
                     ReadExcel readfile = new ReadExcel(a, atype);
                     ScoreStats Alstat = new ScoreStats();
                     ScoreStats Qlstat = new ScoreStats();
@@ -4588,6 +4598,8 @@ namespace CETAP_LOB.Model
                     List<int> myQL = new List<int>();
                     foreach (var x in AQLreads)
                     {
+                        x.TestCode =testCode;
+                        x.Language = testLanguage;
                         myAL.Add((int)x.AL);
                         myQL.Add((int)x.QL);
                     }
@@ -4842,153 +4854,245 @@ namespace CETAP_LOB.Model
         {
             BenchMarkLevelsBDO degbenchmark = new BenchMarkLevelsBDO();
             ObservableCollection<VenueBDO> venues = new ObservableCollection<VenueBDO>();
+            ObservableCollection<WritersBDO> writers = new ObservableCollection<WritersBDO>();
 
             GetIntakeBenchmarks();
             using (var context = new CETAPEntities())
             {
                 var venuesdb = context.TestVenues.ToList();
+                var testdate = context.WriterLists
+                    .Where(w => (w.VenueID == 99999 && w.DOT < DateTime.Now))
+                    .OrderByDescending(w => w.DOT)
+                    .Select(w => w.DOT)
+                    .FirstOrDefault();
+
+                var writersdb = context.WriterLists
+                                 .Where(w => w.DOT == testdate)
+                                 .ToList();
+
                 foreach (var v in venuesdb)
                 {
                     VenueBDO Venue = new VenueBDO();
                     TestVenueToVenueBDO(Venue, v);
                     venues.Add(Venue);
                 }
+
+                foreach (var v in writersdb)
+                {
+                    WritersBDO writerBDO = new WritersBDO();
+                    WriterListToWriterlistBDO(writerBDO, v);
+                    writers.Add(writerBDO);
+                }
             }
             degbenchmark = benchmarkLevels.Where(rec => rec.Type == "Degree    ").Select(x => x).FirstOrDefault();
 
             Composite = new ObservableCollection<CompositBDO>();
-            var matched = (from b in BIO
-                           join a in AQL on b.NBT equals a.ID into ab_j
-                           join m in MAT on b.NBT equals m.ID into bm_j
-                           join c in venues on b.VenueCode equals c.VenueCode into venue_j
-                           from ab in ab_j.DefaultIfEmpty(new AQL_Score())
-                           from bm in bm_j.DefaultIfEmpty(new MAT_Score())
+
+            var myWriters = (from w in writers                         
+                         join b in BIO on w.NBT equals b.NBT into writers_j
+                         from bw in writers_j//.DefaultIfEmpty(new AnswerSheetBio())
+                         select new
+                         {
+                             Barcode ="",
+                             NBT = bw?.NBT?? w.NBT,
+                             Surname = w.Surname,
+                             Name = w.Name,
+                             Initials = w.Initials,                            
+                             SAID = w.SAID,
+                             ForeignID = w.ForeignID,
+                             IDType = w.SAID > 0? 1:2,
+                             Gender = bw?.Gender?? w.Gender,
+                             Citizenship = bw?.Citizenship?? null,
+                             HEALTH_SCI_APP = bw?.Faculty1?? null,
+                             Date_of_Birth = w.DOB,
+                             VenueCode = 99999,
+                             //VenueName = vb.VenueName,
+                             DOT = w.DOT,
+                             HLang = bw?.HomeLanguage ?? null,
+                             GR12_Lang = bw?.Grade12_Language ?? null,
+                             Classification = bw?.Classification,
+                             Faculty1 = bw?.Faculty1?? null,
+                             Faculty2 = bw?.Faculty2 ?? null,
+                             Faculty3 = bw?.faculty3 ?? null       
+                         }
+                         ).Distinct().ToList();
+
+            var myBio = (from  w in myWriters
+                         join v in venues on w.VenueCode equals v.VenueCode into venues_j
+                         from vb in venues_j.DefaultIfEmpty()
+                         select new
+                         {
+                             w,
+                             vb.VenueName
+                         }
+                        ).Distinct().ToList();
+
+            var scores = ( from a in AQL
+                           join m in MAT on a.ID equals m.ID into am_j
+                           from am in am_j.DefaultIfEmpty(new MAT_Score())
                            select new
                            {
-                               Barcode = b.Barcode, // changed because of Online using NBT RefNo instead of Barcode
-                               NBT = b.NBT,
-                               Surname = b.Surname,
-                               Name = b.Name,
-                               Initials = b.Initials,
-                               SAID = b.SAID,
-                               ForeignID = b.ForeignID,
-                               ID_Type = b.ID_Type,
-                               //DOB = b.DOB != null ? b.DOB: HelperUtils.BioDate("19000101"),
-                               DOB = b.DOB,
-                               Gender = b.Gender,
-                               Classification = b.Classification,
-                               Citizenship = b.Citizenship,
-                               GR12Language = b.Grade12_Language,
-                               HomeLanguage = b.HomeLanguage,
-
-                               DOT = b.DOT,
-                               VenueCode = b.VenueCode,
-                               VenueName = venue_j.FirstOrDefault()?.ShortName,
-
-                               MATCode = b.MatCode,
-                               MAT_Language = b.Mat_Language,
-                               AQLCode = b.AQLCode,
-                               AQL_Language = b.AQL_Language,
-
-                               Faculty1 = b.Faculty1,
-                               Faculty2 = b.Faculty2,
-                               faculty3 = b.faculty3,
-                               AL = ab.AL == 0 ? (int?)null : ab.AL,
-                               wroteAL = ab.AL == null ? "NO" :
-                                          ab.AL == 0 ? "NO" : "YES",
-                               AL_Level = ab.AL >= degbenchmark.AL_PU ? "Proficient Upper" :
-                                          ab.AL >= degbenchmark.AL_PL ? "Proficient Lower" :
-                                          ab.AL >= degbenchmark.AL_IU ? "Intermediate Upper" :
-                                          ab.AL >= degbenchmark.AL_IL ? "Intermediate Lower" :
-                                          ab.AL >= degbenchmark.AL_BU ? "Basic Upper" :
-                                          ab.AL > degbenchmark.AL_BL ? "Basic Lower" : "",
-
-                               QL = ab.QL == 0 ? (int?)null : ab.QL,
-                               wroteQL = ab.QL == null ? "NO" :
-                                          ab.QL == 0 ? "NO" : "YES",
-                               QL_Level = ab.QL >= degbenchmark.QL_PU ? "Proficient Upper" :
-                                          ab.QL >= degbenchmark.QL_PL ? "Proficient Lower" :
-                                          ab.QL >= degbenchmark.QL_IU ? "Intermediate Upper" :
-                                          ab.QL >= degbenchmark.QL_IL ? "Intermediate Lower" :
-                                          ab.QL >= degbenchmark.QL_BU ? "Basic Upper" :
-                                          ab.QL > degbenchmark.QL_BL ? "Basic Lower" : "",
-                               MAT = bm.MAT != null ? (int?)bm.MAT : null,
-                               //MAT = bm.MAT,
-                               wroteMat = bm.MAT != null ? "YES" : "NO",
-                               mat_level = bm.MAT >= degbenchmark.MAT_PU ? "Proficient Upper" :
-                                          bm.MAT >= degbenchmark.MAT_PL ? "Proficient Lower" :
-                                          bm.MAT >= degbenchmark.MAT_IU ? "Intermediate Upper" :
-                                          bm.MAT >= degbenchmark.MAT_IL ? "Intermediate Lower" :
-                                          bm.MAT >= degbenchmark.MAT_BU ? "Basic Upper" :
-                                          bm.MAT > degbenchmark.MAT_BL ? "Basic Lower" : "",
-                               Batch = b.BatchFile
+                               NBT = a.ID,
+                               AL = a.AL,
+                               QL = a.QL,
+                               AQL_Code = a.TestCode,
+                               AQL_Lang = a.Language,
+                               MAT = am.MAT,
+                               Mat_code = am.TestCode,
+                               Mat_lang = am.Language
                            }).Distinct().ToList();
 
-            //Parallel.ForEach( matched, x =>
-            //    {
-            //        CompositBDO record = new CompositBDO();
-            //        record.Barcode = x.Barcode;
-            //        record.RefNo = x.NBT;
-            //        record.Surname = x.Surname;
-            //        record.Name = x.Name;
-            //        record.Initials = x.Initials;
-            //        record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
-            //        record.ForeignID = x.ForeignID;
-            //        record.ID_Type = x.ID_Type.ToString();
-            //        record.Gender = x.Gender.ToString();
-            //        record.DOB = x.DOB;
+            var matched = (from s1 in scores
+                           join b1 in myBio on s1.NBT equals b1.w.NBT into bw_j 
+                           from bam in bw_j.DefaultIfEmpty()
+                           select new
+                           {
+                               Barcode = "",
+                               NBT = s1.NBT,
+                              // WriterName = bam?.w.Name ?? "Unknown" // Handle null writer name
+                               Surname = bam?.w.Surname ?? "",
+                               Name = bam?.w.Name?? "",
+                               Initials = bam?.w.Initials?? "",
+                               SAID = bam?.w.SAID?? null,
+                               ForeignID = bam?.w.ForeignID ?? "",
+                               ID_Type = bam?.w.IDType?? null,
+                               //DOB = b.DOB != null ? b.DOB: HelperUtils.BioDate("19000101"),
+                               DOB = bam?.w.Date_of_Birth?? DateTime.Today,
+                               Gender = bam?.w.Gender ?? "",
+                               Classification = bam?.w.Classification?? "",
+                               Citizenship = bam?.w.Citizenship?? null,
+                               GR12Language = bam?.w.GR12_Lang ?? "",
+                               HomeLanguage = bam?.w.HLang ?? null,                              
+                               DOT = bam?.w.DOT?? DateTime.Today,
+                               VenueName = bam?.VenueName,
+                               VenueCode = bam?.w.VenueCode?? 0,
+                              
+                               AQL_CODE = s1.AQL_Code,
+                               AQL_LANG = s1.AQL_Lang,
+                               MAT_LANG = s1.Mat_lang,
+                               MAT_CODE = s1.Mat_code,
+                               Faculty1 = bam?.w.Faculty1 ?? "",
+                               Faculty2 = bam?.w.Faculty2 ?? null,
+                               faculty3 = bam?.w.Faculty3 ?? null,
+                               AL = s1.AL == 0 ? (int?)null : s1.AL,
+                               wroteAL = s1.AL == null ? "NO" :
+                                               s1.AL == 0 ? "NO" : "YES",
+                               AL_Level = s1.AL >= degbenchmark.AL_PU ? "Proficient Upper" :
+                                               s1.AL >= degbenchmark.AL_PL ? "Proficient Lower" :
+                                               s1.AL >= degbenchmark.AL_IU ? "Intermediate Upper" :
+                                               s1.AL >= degbenchmark.AL_IL ? "Intermediate Lower" :
+                                               s1.AL >= degbenchmark.AL_BU ? "Basic Upper" :
+                                               s1.AL > degbenchmark.AL_BL ? "Basic Lower" : "",
 
-            //        record.HomeLanguage = x.HomeLanguage;
-            //        record.GR12Language = x.GR12Language.ToString();
-            //        record.Citizenship = x.Citizenship;
-            //        record.Classification = x.Classification.ToString();
+                               QL = s1.QL == 0 ? (int?)null : s1.QL,
+                               wroteQL = s1.QL == null ? "NO" :
+                                               s1.QL == 0 ? "NO" : "YES",
+                               QL_Level = s1.QL >= degbenchmark.QL_PU ? "Proficient Upper" :
+                                               s1.QL >= degbenchmark.QL_PL ? "Proficient Lower" :
+                                               s1.QL >= degbenchmark.QL_IU ? "Intermediate Upper" :
+                                               s1.QL >= degbenchmark.QL_IL ? "Intermediate Lower" :
+                                               s1.QL >= degbenchmark.QL_BU ? "Basic Upper" :
+                                               s1.QL > degbenchmark.QL_BL ? "Basic Lower" : "",
+                               MAT = s1.MAT != null ? (int?)s1.MAT : null,
+                               //MAT = bm.MAT,
+                               wroteMat = s1.MAT != null ? "YES" : "NO",
+                               mat_level = s1.MAT >= degbenchmark.MAT_PU ? "Proficient Upper" :
+                                               s1.MAT >= degbenchmark.MAT_PL ? "Proficient Lower" :
+                                               s1.MAT >= degbenchmark.MAT_IU ? "Intermediate Upper" :
+                                               s1.MAT >= degbenchmark.MAT_IL ? "Intermediate Lower" :
+                                               s1.MAT >= degbenchmark.MAT_BU ? "Basic Upper" :
+                                               s1.MAT > degbenchmark.MAT_BL ? "Basic Lower" : "",
+                               Batch = ""
+                           }).Distinct().ToList();
+                          // )
+                          // join b in BIO on b.NBT equals a.ID into ab_j
+                          //// join m in MAT on b.NBT equals m.ID into bm_j
+                          // join c in venues on b.VenueCode equals c.VenueCode into venue_j
+                          // from ab in ab_j.DefaultIfEmpty(new AQL_Score())
+                          // from bm in bm_j.DefaultIfEmpty(new MAT_Score())
+                          // select new
+                          // {
+                          //     Barcode = b.Barcode, // changed because of Online using NBT RefNo instead of Barcode
+                          //     NBT = b.NBT,
+                          //     Surname = b.Surname,
+                          //     Name = b.Name,
+                          //     Initials = b.Initials,
+                          //     SAID = b.SAID,
+                          //     ForeignID = b.ForeignID,
+                          //     ID_Type = b.ID_Type,
+                          //     //DOB = b.DOB != null ? b.DOB: HelperUtils.BioDate("19000101"),
+                          //     DOB = b.DOB,
+                          //     Gender = b.Gender,
+                          //     Classification = b.Classification,
+                          //     Citizenship = b.Citizenship,
+                          //     GR12Language = b.Grade12_Language,
+                          //     HomeLanguage = b.HomeLanguage,
 
-            //        record.ALScore = x.AL;
-            //        record.QLScore = x.QL;
-            //        record.MATScore = x.MAT;
-            //        record.ALLevel = x.AL_Level;
-            //        record.QLLevel = x.QL_Level;
-            //        record.MATLevel = x.mat_level;
-            //        record.WroteAL = x.wroteAL;
-            //        record.WroteQL = x.wroteQL;
-            //        record.WroteMat = x.wroteMat;
-            //        record.DOT = x.DOT;
-            //        record.VenueCode = x.VenueCode;
-            //        record.VenueName = x.VenueName;
-            //        record.AQLCode = x.AQLCode;
-            //        record.MatCode = x.MATCode;
-            //        record.AQLLanguage = x.AQL_Language;
-            //        record.MatLanguage = x.MAT_Language;
-            //        record.Faculty = x.Faculty1;
-            //        record.Faculty2 = x.Faculty2;
-            //        record.Faculty3 = x.faculty3;
-            //        record.Batch = x.Batch;
-            //        record.RowGuid = Guid.NewGuid();
-            //        record.DateModified = DateTime.Now;
+                          //     DOT = b.DOT,
+                          //     VenueCode = b.VenueCode,
+                          //     VenueName = venue_j.FirstOrDefault()?.ShortName,
 
-            //        Composite.Add(record);
-            //    }
-            //    );
+                          //     MATCode = b.MatCode,
+                          //     MAT_Language = b.Mat_Language,
+                          //     AQLCode = b.AQLCode,
+                          //     AQL_Language = b.AQL_Language,
+
+                          //     Faculty1 = b.Faculty1,
+                          //     Faculty2 = b.Faculty2,
+                          //     faculty3 = b.faculty3,
+                          //     AL = ab.AL == 0 ? (int?)null : ab.AL,
+                          //     wroteAL = ab.AL == null ? "NO" :
+                          //                ab.AL == 0 ? "NO" : "YES",
+                          //     AL_Level = ab.AL >= degbenchmark.AL_PU ? "Proficient Upper" :
+                          //                ab.AL >= degbenchmark.AL_PL ? "Proficient Lower" :
+                          //                ab.AL >= degbenchmark.AL_IU ? "Intermediate Upper" :
+                          //                ab.AL >= degbenchmark.AL_IL ? "Intermediate Lower" :
+                          //                ab.AL >= degbenchmark.AL_BU ? "Basic Upper" :
+                          //                ab.AL > degbenchmark.AL_BL ? "Basic Lower" : "",
+
+                          //     QL = ab.QL == 0 ? (int?)null : ab.QL,
+                          //     wroteQL = ab.QL == null ? "NO" :
+                          //                ab.QL == 0 ? "NO" : "YES",
+                          //     QL_Level = ab.QL >= degbenchmark.QL_PU ? "Proficient Upper" :
+                          //                ab.QL >= degbenchmark.QL_PL ? "Proficient Lower" :
+                          //                ab.QL >= degbenchmark.QL_IU ? "Intermediate Upper" :
+                          //                ab.QL >= degbenchmark.QL_IL ? "Intermediate Lower" :
+                          //                ab.QL >= degbenchmark.QL_BU ? "Basic Upper" :
+                          //                ab.QL > degbenchmark.QL_BL ? "Basic Lower" : "",
+                          //     MAT = bm.MAT != null ? (int?)bm.MAT : null,
+                          //     //MAT = bm.MAT,
+                          //     wroteMat = bm.MAT != null ? "YES" : "NO",
+                          //     mat_level = bm.MAT >= degbenchmark.MAT_PU ? "Proficient Upper" :
+                          //                bm.MAT >= degbenchmark.MAT_PL ? "Proficient Lower" :
+                          //                bm.MAT >= degbenchmark.MAT_IU ? "Intermediate Upper" :
+                          //                bm.MAT >= degbenchmark.MAT_IL ? "Intermediate Lower" :
+                          //                bm.MAT >= degbenchmark.MAT_BU ? "Basic Upper" :
+                          //                bm.MAT > degbenchmark.MAT_BL ? "Basic Lower" : "",
+                          //     Batch = b.BatchFile
+                          // }).Distinct().ToList();
+
+
+           
             try
             {
                 foreach (var x in matched)
                 {
                     CompositBDO record = new CompositBDO();
-                    record.Barcode = x.Barcode;
+                   // record.Barcode = "";
                     record.RefNo = x.NBT;
                     record.Surname = x.Surname;
                     record.Name = x.Name;
                     record.Initials = x.Initials;
-                    record.SAID = (x.SAID == null || x.SAID == "") ? (long?)null : Convert.ToInt64(x.SAID);
+                    record.SAID = (x.SAID == null) ? (long?)null : Convert.ToInt64(x.SAID);
                     record.ForeignID = x.ForeignID;
                     record.ID_Type = x.ID_Type.ToString();
-                    record.Gender = x.Gender.ToString();
+                    record.Gender = x.Gender;
                     record.DOB = x.DOB;
 
                     record.HomeLanguage = x.HomeLanguage;
-                    record.GR12Language = x.GR12Language.ToString();
+                    record.GR12Language = x.GR12Language;
                     record.Citizenship = x.Citizenship;
-                    record.Classification = x.Classification.ToString();
+                    record.Classification = x.Classification;
 
                     record.ALScore = x.AL;
                     record.QLScore = x.QL;
@@ -5002,10 +5106,10 @@ namespace CETAP_LOB.Model
                     record.DOT = x.DOT;
                     record.VenueCode = x.VenueCode;
                     record.VenueName = x.VenueName;
-                    record.AQLCode = x.AQLCode;
-                    record.MatCode = x.MATCode;
-                    record.AQLLanguage = x.AQL_Language;
-                    record.MatLanguage = x.MAT_Language;
+                    record.AQLCode = x.AQL_CODE;
+                    record.MatCode = x.MAT_CODE;
+                    record.AQLLanguage = x.AQL_LANG;
+                    record.MatLanguage = x.MAT_LANG;
                     record.Faculty = x.Faculty1;
                     record.Faculty2 = x.Faculty2;
                     record.Faculty3 = x.faculty3;
@@ -5265,7 +5369,7 @@ namespace CETAP_LOB.Model
                     WebRec.ID_Type = web.ID_Type.ToString();
                     WebRec.Citizenship = web.Citizenship.ToString();
                     WebRec.Classification = web.Classification;
-                    WebRec.Gender = web.Gender.ToString();
+                    WebRec.Gender = web.Gender;
                     WebRec.Faculty = web.Faculty;
                     WebRec.DOT = web.Date_of_Test;
                     WebRec.VenueCode = web.VenueCode.ToString();
@@ -6070,6 +6174,17 @@ namespace CETAP_LOB.Model
                 List<ScoreStats> matstats = new List<ScoreStats>();
                 foreach (var a in myDir.MATScoresfiles)
                 {
+                    string filename = Path.GetFileNameWithoutExtension(a);
+                    string testLanguage = "";
+                    int? testCode = null;
+                    string[] words = filename.Split(' ');
+                    string test = words[0];
+                    if(test.Length >= 4)
+                    {
+                        testLanguage = test[3].ToString();
+                    }
+                    testCode = HelperUtils.getTestCode(test);
+
                     ReadExcel readfile = new ReadExcel(a, atype);
                     var Matreads = readfile.MATScores;
                     var Matread1 = Matreads.GroupBy(e => e.ID).Select(gr => gr.First()).ToList();
@@ -6077,6 +6192,8 @@ namespace CETAP_LOB.Model
                     List<int> myMat = new List<int>();
                     foreach (var x in Matread1)
                     {
+                        x.TestCode = testCode;
+                        x.Language = testLanguage;
                         myMat.Add((int)x.MAT);
 
                     }
