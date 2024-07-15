@@ -489,22 +489,9 @@ warning 6002: The table/view 'NBT_Production.Process.TestRooms' does not have a 
     <Property Name="modified_by" Type="varchar" MaxLength="50" />
     <Property Name="date_modified" Type="datetime" />
   </EntityType>
-  <!--Errors Found During Generation:
-warning 6002: The table/view 'NBT_Production.scoring.OnlineComposit' does not have a primary key defined. The key has been inferred and the definition was created as a read-only table/view.-->
   <EntityType Name="OnlineComposit">
     <Key>
-      <PropertyRef Name="RefNo" />
       <PropertyRef Name="Barcode" />
-      <PropertyRef Name="Surname" />
-      <PropertyRef Name="Name" />
-      <PropertyRef Name="DOB" />
-      <PropertyRef Name="DOT" />
-      <PropertyRef Name="VenueCode" />
-      <PropertyRef Name="WroteAL" />
-      <PropertyRef Name="WroteQL" />
-      <PropertyRef Name="WroteMat" />
-      <PropertyRef Name="Batch" />
-      <PropertyRef Name="DateModified" />
     </Key>
     <Property Name="RefNo" Type="bigint" Nullable="false" />
     <Property Name="Barcode" Type="bigint" Nullable="false" />
@@ -513,7 +500,7 @@ warning 6002: The table/view 'NBT_Production.scoring.OnlineComposit' does not ha
     <Property Name="Initials" Type="nchar" MaxLength="3" />
     <Property Name="SAID" Type="bigint" />
     <Property Name="ForeignID" Type="nvarchar" MaxLength="20" />
-    <Property Name="DOB" Type="date" Nullable="false" />
+    <Property Name="DOB" Type="date" />
     <Property Name="ID_Type" Type="nchar" MaxLength="1" />
     <Property Name="Citizenship" Type="int" />
     <Property Name="Classification" Type="nchar" MaxLength="1" />
@@ -534,12 +521,12 @@ warning 6002: The table/view 'NBT_Production.scoring.OnlineComposit' does not ha
     <Property Name="QLLevel" Type="nvarchar" MaxLength="20" />
     <Property Name="MATScore" Type="int" />
     <Property Name="MATLevel" Type="nvarchar" MaxLength="20" />
-    <Property Name="WroteAL" Type="nchar" MaxLength="3" Nullable="false" />
-    <Property Name="WroteQL" Type="nchar" MaxLength="3" Nullable="false" />
-    <Property Name="WroteMat" Type="nchar" MaxLength="3" Nullable="false" />
+    <Property Name="WroteAL" Type="nchar" MaxLength="3" />
+    <Property Name="WroteQL" Type="nchar" MaxLength="3" />
+    <Property Name="WroteMat" Type="nchar" MaxLength="3" />
     <Property Name="Faculty2" Type="nchar" MaxLength="50" />
     <Property Name="Faculty3" Type="nchar" MaxLength="50" />
-    <Property Name="Batch" Type="nchar" MaxLength="22" Nullable="false" />
+    <Property Name="Batch" Type="nchar" MaxLength="22" />
     <Property Name="DateModified" Type="datetime" Nullable="false" />
     <Property Name="Description" Type="nvarchar" MaxLength="200" />
   </EntityType>
@@ -713,6 +700,7 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     <EntitySet Name="WriterList" EntityType="Self.WriterList" Schema="Process" store:Type="Tables" />
     <EntitySet Name="WritersPayments" EntityType="Self.WritersPayments" Schema="Process" store:Type="Tables" />
     <EntitySet Name="Cleaned_batch" EntityType="Self.Cleaned_batch" Schema="scoring" store:Type="Tables" />
+    <EntitySet Name="OnlineComposit" EntityType="Self.OnlineComposit" Schema="scoring" store:Type="Tables" />
     <EntitySet Name="Users" EntityType="Self.Users" store:Type="Tables" store:Schema="dbo">
       <DefiningQuery>SELECT 
     [Users].[StaffID] AS [StaffID], 
@@ -744,46 +732,6 @@ warning 6002: The table/view 'NBT_Production.dbo.Vw_EasyPayRecords' does not hav
     [TestRooms].[RoomName] AS [RoomName], 
     [TestRooms].[TestRoom_TestVenue] AS [TestRoom_TestVenue]
     FROM [Process].[TestRooms] AS [TestRooms]</DefiningQuery>
-    </EntitySet>
-    <EntitySet Name="OnlineComposit" EntityType="Self.OnlineComposit" store:Type="Tables" store:Schema="scoring">
-      <DefiningQuery>SELECT 
-    [OnlineComposit].[RefNo] AS [RefNo], 
-    [OnlineComposit].[Barcode] AS [Barcode], 
-    [OnlineComposit].[Surname] AS [Surname], 
-    [OnlineComposit].[Name] AS [Name], 
-    [OnlineComposit].[Initials] AS [Initials], 
-    [OnlineComposit].[SAID] AS [SAID], 
-    [OnlineComposit].[ForeignID] AS [ForeignID], 
-    [OnlineComposit].[DOB] AS [DOB], 
-    [OnlineComposit].[ID_Type] AS [ID_Type], 
-    [OnlineComposit].[Citizenship] AS [Citizenship], 
-    [OnlineComposit].[Classification] AS [Classification], 
-    [OnlineComposit].[Gender] AS [Gender], 
-    [OnlineComposit].[Faculty] AS [Faculty], 
-    [OnlineComposit].[DOT] AS [DOT], 
-    [OnlineComposit].[VenueCode] AS [VenueCode], 
-    [OnlineComposit].[VenueName] AS [VenueName], 
-    [OnlineComposit].[HomeLanguage] AS [HomeLanguage], 
-    [OnlineComposit].[GR12Language] AS [GR12Language], 
-    [OnlineComposit].[AQLLanguage] AS [AQLLanguage], 
-    [OnlineComposit].[AQLCode] AS [AQLCode], 
-    [OnlineComposit].[MatLanguage] AS [MatLanguage], 
-    [OnlineComposit].[MatCode] AS [MatCode], 
-    [OnlineComposit].[ALScore] AS [ALScore], 
-    [OnlineComposit].[ALLevel] AS [ALLevel], 
-    [OnlineComposit].[QLScore] AS [QLScore], 
-    [OnlineComposit].[QLLevel] AS [QLLevel], 
-    [OnlineComposit].[MATScore] AS [MATScore], 
-    [OnlineComposit].[MATLevel] AS [MATLevel], 
-    [OnlineComposit].[WroteAL] AS [WroteAL], 
-    [OnlineComposit].[WroteQL] AS [WroteQL], 
-    [OnlineComposit].[WroteMat] AS [WroteMat], 
-    [OnlineComposit].[Faculty2] AS [Faculty2], 
-    [OnlineComposit].[Faculty3] AS [Faculty3], 
-    [OnlineComposit].[Batch] AS [Batch], 
-    [OnlineComposit].[DateModified] AS [DateModified], 
-    [OnlineComposit].[Description] AS [Description]
-    FROM [scoring].[OnlineComposit] AS [OnlineComposit]</DefiningQuery>
     </EntitySet>
     <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" store:Type="Views" store:Schema="dbo">
       <DefiningQuery>SELECT 

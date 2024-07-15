@@ -254,6 +254,7 @@
     <Compile Include="BDO\LogisticsComposite.cs" />
     <Compile Include="BDO\NBTWebUpload.cs" />
     <Compile Include="BDO\NewNBTNumberBDO.cs" />
+    <Compile Include="BDO\OnlineCompositBDO.cs" />
     <Compile Include="BDO\ProfileAllocationBDO.cs" />
     <Compile Include="BDO\ProvinceBDO.cs" />
     <Compile Include="BDO\QAFileBDO.cs" />

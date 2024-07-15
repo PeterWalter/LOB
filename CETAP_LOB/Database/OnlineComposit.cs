@@ -21,7 +21,7 @@ namespace CETAP_LOB.Database
         public string Initials { get; set; }
         public Nullable<long> SAID { get; set; }
         public string ForeignID { get; set; }
-        public System.DateTime DOB { get; set; }
+        public Nullable<System.DateTime> DOB { get; set; }
         public string ID_Type { get; set; }
         public Nullable<int> Citizenship { get; set; }
         public string Classification { get; set; }

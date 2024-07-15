@@ -532,6 +532,8 @@ E:\CETAP_LOB_20230810\CETAP_LOB\obj\Debug\CETAP_LOB.application
 E:\CETAP_LOB_20230810\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.CopyComplete
 E:\CETAP_LOB_20230810\CETAP_LOB\obj\Debug\CETAP_LOB.exe
 E:\CETAP_LOB_20230810\CETAP_LOB\obj\Debug\CETAP_LOB.pdb
+D:\projects\source code\LOB\CETAP_LOB\bin\Debug\CsvHelper.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Debug\FileHelpers.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\x86\SqlServerSpatial160.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\x64\SqlServerSpatial160.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\ApplicationSettings.Designer.cs
@@ -552,12 +554,11 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Debug\BouncyCastle.Crypto.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\BouncyCastle.Cryptography.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\ClosedXML.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\CommonLibrary.dll
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\CsvHelper.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\DocumentFormat.OpenXml.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\DocumentFormat.OpenXml.Framework.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Dumpify.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\EntityFramework.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\EntityFramework.SqlServer.dll
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\FileHelpers.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\FirstFloor.ModernUI.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\GalaSoft.MvvmLight.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\GalaSoft.MvvmLight.Extras.dll
@@ -574,6 +575,7 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Microsoft.Practices.ServiceLocat
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Microsoft.SqlServer.Types.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\MimeKit.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Renci.SshNet.dll
+D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Base.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Portable.dll
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Licensing.dll
@@ -615,6 +617,7 @@ D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Microsoft.Practices.ServiceLocat
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\MimeKit.pdb
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\MimeKit.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Renci.SshNet.xml
+D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Base.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Compression.Portable.xml
 D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Syncfusion.Pdf.Base.xml
@@ -673,6 +676,7 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\scoring\ScoringView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\SettingsAppearance.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\SettingsView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\splitpage1.g.cs
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\LoadFileView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\ProcessView.g.cs
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\VenueMapView.g.cs
@@ -707,6 +711,7 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\scoring\ModerationView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\scoring\ScoringView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\SettingsAppearance.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\SettingsView.baml
+D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\LoadFileView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\ProcessView.baml
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\writers\VenuesView.baml
@@ -719,8 +724,3 @@ D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.application
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.csproj.Up2Date
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.exe
 D:\projects\source code\LOB\CETAP_LOB\obj\Debug\CETAP_LOB.pdb
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Dumpify.dll
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.dll
-D:\projects\source code\LOB\CETAP_LOB\bin\Debug\Spectre.Console.xml
-D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.g.cs
-D:\projects\source code\LOB\CETAP_LOB\obj\Debug\View\Utilities\OnlineView.baml

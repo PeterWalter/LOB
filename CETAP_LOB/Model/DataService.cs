@@ -75,6 +75,7 @@ namespace CETAP_LOB.Model
         private ObservableCollection<ScoreStats> AnswerSheetBioStatistics;
         private ObservableCollection<MAT_Score> MAT;
         private ObservableCollection<CompositBDO> Composite;
+        private ObservableCollection<OnlineCompositBDO> OnlineComposite;
         private ObservableCollection<CompositBDO> Scores;
         private ObservableCollection<CompositBDO> ModeratedScores;
         private ObservableCollection<QADatRecord> QaData;
@@ -2112,7 +2113,47 @@ namespace CETAP_LOB.Model
 
         }
 
+        static void OnlineCompositDALToCompositBDO(OnlineCompositBDO compositBDO, OnlineComposit composit)
+        {
+            compositBDO.ALScore = composit.ALScore;
+            compositBDO.AQLCode = Convert.ToInt32(composit.AQLCode);
+            compositBDO.AQLLanguage = composit.AQLLanguage;
+            compositBDO.Barcode = composit.Barcode;
+            compositBDO.Citizenship = composit.Citizenship;
+            compositBDO.Classification = composit.Classification;
+            compositBDO.DOB = composit.DOB;
+            compositBDO.DOT = composit.DOT;
+            compositBDO.ALLevel = composit.ALLevel;
+            compositBDO.Faculty = composit.Faculty;
+            compositBDO.Faculty2 = composit.Faculty2;
+            compositBDO.Faculty3 = composit.Faculty3;
+            compositBDO.ForeignID = composit.ForeignID;
+            compositBDO.Gender = composit.Gender;
+            compositBDO.GR12Language = composit.GR12Language;
+            compositBDO.HomeLanguage = (int?)Convert.ToInt32(composit.HomeLanguage);
+            compositBDO.ID_Type = composit.ID_Type;
+            compositBDO.Initials = composit.Initials;
+            compositBDO.MatCode = Convert.ToInt32(composit.MatCode);
+            compositBDO.MatLanguage = composit.MatLanguage;
+            compositBDO.MATLevel = composit.MATLevel;
+            compositBDO.MATScore = composit.MATScore;
+            compositBDO.Name = composit.Name;
+            compositBDO.QLLevel = composit.QLLevel;
+            compositBDO.QLScore = composit.QLScore;
+            compositBDO.RefNo = composit.RefNo;
+            //compositBDO.RowGuid = composit.RowGuid;
+            //compositBDO.RowVersion = composit.RowVersion;
+            compositBDO.SAID = composit.SAID;
+            compositBDO.Surname = composit.Surname;
+            compositBDO.VenueName = composit.VenueName;
+            compositBDO.VenueCode = composit.VenueCode;
+            compositBDO.WroteAL = composit.WroteAL;
+            compositBDO.WroteQL = composit.WroteQL;
+            compositBDO.WroteMat = composit.WroteMat;
+            compositBDO.DateModified = composit.DateModified;
+            compositBDO.Batch = compositBDO.Batch;
 
+        }
         static void ProfileBDOToProfileDAL(TestProfileBDO testProfileBDO, TestProfile testProfile)
         {
 
@@ -4850,6 +4891,323 @@ namespace CETAP_LOB.Model
             }
             return Composite;
         }
+
+        public ObservableCollection<OnlineCompositBDO> DBOnlineScores(DateTime testDate)
+        {
+            ObservableCollection<OnlineCompositBDO> onlineWriters = new ObservableCollection<OnlineCompositBDO>();
+            using (var context = new CETAPEntities())
+            {
+                var testdate = context.WriterLists
+                        .Where(w => (w.VenueID == 99999 && w.DOT < DateTime.Now))
+                        .OrderByDescending(w => w.DOT)
+                        .Select(w => w.DOT)
+                        .FirstOrDefault();
+
+                var comp = context.OnlineComposits
+                              .Where(c => c.Batch != "Invalid" && c.DOT == testDate)
+                              .Select(c => c)
+                              .ToList();
+
+                if (comp.Count > 100)
+                {
+                    foreach (var ca in comp)
+                    {
+                        OnlineCompositBDO writer = new OnlineCompositBDO();
+                        OnlineCompositDALToCompositBDO(writer, ca);
+                        onlineWriters.Add(writer);
+                    }
+                  
+                }
+            }
+            OnlineComposite = new ObservableCollection<OnlineCompositBDO>(onlineWriters);
+            GenerateExcelCompositeForOnline();
+            return onlineWriters;
+        }
+
+        public bool GenerateExcelCompositeForOnline()
+        {
+            bool iscomplete = false;
+            string onlinepath = ApplicationSettings.Default.FilesForScoring;
+            string resultpath = Path.Combine(ApplicationSettings.Default.FilesForScoring, "Composit.csv");
+
+            using (var streamWriter = new StreamWriter(resultpath))
+            {
+                using (var writer = new CsvWriter(streamWriter))
+                {
+                    writer.Configuration.HasHeaderRecord = true;
+                    IEnumerable<OnlineCompositBDO> records = OnlineComposite.ToList();
+                    writer.WriteRecords(records);
+
+                }
+            }
+
+            if(OnlineComposite.Count > 0)
+            {
+                var Compo = from mydata in OnlineComposite
+                            select new
+                            {
+                                SessionID = mydata.Barcode,
+                                NBTNumber = mydata.RefNo,
+                                Surname = mydata.Surname,
+                                Name = mydata.Name,
+                                Initial = mydata.Initials,
+                                SouthAfricanID = HelperUtils.ToSAID(mydata.SAID),
+                                Passport = mydata.ForeignID,
+                                Birth = string.Format("{0:dd/MM/yyyy}", mydata.DOB),
+
+                                W_AL = mydata.WroteAL,
+                                W_QL = mydata.WroteQL,
+                                W_Mat = mydata.WroteMat,
+                              
+                                DateTest = String.Format("{0:yyyyMMdd}", mydata.DOT),
+                                VenueCode = mydata.VenueCode.ToString("D5"),
+                                Venue = mydata.VenueName,
+                                Gender = mydata.Gender,
+                                ALScore = mydata.ALScore,
+                                ALLevel = mydata.ALLevel,
+                                QLScore = mydata.QLScore,
+                                QLLevel = mydata.QLLevel,
+                                MatScore = mydata.MATScore,
+                                MatLevel = mydata.MATLevel,
+                                AQL_Lang = mydata.AQLLanguage,
+                                Mat_Lang = mydata.MatLanguage
+
+                            };
+
+
+                var UCT = from C in Compo
+                          select new
+                          {
+                              NBT_Ref_No = C.NBTNumber.ToString(),
+                              Surname = C.Surname,
+                              First_Name = C.Name,
+                              Initials = C.Initial,
+                              South_African_ID_No = C.SouthAfricanID,
+                              Foreign_Passport = C.Passport,
+                              Date_of_Birth = C.Birth,
+                              Date_of_Test = C.DateTest,
+                              Venue = C.VenueCode,
+                              ALScore = C.ALScore,
+                              ALPerformanceLevel = (C.ALLevel == "Proficient Upper" ? "Proficient" :
+                                            C.ALLevel == "Proficient Lower" ? "Proficient" :
+                                            C.ALLevel == "Intermediate Upper" ? "Intermediate" :
+                                            C.ALLevel == "Intermediate Lower" ? "Intermediate" :
+                                            C.ALLevel == "Basic Upper" ? "Basic" :
+                                            C.ALLevel == "Basic Lower" ? "Basic" : ""),
+                              QLScore = C.QLScore,
+                              QLPerformanceLevel = (C.QLLevel == "Proficient Upper" ? "Proficient" :
+                                            C.QLLevel == "Proficient Lower" ? "Proficient" :
+                                            C.QLLevel == "Intermediate Upper" ? "Intermediate" :
+                                            C.QLLevel == "Intermediate Lower" ? "Intermediate" :
+                                            C.QLLevel == "Basic Upper" ? "Basic" :
+                                            C.QLLevel == "Basic Lower" ? "Basic" : ""),
+                              MathsScore = C.MatScore,
+                              MathsPerformanceLevel = (C.MatLevel == "Proficient Upper" ? "Proficient" :
+                                            C.MatLevel == "Proficient Lower" ? "Proficient" :
+                                            C.MatLevel == "Intermediate Upper" ? "Intermediate" :
+                                            C.MatLevel == "Intermediate Lower" ? "Intermediate" :
+                                            C.MatLevel == "Basic Upper" ? "Basic" :
+                                            C.MatLevel == "Basic Lower" ? "Basic" : ""),
+
+                              AQLLanguage = C.AQL_Lang,
+                              MathLanguage = C.Mat_Lang
+                          };
+
+                List<UCT_Upload> UCTLoads = new List<UCT_Upload>();
+                foreach (var rec in UCT)
+                {
+                    UCT_Upload UctRec = new UCT_Upload();
+                    UctRec.ALLevel = rec.ALPerformanceLevel;
+                    UctRec.ALScore = rec.ALScore;
+                    UctRec.DOB = rec.Date_of_Birth;
+                    UctRec.DOT = rec.Date_of_Test;
+                    UctRec.ForeignID = rec.Foreign_Passport;
+                    UctRec.Initials = rec.Initials;
+                    UctRec.MATLevel = rec.MathsPerformanceLevel;
+                    UctRec.MATScore = rec.MathsScore;
+                    UctRec.Name = rec.First_Name;
+                    UctRec.NBT = rec.NBT_Ref_No;
+                    UctRec.QLLevel = rec.QLPerformanceLevel;
+                    UctRec.QLScore = rec.QLScore;
+                    UctRec.SAID = rec.South_African_ID_No;
+                    UctRec.Surname = rec.Surname;
+                    UctRec.Venue = rec.Venue;
+                    UctRec.AQLLang = rec.AQLLanguage;
+                    UctRec.MATLANG = rec.MathLanguage;
+
+
+
+                    UCTLoads.Add(UctRec);
+                }
+
+
+                // Get the date today
+                DateTime dt = new DateTime();
+                string n = " N_" + Compo.Count().ToString() + ".xlsx";
+
+                dt = DateTime.Now;
+                string myDay = dt.Year.ToString() + dt.Month.ToString("00") + dt.Day.ToString("00") + "_" + dt.Hour.ToString("00") + dt.Minute.ToString("00");
+
+                //   writing to Csv files for UCT and website
+                CsvFileDescription outputDesc = new CsvFileDescription
+                {
+                    SeparatorChar = ',',
+                    FirstLineHasColumnNames = true
+
+                };
+                string n1 = " n=" + Compo.Count().ToString() + ".csv";
+
+                CsvContext cc = new CsvContext();
+                string UCTFilename = "UCT_Upload " + myDay + n1;
+                string Combination2 = Path.Combine(onlinepath, UCTFilename);
+                cc.Write(UCTLoads, Combination2, outputDesc);
+
+                var NBTWeb = from Adata in OnlineComposite
+
+                             select new
+                             {
+                                 NBT = Adata.RefNo,
+                                 Barcode = Adata.Barcode,
+                                 Surname = Adata.Surname,
+                                 Name = Adata.Name,
+                                 Initial = Adata.Initials,
+                                 SAID = Adata.SAID,
+                                 Passport = Adata.ForeignID,
+                                 DOB = String.Format("{0:dd/MM/yyyy}", Adata.DOB),
+                                 ID_Type = Adata.ID_Type,
+                                 Citizenship = Adata.Citizenship,
+                                 Classification = Adata.Classification,
+                                 Gender = Adata.Gender,
+                                 Faculty = Adata.Faculty,
+                                 Date_of_Test = String.Format("{0:yyyyMMdd}", Adata.DOT),
+                                 VenueCode = Adata.VenueCode,
+                                 VenueName = GetWebSiteNameByVenueCode(Adata.VenueCode),
+                                 HLanguage = Adata.HomeLanguage,
+                                 GLanguage = Adata.GR12Language,
+                                 AQLLanguage = Adata.AQLLanguage,
+                                 AQLCode = Adata.AQLCode,
+                                 MATLanguage = Adata.MatLanguage,
+                                 MatCode = Adata.MatCode,
+                                 ALScore = (Adata.ALScore == null ? 0 : Adata.ALScore),
+                                 ALLevel = Adata.ALLevel,
+                                 QLScore = (Adata.QLScore == null ? 0 : Adata.QLScore),
+                                 QLLevel = Adata.QLLevel,
+                                 MatScore = (Adata.MATScore == null ? 0 : Adata.MATScore),
+                                 MatLevel = Adata.MATLevel,
+                                 WroteAL = Adata.WroteAL,
+                                 WroteQL = Adata.WroteQL,
+                                 WroteMAT = Adata.WroteMat,
+
+                                 Faculty2 = Adata.Faculty2,
+                                 Faculty3 = Adata.Faculty3,
+                                 I_Barcode = Adata.Barcode,
+                                 TName = Adata.AQLCode,
+                                 AL_Cohesion = "",
+                                 AL_CommunicativeFunction = "",
+                                 AL_Discourse = "",
+                                 AL_Essential = "",
+                                 AL_Grammar = "",
+                                 AL_Inference = "",
+                                 AL_Metaphor = "",
+                                 AL_TextGenre = "",
+                                 AL_Vocabulary = "",
+                                 QL_C = "",
+                                 QL_D = "",
+                                 QL_P = "",
+                                 QL_Q = "",
+                                 QL_R = "",
+                                 QL_S = "",
+                                 MATTestName = Adata.MatCode.ToString(),
+                                 MAT_M1 = "",
+                                 MAT_M2 = "",
+                                 MAT_M3 = "",
+                                 MAT_M4 = "",
+                                 MAT_M5 = ""
+                             };
+
+                //   ConcurrentBag<NBTWebUpload> webUploads = new ConcurrentBag<NBTWebUpload>();
+
+                List<NBTWebUpload> WebUploads = new List<NBTWebUpload>();
+
+                foreach (var web in NBTWeb)
+                {
+                    var WebRec = new NBTWebUpload();
+                    WebRec.NBT = web.NBT;
+                    WebRec.Barcode = web.Barcode;
+                    WebRec.Surname = web.Surname;
+                    WebRec.Name = web.Name;
+                    WebRec.Initials = web.Initial;
+                    WebRec.SAID = web.SAID;
+                    WebRec.ForeignID = web.Passport;
+                    WebRec.DOB = web.DOB;
+                    WebRec.ID_Type = web.ID_Type.ToString();
+                    WebRec.Citizenship = web.Citizenship.ToString();
+                    WebRec.Classification = web.Classification;
+                    WebRec.Gender = web.Gender;
+                    WebRec.Faculty = web.Faculty;
+                    WebRec.DOT = web.Date_of_Test;
+                    WebRec.VenueCode = web.VenueCode.ToString();
+                    WebRec.VenueName = web.VenueName;
+                    WebRec.HomeLanguage = web.HLanguage.ToString();
+                    WebRec.GR12Language = web.GLanguage;
+                    WebRec.AQLLanguage = web.AQLLanguage;
+                    WebRec.AQLCode = web.AQLCode.ToString();
+                    WebRec.MATLanguage = web.MATLanguage != null ? web.MATLanguage.ToString() : string.Empty;
+                    WebRec.MATCode = web.MatCode.ToString();
+                    WebRec.ALLevel = web.ALLevel;
+                    WebRec.ALScore = web.ALScore;
+                    WebRec.QLLevel = web.QLLevel;
+                    WebRec.QLScore = web.QLScore;
+                    WebRec.MATLevel = web.MatLevel;
+                    WebRec.MATScore = web.MatScore == null ? string.Empty : web.MatScore == 0 ? string.Empty : web.MatScore.ToString();
+                    WebRec.WroteAL = web.WroteAL;
+                    WebRec.WroteQL = web.WroteQL;
+                    WebRec.WroteMat = web.WroteMAT;
+                    WebRec.Faculty2 = web.Faculty2;
+                    WebRec.Faculty3 = web.Faculty3;
+                    WebRec.I_Barcode = web.I_Barcode;
+                    WebRec.TestName = web.TName.ToString();
+                    WebRec.AL_Cohesion = web.AL_Cohesion;
+                    WebRec.AL_CommunicativeFunction = web.AL_CommunicativeFunction;
+                    WebRec.AL_Discourse = web.AL_Discourse;
+                    WebRec.AL_Essential = web.AL_Essential;
+                    WebRec.AL_Grammar = web.AL_Grammar;
+                    WebRec.AL_Inference = web.AL_Inference;
+                    WebRec.AL_Metaphor = web.AL_Metaphor;
+                    WebRec.AL_TextGenre = web.AL_TextGenre;
+                    WebRec.AL_Vocabulary = web.AL_Vocabulary;
+                    WebRec.QL_C = web.QL_C;
+                    WebRec.QL_D = web.QL_D;
+                    WebRec.QL_P = web.QL_P;
+                    WebRec.QL_Q = web.QL_Q;
+                    WebRec.QL_R = web.QL_R;
+                    WebRec.QL_S = web.QL_S;
+                    WebRec.MatTestName = web.MATTestName.ToString();
+                    WebRec.MAT_M1 = web.MAT_M1;
+                    WebRec.MAT_M2 = web.MAT_M2;
+                    WebRec.MAT_M3 = web.MAT_M3;
+                    WebRec.MAT_M4 = web.MAT_M4;
+                    WebRec.MAT_M5 = web.MAT_M5;
+
+
+                    WebUploads.Add(WebRec);
+                }
+
+                // writing to excel files
+
+
+
+                //	CsvContext ccw = new CsvContext();
+                string WebFilename = "WEB_Upload " + myDay + n1;
+                string Combination3 = Path.Combine(onlinepath, WebFilename);
+                cc.Write(WebUploads, Combination3, outputDesc);
+
+                iscomplete = true;
+            }
+
+
+            return iscomplete;
+        }
         public ObservableCollection<CompositBDO> MatchOnlineScores()
         {
             BenchMarkLevelsBDO degbenchmark = new BenchMarkLevelsBDO();
@@ -5260,6 +5618,7 @@ namespace CETAP_LOB.Model
                               AQLLanguage = C.AQL_Lang,
                               MathLanguage = C.Mat_Lang
                           };
+                
                 List<UCT_Upload> UCTLoads = new List<UCT_Upload>();
                 foreach (var rec in UCT)
                 {

@@ -731,18 +731,7 @@
   </EntityType>
   <EntityType Name="OnlineComposit">
     <Key>
-      <PropertyRef Name="RefNo" />
       <PropertyRef Name="Barcode" />
-      <PropertyRef Name="Surname" />
-      <PropertyRef Name="Name" />
-      <PropertyRef Name="DOB" />
-      <PropertyRef Name="DOT" />
-      <PropertyRef Name="VenueCode" />
-      <PropertyRef Name="WroteAL" />
-      <PropertyRef Name="WroteQL" />
-      <PropertyRef Name="WroteMat" />
-      <PropertyRef Name="Batch" />
-      <PropertyRef Name="DateModified" />
     </Key>
     <Property Name="RefNo" Type="Int64" Nullable="false" />
     <Property Name="Barcode" Type="Int64" Nullable="false" />
@@ -751,7 +740,7 @@
     <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
     <Property Name="SAID" Type="Int64" />
     <Property Name="ForeignID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DOB" Type="DateTime" Precision="0" />
     <Property Name="ID_Type" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
     <Property Name="Citizenship" Type="Int32" />
     <Property Name="Classification" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
@@ -772,12 +761,12 @@
     <Property Name="QLLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
     <Property Name="MATScore" Type="Int32" />
     <Property Name="MATLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
-    <Property Name="WroteAL" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
-    <Property Name="WroteQL" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
-    <Property Name="WroteMat" Type="String" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="WroteAL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="WroteQL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="WroteMat" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
     <Property Name="Faculty2" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
     <Property Name="Faculty3" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
-    <Property Name="Batch" Type="String" Nullable="false" MaxLength="22" FixedLength="true" Unicode="true" />
+    <Property Name="Batch" Type="String" MaxLength="22" FixedLength="true" Unicode="true" />
     <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
     <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
   </EntityType>

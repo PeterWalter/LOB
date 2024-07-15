@@ -11,6 +11,7 @@ using System.Linq;
 using System.Windows;
 using System.Windows.Forms;
 using CETAP_LOB.Database;
+using System.Windows.Controls;
 
 namespace CETAP_LOB.ViewModel.Utilities
 {
@@ -18,6 +19,8 @@ namespace CETAP_LOB.ViewModel.Utilities
     {
         public const string StatusPropertyName = "Status";
         public const string CompositPropertyName = "Composit";
+        public const string DBCompositPropertyName = "DBComposit";
+        public const string testDatePropertyName = "testDate";
         public const string BIOPropertyName = "BIO";
         public const string MATPropertyName = "MAT";
         public const string AQLPropertyName = "AQL";
@@ -25,7 +28,9 @@ namespace CETAP_LOB.ViewModel.Utilities
         private IDataService _service;
         private bool IsmatchScores;
         private string _myStatus;
+        private string _testDate;
         private ObservableCollection<CompositBDO> _composit;
+        private ObservableCollection<OnlineCompositBDO> _dbcomposit;
         private ObservableCollection<AnswerSheetBio> _bio;
         private ObservableCollection<MAT_Score> _mat;
         private ObservableCollection<AQL_Score> _aql;
@@ -40,7 +45,7 @@ namespace CETAP_LOB.ViewModel.Utilities
 
         public RelayCommand GenerateCompositeCommand { get; private set; }
 
-        public RelayCommand TrackScoresCommand { get; private set; }
+        public RelayCommand GenerateFromDBCommand { get; private set; }
 
         public ObservableCollection<MAT_Score> MAT
         {
@@ -115,6 +120,32 @@ namespace CETAP_LOB.ViewModel.Utilities
                 RaisePropertyChanged("FilesInFolder");
             }
         }
+
+        public string testDate 
+        {
+            get
+            {
+                return _testDate;
+            }
+            set
+            {
+                if (_testDate == value)
+                    return;
+                _testDate = value;
+                RaisePropertyChanged(testDate);
+            }
+        }
+        private DateTime? _selectedDate;
+        public DateTime? SelectedDate
+        {
+            get => _selectedDate;
+            set
+            {
+                _selectedDate = value;
+                RaisePropertyChanged("SelectedDate");
+                // Notify property changed if you're using MVVM pattern
+            }
+        }
         public string Status
         {
             get
@@ -136,11 +167,26 @@ namespace CETAP_LOB.ViewModel.Utilities
             InitializeModels();
             RegisterCommands();
         }
+        public ObservableCollection<OnlineCompositBDO> DBComposit
+        {
+            get
+            {
+                return _dbcomposit;
+            }
+            set
+            {
+                if (_dbcomposit == value)
+                    return;
+                _dbcomposit = value;
+                RaisePropertyChanged("Composit");
+            }
+        }
 
         private void InitializeModels()
         {
             FilesInFolder = new ObservableCollection<string>();
-           // Composit = new ObservableCollection<CompositBDO>();
+            DBComposit = new ObservableCollection<OnlineCompositBDO>();
+            // Composit = new ObservableCollection<CompositBDO>();
         }
         private void RegisterCommands()
         {
@@ -148,7 +194,33 @@ namespace CETAP_LOB.ViewModel.Utilities
             ReadFilesCommand = new RelayCommand((readScoreFiles));
             ProcessScoresCommand = new RelayCommand(() => ProcessScores(), () => CanprocessScores());
             GenerateCompositeCommand = new RelayCommand(() => GenerateComposite());
-          //  TrackScoresCommand = new RelayCommand(() => TrackScores(), () => canTrack());
+            GenerateFromDBCommand = new RelayCommand((CompileScores));
+            //  TrackScoresCommand = new RelayCommand(() => TrackScores(), () => canTrack());
+        }
+
+        private void CompileScores()
+        {
+            if (_dbcomposit != null)
+            {
+                _dbcomposit.Clear();
+            }
+             if(testDate == null)
+            {
+                string text = "Please enter test Date";
+                int num = (int)ModernDialog.ShowMessage(text, "OnlineComposite", MessageBoxButton.OK, (Window)null);
+                return;
+            }
+            string userInput = testDate;//"2024-06-22";
+            if (DateTime.TryParse(userInput, out DateTime date))
+            {
+                SelectedDate = date;
+                _dbcomposit = _service.DBOnlineScores(date);
+            }
+            else
+            {
+                SelectedDate = null;
+            }
+            
         }
         private void selectFolder()
         {
