@@ -1,0 +1,184 @@
+﻿<UserControl x:Class="CETAP_LOB.View.processing.ScanTrackerView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             xmlns:local="clr-namespace:CETAP_LOB.View.processing"
+             mc:Ignorable="d" 
+              BorderBrush="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"
+             DataContext="{Binding Path=Tracks, Source={StaticResource Locator}}"
+             d:DesignHeight="306" d:DesignWidth="757">
+    <FrameworkElement.Resources>
+        <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
+            <Style.Triggers>
+                <Trigger Property="Validation.HasError" Value="true">
+                    <Setter Property="FrameworkElement.ToolTip"
+                  Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource self}}"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+    </FrameworkElement.Resources>
+    <Grid Margin="0,0,5,5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="10*"/>
+            <RowDefinition Height="800*"/>
+        </Grid.RowDefinitions>
+        <DataGrid Grid.Row="0" Grid.RowSpan="2" Margin="0,0,0,72" HorizontalContentAlignment="Center"
+              VerticalContentAlignment="Stretch" AutoGenerateColumns="false" Background="Transparent"
+              BorderThickness="1" CanUserResizeColumns="true" CanUserSortColumns="true"
+              HorizontalScrollBarVisibility="Visible"
+              ItemsSource="{Binding Tracks.Trackers, Source={StaticResource Locator}}">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn Header="Batch Name" SortMemberPath="FileName">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding FileName}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Test Date" SortMemberPath="TestDate">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding TestDate, StringFormat=\{0:D\}}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Batched By" SortMemberPath="BatchedBy">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" Text="{Binding BatchedBy}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date Batched" SortMemberPath="DateBatched">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" TextAlignment="Center" Text="{Binding DateBatched}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="No Of Records" SortMemberPath="Records">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" TextAlignment="Center" Text="{Binding Records}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date Scanned" SortMemberPath="DateScanned">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding DateScanned}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Scan Count" SortMemberPath="ScanRecords">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" TextAlignment="Center" Text="{Binding ScanRecords}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Edit Date" SortMemberPath="DateEdited">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" Text="{Binding DateEdited}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Edit Count" SortMemberPath="EditRecords">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Style="{StaticResource TextBlockStyle}" TextAlignment="Center" Text="{Binding EditRecords}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="QA Date" SortMemberPath="DateQA">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DateQA}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="QA Records" SortMemberPath="QARecords">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" Text="{Binding QARecords}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date sent for Scoring" SortMemberPath="DateSentForScoring">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DateSentForScoring}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Sent Items" SortMemberPath="SentCount">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" Text="{Binding SentCount}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date Scored" SortMemberPath="DateScored">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DateScored}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Records Scored" SortMemberPath="ScoredRecords">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock TextAlignment="Center" Text="{Binding ScoredRecords}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+                <DataGridTemplateColumn Header="Date File Modified" SortMemberPath="DateModified">
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding DateModified}"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+            <FrameworkElement.ContextMenu>
+                <ContextMenu>
+                    <MenuItem Header="Report Records"
+                    Command="{Binding Tracks.SavetoExcelCommand, Mode=OneWay, Source={StaticResource Locator}}">
+                        <MenuItem.Icon>
+                            <Image Width="16" Height="16" Source="/Assets/icons/UpdateSheet.png"/>
+                        </MenuItem.Icon>
+                    </MenuItem>
+                    <Separator/>
+                </ContextMenu>
+            </FrameworkElement.ContextMenu>
+        </DataGrid>
+        <StackPanel VerticalAlignment="Bottom" Grid.Row="1">
+            <StackPanel Orientation="Horizontal" Height="25">
+                <Label Content="Venue Code" Width="96" Margin="20,0,0,0" FontSize="16" />
+                <TextBlock TextWrapping="Wrap" Text="{Binding Tracks.SelectedVenue.VenueCode, Source={StaticResource Locator}, StringFormat=\{0:D5\}}" FontSize="16"  Background="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}"/>
+            </StackPanel>
+
+            <StackPanel Height="45" Orientation="Horizontal" VerticalAlignment="Bottom">
+                <Label Content="Venue" HorizontalAlignment="Left" Height="19" Margin="10,0,0,0" Width="51"/>
+                <ComboBox Width="247" Margin="0,10" ItemsSource="{Binding Tracks.Venues, Source={StaticResource Locator}}" DisplayMemberPath="VenueName" SelectedItem="{Binding Tracks.SelectedVenue, Source={StaticResource Locator}}" />
+                <Label Content="Test Date" HorizontalAlignment="Center"  Width="60" Margin="20,14,0,10" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" VerticalAlignment="Center" Height="21"/>
+                <DatePicker HorizontalAlignment="Left" Width="144" Margin="0,10"  SelectedDate="{Binding SelectedProcessDate, Mode=TwoWay}"/>
+                <Button Content="Get Records" Height="25" Margin="10,10,0,0" VerticalAlignment="Top" Width="114" Command="{Binding Tracks.LoadDataCommand, Source={StaticResource Locator}}"/>
+                
+                <mui:ModernButton Margin="15,0,5,0"
+								  BorderThickness="5,10,0,0"
+								  Command="{Binding Tracks.RefreshDataCommand,
+													Mode=OneWay,
+													Source={StaticResource Locator}}"
+								  EllipseDiameter="40"
+								  IconData="F1 M 24,13C 27.1521,13 29.9945,14.3258 32,16.4501L 32,11L 35,14L 35,22L 27,22L 24,19L 29.5903,19C 28.217,17.4656 26.2212,16.5 24,16.5C 20.1969,16.5 17.055,19.3306 16.5661,23L 13.0448,23C 13.5501,17.3935 18.262,13 24,13 Z M 24,31.5C 27.8031,31.5 30.945,28.6694 31.4339,25L 34.9552,25C 34.4499,30.6065 29.738,35 24,35C 20.8479,35 18.0055,33.6742 16,31.5499L 16,37L 13,34L 13,26L 21,26L 24,29L 18.4097,29C 19.783,30.5344 21.7787,31.5 24,31.5 Z"
+								  IconHeight="33"
+								  IconWidth="33"
+								  ToolTip="Refresh All Data" HorizontalAlignment="Right"  HorizontalContentAlignment="Center" />
+            </StackPanel>
+        </StackPanel>
+    </Grid>
+</UserControl>

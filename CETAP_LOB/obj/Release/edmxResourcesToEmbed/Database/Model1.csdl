@@ -1,0 +1,1070 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Schema Namespace="NBT_ProductionModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+  <EntityType Name="TestName">
+    <Key>
+      <PropertyRef Name="TestID" />
+    </Key>
+    <Property Name="TestID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TestName1" Type="String" MaxLength="14" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="TestCode" Type="Int32" Nullable="false" />
+    <Property Name="Section7" Type="Int16" Nullable="false" />
+    <Property Name="HasErrors" Type="Boolean" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="rowguid" Type="Guid" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="TestAllocations" Relationship="Self.FK_TestAllocation_TestName" FromRole="TestName" ToRole="TestAllocation" />
+    <Property Name="InUse" Type="Boolean" />
+    <Property Name="TestCode_CHAR" Type="String" MaxLength="5" FixedLength="true" Unicode="false" />
+  </EntityType>
+  <EntityType Name="Log">
+    <Key>
+      <PropertyRef Name="id" />
+    </Key>
+    <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Date" Type="DateTime" Nullable="false" Precision="7" />
+    <Property Name="Thread" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Level" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Logger" Type="String" MaxLength="255" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Message" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="UserName" Type="String" MaxLength="100" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Location" Type="String" MaxLength="200" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Method" Type="String" MaxLength="50" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="exception" Type="String" MaxLength="4000" FixedLength="false" Unicode="false" />
+  </EntityType>
+  <EntityType Name="EasyPayFile">
+    <Key>
+      <PropertyRef Name="FileGenerationNumber" />
+    </Key>
+    <Property Name="FileGenerationNumber" Type="Int32" Nullable="false" />
+    <Property Name="FileName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DateWritten" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="NumberOfPayments" Type="Int32" />
+    <Property Name="NumberOfTenders" Type="Int32" />
+    <Property Name="TotalFees" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalBankFees" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="TotalPayment" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="CalculatedAmountCollected" Type="Decimal" Precision="18" Scale="2" />
+    <NavigationProperty Name="EasyPayRecords" Relationship="Self.FK_EasyPayRecord_EasyPayFile" FromRole="EasyPayFile" ToRole="EasyPayRecord" />
+  </EntityType>
+  <EntityType Name="EasyPayRecord">
+    <Key>
+      <PropertyRef Name="PayNumber" />
+    </Key>
+    <Property Name="PayNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="FileGenerationNumber" Type="Int32" Nullable="false" />
+    <Property Name="PayTag" Type="Int64" Nullable="false" />
+    <Property Name="CollectorID" Type="Int64" />
+    <Property Name="date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Time" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Fee" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="BankCost" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="NumOfTrans" Type="Int16" Nullable="false" />
+    <Property Name="AmountPaid" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Trace" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="TenderType_PAN" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="PointOfService" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Original" Type="Int16" Nullable="false" />
+    <NavigationProperty Name="EasyPayFile" Relationship="Self.FK_EasyPayRecord_EasyPayFile" FromRole="EasyPayRecord" ToRole="EasyPayFile" />
+    <NavigationProperty Name="WritersPayment" Relationship="Self.FK_WritersPayments_EasyPayRecord" FromRole="EasyPayRecord" ToRole="WritersPayments" />
+  </EntityType>
+  <EntityType Name="Batch">
+    <Key>
+      <PropertyRef Name="BatchID" />
+    </Key>
+    <Property Name="BatchID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BatchName" Type="String" MaxLength="22" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="TestCombination" Type="String" MaxLength="4" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="BatchedBy" Type="String" MaxLength="15" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="BatchDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RandTestNumber" Type="Int32" Nullable="false" />
+    <Property Name="Count" Type="Int32" Nullable="false" />
+    <Property Name="TestVenueID" Type="Int32" Nullable="false" />
+    <Property Name="TestProfileID" Type="Int32" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="ScannedFiles" Relationship="Self.FK_ScannedFile_Batch" FromRole="Batch" ToRole="ScannedFile" />
+    <NavigationProperty Name="QAs" Relationship="NBT_ProductionModel.FK_QA_Batch" FromRole="Batch" ToRole="QA" />
+  </EntityType>
+  <EntityType Name="BenchmarkLevel">
+    <Key>
+      <PropertyRef Name="yearID" />
+    </Key>
+    <Property Name="yearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="YearSet" Type="Int32" Nullable="false" />
+    <Property Name="StartIntakeYear" Type="Int32" Nullable="false" />
+    <Property Name="EndIntakeYear" Type="Int32" Nullable="false" />
+    <Property Name="AL_PU" Type="Int32" Nullable="false" />
+    <Property Name="AL_PL" Type="Int32" Nullable="false" />
+    <Property Name="AL_IU" Type="Int32" Nullable="false" />
+    <Property Name="AL_IL" Type="Int32" Nullable="false" />
+    <Property Name="AL_BU" Type="Int32" Nullable="false" />
+    <Property Name="AL_BL" Type="Int32" Nullable="false" />
+    <Property Name="QL_PU" Type="Int32" Nullable="false" />
+    <Property Name="QL_PL" Type="Int32" Nullable="false" />
+    <Property Name="QL_IU" Type="Int32" Nullable="false" />
+    <Property Name="QL_IL" Type="Int32" Nullable="false" />
+    <Property Name="QL_BU" Type="Int32" Nullable="false" />
+    <Property Name="QL_BL" Type="Int32" Nullable="false" />
+    <Property Name="MAT_PU" Type="Int32" Nullable="false" />
+    <Property Name="MAT_PL" Type="Int32" Nullable="false" />
+    <Property Name="MAT_IU" Type="Int32" Nullable="false" />
+    <Property Name="MAT_IL" Type="Int32" Nullable="false" />
+    <Property Name="MAT_BU" Type="Int32" Nullable="false" />
+    <Property Name="MAT_BL" Type="Int32" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Type" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Composit">
+    <Key>
+      <PropertyRef Name="Barcode" />
+    </Key>
+    <Property Name="RefNo" Type="Int64" Nullable="false" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="Surname" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ID_Type" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="Classification" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="VenueCode" Type="Int32" Nullable="false" />
+    <Property Name="VenueName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="HomeLanguage" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+    <Property Name="GR12Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="AQLLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="AQLCode" Type="Int32" />
+    <Property Name="MatLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="MatCode" Type="Int32" />
+    <Property Name="ALScore" Type="Int32" />
+    <Property Name="ALLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="QLScore" Type="Int32" />
+    <Property Name="QLLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="MATScore" Type="Int32" />
+    <Property Name="MATLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="WroteAL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="WroteQL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="WroteMat" Type="String" MaxLength="3" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Faculty2" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty3" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Batch" Type="String" MaxLength="22" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="RowGuid" Type="Guid" Nullable="false" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="InstitutionMatches" Relationship="Self.FK_InstitutionMatch_Composit" FromRole="Composit" ToRole="InstitutionMatch" />
+    <Property Name="ProvinceID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="FirstName">
+    <Key>
+      <PropertyRef Name="NameID" />
+    </Key>
+    <Property Name="NameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="Institution">
+    <Key>
+      <PropertyRef Name="InstID" />
+    </Key>
+    <Property Name="InstID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Name" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="500" FixedLength="true" Unicode="true" />
+    <Property Name="Logo" Type="Binary" MaxLength="Max" FixedLength="false" />
+    <Property Name="GUID" Type="Guid" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="InstitutionMatches" Relationship="Self.FK_InstitutionMatch_Institution" FromRole="Institution" ToRole="InstitutionMatch" />
+  </EntityType>
+  <EntityType Name="InstitutionMatch">
+    <Key>
+      <PropertyRef Name="RequestNumber" />
+    </Key>
+    <Property Name="RequestNumber" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="InstID" Type="Int32" Nullable="false" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="StudentID" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Programme" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="RequestDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Composit" Relationship="Self.FK_InstitutionMatch_Composit" FromRole="InstitutionMatch" ToRole="Composit" />
+    <NavigationProperty Name="Institution" Relationship="Self.FK_InstitutionMatch_Institution" FromRole="InstitutionMatch" ToRole="Institution" />
+  </EntityType>
+  <EntityType Name="IntakeYear">
+    <Key>
+      <PropertyRef Name="yearID" />
+    </Key>
+    <Property Name="yearID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Year" Type="Int32" Nullable="false" />
+    <Property Name="yearStart" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="yearEnd" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="NewNBTNumber">
+    <Key>
+      <PropertyRef Name="NewNBT" />
+    </Key>
+    <Property Name="NewNBT" Type="Int64" Nullable="false" />
+    <Property Name="OriginalNBT" Type="Int64" />
+    <Property Name="Used" Type="Boolean" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="WriterListID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="Province">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Code" Type="Int32" Nullable="false" />
+    <NavigationProperty Name="TestVenues" Relationship="Self.FK_TestVenues_Provinces" FromRole="Provinces" ToRole="TestVenues" />
+  </EntityType>
+  <EntityType Name="RecordsInQueue">
+    <Key>
+      <PropertyRef Name="RecID" />
+    </Key>
+    <Property Name="RecID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="NBT" Type="Int64" Nullable="false" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="FID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="Reason" Type="String" MaxLength="100" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="ScannedFile">
+    <Key>
+      <PropertyRef Name="Filename" />
+    </Key>
+    <Property Name="FileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Filename" Type="String" MaxLength="30" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Datescanned" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="FileData" Type="Binary" MaxLength="Max" FixedLength="false" Nullable="false" />
+    <Property Name="BatchID" Type="Int32" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="Client" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <NavigationProperty Name="Batch" Relationship="Self.FK_ScannedFile_Batch" FromRole="ScannedFile" ToRole="Batch" />
+  </EntityType>
+  <EntityType Name="ScanTracker">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="BatchedBy" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="DateBatched" Type="DateTime" Precision="3" />
+    <Property Name="Records" Type="Int32" />
+    <Property Name="DateScanned" Type="DateTime" Precision="3" />
+    <Property Name="ScanRecords" Type="Int32" />
+    <Property Name="DateEdited" Type="DateTime" Precision="3" />
+    <Property Name="EditRecords" Type="Int32" />
+    <Property Name="DateQA" Type="DateTime" Precision="3" />
+    <Property Name="QARecords" Type="Int32" />
+    <Property Name="DateSentForScoring" Type="DateTime" Precision="3" />
+    <Property Name="SentCount" Type="Int32" />
+    <Property Name="DateScored" Type="DateTime" Precision="3" />
+    <Property Name="ScoredRecords" Type="Int32" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="TestDate" Type="DateTime" Precision="0" />
+    <Property Name="FileName" Type="String" MaxLength="22" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Description" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+  </EntityType>
+  <EntityType Name="Surname">
+    <Key>
+      <PropertyRef Name="SurnameID" />
+    </Key>
+    <Property Name="SurnameID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Surname1" Type="String" MaxLength="100" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+  </EntityType>
+  <EntityType Name="TestAllocation">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="TestDate" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="ClientType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="TestID" Type="Int32" Nullable="false" />
+    <Property Name="Client" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Estimated" Type="Int32" Nullable="false" />
+    <Property Name="ActualUsed" Type="Int32" Nullable="false" />
+    <Property Name="RowGuid" Type="Guid" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="TestName" Relationship="Self.FK_TestAllocation_TestName" FromRole="TestAllocation" ToRole="TestName" />
+    <NavigationProperty Name="TestProfiles" Relationship="Self.FK_TestProfile_TestAllocation" FromRole="TestAllocation" ToRole="TestProfile" />
+  </EntityType>
+  <EntityType Name="TestProfile">
+    <Key>
+      <PropertyRef Name="ProfileID" />
+    </Key>
+    <Property Name="ProfileID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="Profile" Type="Int32" Nullable="false" />
+    <Property Name="AllocationID" Type="Int32" Nullable="false" />
+    <Property Name="Intake" Type="Int32" Nullable="false" />
+    <Property Name="RowGuid" Type="Guid" Nullable="false" />
+    <Property Name="ModifiedDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="TestAllocation" Relationship="Self.FK_TestProfile_TestAllocation" FromRole="TestProfile" ToRole="TestAllocation" />
+  </EntityType>
+  <EntityType Name="TestVenue">
+    <Key>
+      <PropertyRef Name="VenueCode" />
+    </Key>
+    <Property Name="VenueCode" Type="Int32" Nullable="false" />
+    <Property Name="VenueName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="ShortName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="WebsiteName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Room" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="VenueType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="ProvinceID" Type="Int32" Nullable="false" />
+    <Property Name="Capacity" Type="Int32" />
+    <Property Name="Comments" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Available" Type="Boolean" Nullable="false" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="RowGuid" Type="Guid" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Place" Type="Geography" />
+    <NavigationProperty Name="Province" Relationship="Self.FK_TestVenues_Provinces" FromRole="TestVenues" ToRole="Provinces" />
+    <NavigationProperty Name="WriterLists" Relationship="Self.FK_WriterList_TestVenues" FromRole="TestVenues" ToRole="WriterList" />
+  </EntityType>
+  <EntityType Name="WriterList">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="NBT" Type="Int64" Nullable="false" />
+    <Property Name="Surname" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="30" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Classification" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="TestLanguage" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="TestType" Type="String" MaxLength="10" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="VenueID" Type="Int32" Nullable="false" />
+    <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Mobile" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="HomeTelephone" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="EMail" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Paid" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="AccountCreation" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RegistrationDate" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Wrote" Type="Boolean" Nullable="false" />
+    <Property Name="RowGuid" Type="Guid" Nullable="false" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <NavigationProperty Name="TestVenue" Relationship="Self.FK_WriterList_TestVenues" FromRole="WriterList" ToRole="TestVenues" />
+  </EntityType>
+  <EntityType Name="WritersPayment">
+    <Key>
+      <PropertyRef Name="EasyPayPayNumber" />
+    </Key>
+    <Property Name="EasyPayPayNumber" Type="Int64" Nullable="false" />
+    <Property Name="CurrentNBT" Type="Int64" Nullable="false" />
+    <Property Name="OldNBT" Type="Int64" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="EasyPayRecord" Relationship="Self.FK_WritersPayments_EasyPayRecord" FromRole="WritersPayments" ToRole="EasyPayRecord" />
+  </EntityType>
+  <EntityType Name="User">
+    <Key>
+      <PropertyRef Name="StaffID" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="Areas" />
+    </Key>
+    <Property Name="StaffID" Type="String" MaxLength="8" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Name" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Areas" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="email" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+  </EntityType>
+  <EntityType Name="TestRoom">
+    <Key>
+      <PropertyRef Name="Id" />
+      <PropertyRef Name="RowVersion" />
+      <PropertyRef Name="RoomName" />
+      <PropertyRef Name="TestRoom_TestVenue" />
+    </Key>
+    <Property Name="Id" Type="Int32" Nullable="false" />
+    <Property Name="RowVersion" Type="Binary" MaxLength="8" FixedLength="true" Nullable="false" annotation:StoreGeneratedPattern="Computed" />
+    <Property Name="RoomType" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="HireCost" Type="Decimal" Precision="18" Scale="2" />
+    <Property Name="Capacity" Type="Int32" />
+    <Property Name="Comment" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="RoomName" Type="String" MaxLength="255" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="TestRoom_TestVenue" Type="Int32" Nullable="false" />
+  </EntityType>
+  <EntityType Name="Vw_EasyPayRecords">
+    <Key>
+      <PropertyRef Name="File_Number" />
+      <PropertyRef Name="NBT_Ref" />
+      <PropertyRef Name="Source_File_Date" />
+      <PropertyRef Name="Payment_Date" />
+      <PropertyRef Name="Fee" />
+      <PropertyRef Name="Paid_Amount" />
+      <PropertyRef Name="Pay_Code" />
+      <PropertyRef Name="Payment_Method" />
+      <PropertyRef Name="Bank_Reference" />
+    </Key>
+    <Property Name="File_Number" Type="Int32" Nullable="false" />
+    <Property Name="NBT_Ref" Type="Int64" Nullable="false" />
+    <Property Name="EasyPay_Code" Type="Int64" />
+    <Property Name="Source_File_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Payment_Date" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+    <Property Name="Fee" Type="Decimal" Precision="19" Scale="4" Nullable="false" />
+    <Property Name="Processing_Fee" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Transaction_Fee" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Paid_Amount" Type="String" MaxLength="1" FixedLength="false" Unicode="false" Nullable="false" />
+    <Property Name="Pay_Code" Type="Int64" Nullable="false" />
+    <Property Name="Payee_Name" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+    <Property Name="Payment_Method" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Bank_Reference" Type="String" MaxLength="20" FixedLength="true" Unicode="true" Nullable="false" />
+    <Property Name="Revenue" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Expenses" Type="Decimal" Precision="19" Scale="4" />
+    <Property Name="Net" Type="Decimal" Precision="19" Scale="4" />
+  </EntityType>
+  <Association Name="FK_TestAllocation_TestName">
+    <End Role="TestName" Type="Self.TestName" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestName">
+        <PropertyRef Name="TestID" />
+      </Principal>
+      <Dependent Role="TestAllocation">
+        <PropertyRef Name="TestID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_EasyPayRecord_EasyPayFile">
+    <End Role="EasyPayFile" Type="Self.EasyPayFile" Multiplicity="1" />
+    <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="EasyPayFile">
+        <PropertyRef Name="FileGenerationNumber" />
+      </Principal>
+      <Dependent Role="EasyPayRecord">
+        <PropertyRef Name="FileGenerationNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WritersPayments_EasyPayRecord">
+    <End Role="EasyPayRecord" Type="Self.EasyPayRecord" Multiplicity="1" />
+    <End Role="WritersPayments" Type="Self.WritersPayment" Multiplicity="0..1" />
+    <ReferentialConstraint>
+      <Principal Role="EasyPayRecord">
+        <PropertyRef Name="PayNumber" />
+      </Principal>
+      <Dependent Role="WritersPayments">
+        <PropertyRef Name="EasyPayPayNumber" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_ScannedFile_Batch">
+    <End Role="Batch" Type="Self.Batch" Multiplicity="0..1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="ScannedFile" Type="Self.ScannedFile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Batch">
+        <PropertyRef Name="BatchID" />
+      </Principal>
+      <Dependent Role="ScannedFile">
+        <PropertyRef Name="BatchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstitutionMatch_Composit">
+    <End Role="Composit" Type="Self.Composit" Multiplicity="1" />
+    <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Composit">
+        <PropertyRef Name="Barcode" />
+      </Principal>
+      <Dependent Role="InstitutionMatch">
+        <PropertyRef Name="Barcode" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_InstitutionMatch_Institution">
+    <End Role="Institution" Type="Self.Institution" Multiplicity="1" />
+    <End Role="InstitutionMatch" Type="Self.InstitutionMatch" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Institution">
+        <PropertyRef Name="InstID" />
+      </Principal>
+      <Dependent Role="InstitutionMatch">
+        <PropertyRef Name="InstID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestVenues_Provinces">
+    <End Role="Provinces" Type="Self.Province" Multiplicity="1" />
+    <End Role="TestVenues" Type="Self.TestVenue" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Provinces">
+        <PropertyRef Name="Id" />
+      </Principal>
+      <Dependent Role="TestVenues">
+        <PropertyRef Name="ProvinceID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_TestProfile_TestAllocation">
+    <End Role="TestAllocation" Type="Self.TestAllocation" Multiplicity="1">
+      <OnDelete Action="Cascade" />
+    </End>
+    <End Role="TestProfile" Type="Self.TestProfile" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestAllocation">
+        <PropertyRef Name="ID" />
+      </Principal>
+      <Dependent Role="TestProfile">
+        <PropertyRef Name="AllocationID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <Association Name="FK_WriterList_TestVenues">
+    <End Role="TestVenues" Type="Self.TestVenue" Multiplicity="1" />
+    <End Role="WriterList" Type="Self.WriterList" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="TestVenues">
+        <PropertyRef Name="VenueCode" />
+      </Principal>
+      <Dependent Role="WriterList">
+        <PropertyRef Name="VenueID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityContainer Name="CETAPEntities" annotation:LazyLoadingEnabled="true">
+    <EntitySet Name="TestNames" EntityType="Self.TestName" />
+    <EntitySet Name="Logs" EntityType="Self.Log" />
+    <EntitySet Name="EasyPayFiles" EntityType="Self.EasyPayFile" />
+    <EntitySet Name="EasyPayRecords" EntityType="Self.EasyPayRecord" />
+    <EntitySet Name="Batches" EntityType="Self.Batch" />
+    <EntitySet Name="BenchmarkLevels" EntityType="Self.BenchmarkLevel" />
+    <EntitySet Name="Composits" EntityType="Self.Composit" />
+    <EntitySet Name="FirstNames" EntityType="Self.FirstName" />
+    <EntitySet Name="Institutions" EntityType="Self.Institution" />
+    <EntitySet Name="InstitutionMatches" EntityType="Self.InstitutionMatch" />
+    <EntitySet Name="IntakeYears" EntityType="Self.IntakeYear" />
+    <EntitySet Name="NewNBTNumbers" EntityType="Self.NewNBTNumber" />
+    <EntitySet Name="Provinces" EntityType="Self.Province" />
+    <EntitySet Name="RecordsInQueues" EntityType="Self.RecordsInQueue" />
+    <EntitySet Name="ScannedFiles" EntityType="Self.ScannedFile" />
+    <EntitySet Name="ScanTrackers" EntityType="Self.ScanTracker" />
+    <EntitySet Name="Surnames" EntityType="Self.Surname" />
+    <EntitySet Name="TestAllocations" EntityType="Self.TestAllocation" />
+    <EntitySet Name="TestProfiles" EntityType="Self.TestProfile" />
+    <EntitySet Name="TestVenues" EntityType="Self.TestVenue" />
+    <EntitySet Name="WriterLists" EntityType="Self.WriterList" />
+    <EntitySet Name="WritersPayments" EntityType="Self.WritersPayment" />
+    <EntitySet Name="Users" EntityType="Self.User" />
+    <EntitySet Name="TestRooms" EntityType="Self.TestRoom" />
+    <EntitySet Name="Vw_EasyPayRecords" EntityType="Self.Vw_EasyPayRecords" />
+    <AssociationSet Name="FK_TestAllocation_TestName" Association="Self.FK_TestAllocation_TestName">
+      <End Role="TestName" EntitySet="TestNames" />
+      <End Role="TestAllocation" EntitySet="TestAllocations" />
+    </AssociationSet>
+    <AssociationSet Name="FK_EasyPayRecord_EasyPayFile" Association="Self.FK_EasyPayRecord_EasyPayFile">
+      <End Role="EasyPayFile" EntitySet="EasyPayFiles" />
+      <End Role="EasyPayRecord" EntitySet="EasyPayRecords" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WritersPayments_EasyPayRecord" Association="Self.FK_WritersPayments_EasyPayRecord">
+      <End Role="EasyPayRecord" EntitySet="EasyPayRecords" />
+      <End Role="WritersPayments" EntitySet="WritersPayments" />
+    </AssociationSet>
+    <AssociationSet Name="FK_ScannedFile_Batch" Association="Self.FK_ScannedFile_Batch">
+      <End Role="Batch" EntitySet="Batches" />
+      <End Role="ScannedFile" EntitySet="ScannedFiles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstitutionMatch_Composit" Association="Self.FK_InstitutionMatch_Composit">
+      <End Role="Composit" EntitySet="Composits" />
+      <End Role="InstitutionMatch" EntitySet="InstitutionMatches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_InstitutionMatch_Institution" Association="Self.FK_InstitutionMatch_Institution">
+      <End Role="Institution" EntitySet="Institutions" />
+      <End Role="InstitutionMatch" EntitySet="InstitutionMatches" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestVenues_Provinces" Association="Self.FK_TestVenues_Provinces">
+      <End Role="Provinces" EntitySet="Provinces" />
+      <End Role="TestVenues" EntitySet="TestVenues" />
+    </AssociationSet>
+    <AssociationSet Name="FK_TestProfile_TestAllocation" Association="Self.FK_TestProfile_TestAllocation">
+      <End Role="TestAllocation" EntitySet="TestAllocations" />
+      <End Role="TestProfile" EntitySet="TestProfiles" />
+    </AssociationSet>
+    <AssociationSet Name="FK_WriterList_TestVenues" Association="Self.FK_WriterList_TestVenues">
+      <End Role="TestVenues" EntitySet="TestVenues" />
+      <End Role="WriterList" EntitySet="WriterLists" />
+    </AssociationSet>
+    <EntitySet Name="QAs" EntityType="NBT_ProductionModel.QA" />
+    <AssociationSet Name="FK_QA_Batch" Association="NBT_ProductionModel.FK_QA_Batch">
+      <End Role="Batch" EntitySet="Batches" />
+      <End Role="QA" EntitySet="QAs" />
+    </AssociationSet>
+    <EntitySet Name="Schools" EntityType="NBT_ProductionModel.School" />
+    <EntitySet Name="Cleaned_batch" EntityType="NBT_ProductionModel.Cleaned_batch" />
+    <EntitySet Name="OnlineComposits" EntityType="NBT_ProductionModel.OnlineComposit" />
+    <EntitySet Name="BankEasypayRecords" EntityType="NBT_ProductionModel.BankEasypayRecord" />
+    <EntitySet Name="Barcodes" EntityType="NBT_ProductionModel.Barcode" />
+    <EntitySet Name="CharacterReplacements" EntityType="NBT_ProductionModel.CharacterReplacement" />
+    <EntitySet Name="DisabledWriters" EntityType="NBT_ProductionModel.DisabledWriter" />
+    <EntitySet Name="lst_Disability" EntityType="NBT_ProductionModel.lst_Disability" />
+    <EntitySet Name="temp_WriterList" EntityType="NBT_ProductionModel.temp_WriterList" />
+    <EntitySet Name="Domains" EntityType="NBT_ProductionModel.Domain" />
+    <EntitySet Name="Itembanks" EntityType="NBT_ProductionModel.Itembank" />
+    <EntitySet Name="Subdomains" EntityType="NBT_ProductionModel.Subdomain" />
+    <EntitySet Name="Composit_bak" EntityType="NBT_ProductionModel.Composit_bak" />
+    <EntitySet Name="CompoTests" EntityType="NBT_ProductionModel.CompoTest" />
+    <EntitySet Name="LogisticsComposits" EntityType="NBT_ProductionModel.LogisticsComposit" />
+  </EntityContainer>
+  <EntityType Name="QA">
+    <Key>
+      <PropertyRef Name="ID" />
+    </Key>
+    <Property Name="ID" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CSX_Number" Type="Int32" Nullable="false" />
+    <Property Name="CSX" Type="String" Nullable="false" MaxLength="37" FixedLength="true" Unicode="true" />
+    <Property Name="NBT" Type="Int64" Nullable="false" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="true" Unicode="true" />
+    <Property Name="IDType" Type="Int32" />
+    <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="DateOfBirth" Type="DateTime" Precision="3" />
+    <Property Name="Surname" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Name" Type="String" MaxLength="18" FixedLength="true" Unicode="true" />
+    <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="VenueCode" Type="Int32" Nullable="false" />
+    <Property Name="TestDate" Type="DateTime" Precision="3" />
+    <Property Name="HLanguage" Type="Int32" />
+    <Property Name="SchoolLanguage" Type="Int32" />
+    <Property Name="Classification" Type="Int32" />
+    <Property Name="AQL_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="AQL_Code" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="Section1" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Section2" Type="String" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Section3" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+    <Property Name="Section4" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+    <Property Name="Section5" Type="String" Nullable="false" MaxLength="20" FixedLength="true" Unicode="true" />
+    <Property Name="Section6" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+    <Property Name="Section7" Type="String" MaxLength="25" FixedLength="true" Unicode="true" />
+    <Property Name="MAT_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="MathCode" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="MatSection" Type="String" MaxLength="60" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty1" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty2" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty3" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="BatchID" Type="Int32" />
+    <Property Name="dateCreated" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <NavigationProperty Name="Batch" Relationship="NBT_ProductionModel.FK_QA_Batch" FromRole="QA" ToRole="Batch" />
+  </EntityType>
+  <Association Name="FK_QA_Batch">
+    <End Type="NBT_ProductionModel.Batch" Role="Batch" Multiplicity="0..1" />
+    <End Type="NBT_ProductionModel.QA" Role="QA" Multiplicity="*" />
+    <ReferentialConstraint>
+      <Principal Role="Batch">
+        <PropertyRef Name="BatchID" />
+      </Principal>
+      <Dependent Role="QA">
+        <PropertyRef Name="BatchID" />
+      </Dependent>
+    </ReferentialConstraint>
+  </Association>
+  <EntityType Name="School">
+    <Key>
+      <PropertyRef Name="School_Id" />
+    </Key>
+    <Property Name="School_Id" Type="Int32" Nullable="false" />
+    <Property Name="School_Name" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="City" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Postal_Code" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Province" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Country" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Address" Type="String" MaxLength="255" FixedLength="false" Unicode="true" />
+    <Property Name="Position" Type="Geography" />
+  </EntityType>
+  <EntityType Name="Cleaned_batch">
+    <Key>
+      <PropertyRef Name="rec_id" />
+    </Key>
+    <Property Name="rec_id" Type="Int64" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+    <Property Name="CSX_type_id" Type="Int32" Nullable="false" />
+    <Property Name="CSX" Type="String" Nullable="false" MaxLength="37" FixedLength="false" Unicode="false" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="NBT" Type="Int64" Nullable="false" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" Type="String" MaxLength="15" FixedLength="false" Unicode="false" />
+    <Property Name="IDType" Type="Int32" />
+    <Property Name="Gender" Type="Int32" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="Faculty" Type="String" MaxLength="1" FixedLength="false" Unicode="false" />
+    <Property Name="DOB" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="Surname" Type="String" Nullable="false" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="18" FixedLength="false" Unicode="false" />
+    <Property Name="Initials" Type="String" MaxLength="3" FixedLength="false" Unicode="false" />
+    <Property Name="VenueCode" Type="Int32" />
+    <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="HomeLanguage" Type="Int32" />
+    <Property Name="SchoolLanguage" Type="Int32" />
+    <Property Name="Classification" Type="Int32" />
+    <Property Name="AQL_language" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="AQL_code" Type="Int32" />
+    <Property Name="AQL_section1" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section2" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section3" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section4" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section5" Type="String" MaxLength="20" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section6" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="AQL_section7" Type="String" MaxLength="25" FixedLength="false" Unicode="false" />
+    <Property Name="Maths_Language" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="Math_code" Type="Int32" />
+    <Property Name="Math_section" Type="String" MaxLength="60" FixedLength="false" Unicode="false" />
+    <Property Name="Faculty1" Type="String" MaxLength="1" FixedLength="true" Unicode="false" />
+    <Property Name="Faculty2" Type="String" MaxLength="2" FixedLength="true" Unicode="false" />
+    <Property Name="Faculty3" Type="String" MaxLength="3" FixedLength="true" Unicode="false" />
+    <Property Name="BatchID" Type="Int32" Nullable="false" />
+    <Property Name="created_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="date_created" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="modified_by" Type="String" MaxLength="50" FixedLength="false" Unicode="false" />
+    <Property Name="date_modified" Type="DateTime" Precision="3" />
+  </EntityType>
+  <EntityType Name="OnlineComposit">
+    <Key>
+      <PropertyRef Name="Barcode" />
+    </Key>
+    <Property Name="RefNo" Type="Int64" Nullable="false" />
+    <Property Name="Barcode" Type="Int64" Nullable="false" />
+    <Property Name="Surname" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Name" Type="String" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Initials" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="DOB" Type="DateTime" Precision="0" />
+    <Property Name="ID_Type" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="Classification" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Gender" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="DOT" Type="DateTime" Nullable="false" Precision="0" />
+    <Property Name="VenueCode" Type="Int32" Nullable="false" />
+    <Property Name="VenueName" Type="String" MaxLength="100" FixedLength="true" Unicode="true" />
+    <Property Name="HomeLanguage" Type="String" MaxLength="2" FixedLength="true" Unicode="true" />
+    <Property Name="GR12Language" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="AQLLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="AQLCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="MatLanguage" Type="String" MaxLength="1" FixedLength="true" Unicode="true" />
+    <Property Name="MatCode" Type="String" MaxLength="10" FixedLength="true" Unicode="true" />
+    <Property Name="ALScore" Type="Int32" />
+    <Property Name="ALLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="QLScore" Type="Int32" />
+    <Property Name="QLLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="MATScore" Type="Int32" />
+    <Property Name="MATLevel" Type="String" MaxLength="20" FixedLength="false" Unicode="true" />
+    <Property Name="WroteAL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="WroteQL" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="WroteMat" Type="String" MaxLength="3" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty2" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Faculty3" Type="String" MaxLength="50" FixedLength="true" Unicode="true" />
+    <Property Name="Batch" Type="String" MaxLength="22" FixedLength="true" Unicode="true" />
+    <Property Name="DateModified" Type="DateTime" Nullable="false" Precision="3" />
+    <Property Name="Description" Type="String" MaxLength="200" FixedLength="false" Unicode="true" />
+    <Property Name="ProvinceID" Type="Int32" />
+  </EntityType>
+  <EntityType Name="BankEasypayRecord">
+    <Key>
+      <PropertyRef Name="PayID" />
+    </Key>
+    <Property Name="PayID" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="NBT" Nullable="false" Type="Int64" />
+    <Property Name="Amount" Nullable="false" Precision="18" Scale="0" Type="Decimal" />
+    <Property Name="GenDate" Precision="0" Type="DateTime" />
+    <Property Name="Loaded" Nullable="false" Type="Boolean" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="Barcode">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="BarcodeNo" Nullable="false" Type="Int64" />
+    <Property Name="OnlineTest" Nullable="false" Type="Boolean" />
+    <Property Name="LastNumber" Nullable="false" MaxLength="6" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Year" Nullable="false" Type="Int32" />
+    <Property Name="CreatedBy" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DateCreated" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="ModifiedBy" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="CharacterReplacement">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="originalCharacter" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="newCharacter" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+  </EntityType>
+  <EntityType Name="DisabledWriter">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" Type="Int32" />
+    <Property Name="RefNo" Nullable="false" Type="Int64" />
+    <Property Name="VenueId" Nullable="false" Type="Int32" />
+    <Property Name="DOT" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="CategoryId" Nullable="false" Type="Int32" />
+    <Property Name="ExtraTime" Nullable="false" Type="Int32" />
+    <Property Name="CreatedBy" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DateCreated" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="ModifiedBy" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="lst_Disability">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="Category" Nullable="false" MaxLength="255" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Description" MaxLength="Max" FixedLength="false" Unicode="true" Type="String" />
+  </EntityType>
+  <EntityType Name="temp_WriterList">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="NBT" Nullable="false" Type="Int64" />
+    <Property Name="Surname" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Name" Nullable="false" MaxLength="30" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Initials" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" MaxLength="15" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Gender" MaxLength="10" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="DOB" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="Classification" MaxLength="10" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="TestLanguage" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="TestType" Nullable="false" MaxLength="10" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="VenueID" Nullable="false" Type="Int32" />
+    <Property Name="DOT" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="Mobile" MaxLength="15" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="HomeTelephone" MaxLength="15" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="EMail" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Paid" Nullable="false" Precision="19" Scale="4" Type="Decimal" />
+    <Property Name="AccountCreation" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="RegistrationDate" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="Wrote" Nullable="false" Type="Boolean" />
+    <Property Name="RowGuid" Nullable="false" Type="Guid" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="RowVersion" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" Type="Binary" />
+  </EntityType>
+  <EntityType Name="Domain">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="Name" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="description" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="created_by" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="date_created" Precision="3" Type="DateTime" />
+    <Property Name="modified_by" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="date_modified" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="Itembank">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="ItemName" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="ItemKey" Nullable="false" MaxLength="1" FixedLength="true" Unicode="false" Type="String" />
+    <Property Name="NoOfKeys" Type="Int32" />
+    <Property Name="MultipleChoice" Nullable="false" Type="Boolean" />
+    <Property Name="Cognitive_level" Type="Int32" />
+    <Property Name="Difficulty_level" Type="Int32" />
+    <Property Name="Operational" Type="Boolean" />
+    <Property Name="Subdomain_id" Type="Int32" />
+    <Property Name="Primary_cluster" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="Secondary_cluster" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="Discriminating" Nullable="false" Type="Double" />
+    <Property Name="Difficulty" Nullable="false" Type="Double" />
+    <Property Name="Guessing" Nullable="false" Type="Double" />
+    <Property Name="Description" MaxLength="Max" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="created_by" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="date_created" Precision="3" Type="DateTime" />
+    <Property Name="modified_by" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="date_modified" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="Subdomain">
+    <Key>
+      <PropertyRef Name="Id" />
+    </Key>
+    <Property Name="Id" Nullable="false" annotation:StoreGeneratedPattern="Identity" Type="Int32" />
+    <Property Name="Name" Nullable="false" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="Domain_id" Nullable="false" Type="Int32" />
+    <Property Name="Description" MaxLength="50" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="date_created" Nullable="false" Precision="3" Type="DateTime" />
+    <Property Name="date_modified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="Composit_bak">
+    <Key>
+      <PropertyRef Name="RefNo" />
+      <PropertyRef Name="Barcode" />
+      <PropertyRef Name="Surname" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="DOB" />
+      <PropertyRef Name="DOT" />
+      <PropertyRef Name="VenueCode" />
+      <PropertyRef Name="WroteAL" />
+      <PropertyRef Name="WroteQL" />
+      <PropertyRef Name="WroteMat" />
+      <PropertyRef Name="Batch" />
+      <PropertyRef Name="RowGuid" />
+      <PropertyRef Name="RowVersion" />
+      <PropertyRef Name="DateModified" />
+    </Key>
+    <Property Name="RefNo" Nullable="false" Type="Int64" />
+    <Property Name="Barcode" Nullable="false" Type="Int64" />
+    <Property Name="Surname" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Name" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Initials" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DOB" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="ID_Type" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="Classification" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Gender" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="DOT" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="VenueCode" Nullable="false" Type="Int32" />
+    <Property Name="VenueName" MaxLength="100" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="HomeLanguage" MaxLength="2" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="GR12Language" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="AQLLanguage" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="AQLCode" Type="Int32" />
+    <Property Name="MatLanguage" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="MatCode" Type="Int32" />
+    <Property Name="ALScore" Type="Int32" />
+    <Property Name="ALLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="QLScore" Type="Int32" />
+    <Property Name="QLLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="MATScore" Type="Int32" />
+    <Property Name="MATLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="WroteAL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteQL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteMat" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty2" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty3" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Batch" Nullable="false" MaxLength="22" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="RowGuid" Nullable="false" Type="Guid" />
+    <Property Name="RowVersion" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" Type="Binary" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="CompoTest">
+    <Key>
+      <PropertyRef Name="RefNo" />
+      <PropertyRef Name="Barcode" />
+      <PropertyRef Name="Surname" />
+      <PropertyRef Name="Name" />
+      <PropertyRef Name="DOB" />
+      <PropertyRef Name="DOT" />
+      <PropertyRef Name="VenueCode" />
+      <PropertyRef Name="WroteAL" />
+      <PropertyRef Name="WroteQL" />
+      <PropertyRef Name="WroteMat" />
+      <PropertyRef Name="Batch" />
+      <PropertyRef Name="RowGuid" />
+      <PropertyRef Name="RowVersion" />
+      <PropertyRef Name="DateModified" />
+    </Key>
+    <Property Name="RefNo" Nullable="false" Type="Int64" />
+    <Property Name="Barcode" Nullable="false" Type="Int64" />
+    <Property Name="Surname" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Name" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Initials" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="SAID" Type="Int64" />
+    <Property Name="ForeignID" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="DOB" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="ID_Type" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Citizenship" Type="Int32" />
+    <Property Name="Classification" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Gender" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="DOT" Nullable="false" Precision="0" Type="DateTime" />
+    <Property Name="VenueCode" Nullable="false" Type="Int32" />
+    <Property Name="VenueName" MaxLength="100" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="HomeLanguage" MaxLength="2" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="GR12Language" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="AQLLanguage" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="AQLCode" Type="Int32" />
+    <Property Name="MatLanguage" MaxLength="1" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="MatCode" Type="Int32" />
+    <Property Name="ALScore" Type="Int32" />
+    <Property Name="ALLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="QLScore" Type="Int32" />
+    <Property Name="QLLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="MATScore" Type="Int32" />
+    <Property Name="MATLevel" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="WroteAL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteQL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteMat" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty2" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty3" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Batch" Nullable="false" MaxLength="22" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="RowGuid" Nullable="false" Type="Guid" />
+    <Property Name="RowVersion" Nullable="false" MaxLength="8" FixedLength="true" annotation:StoreGeneratedPattern="Computed" Type="Binary" />
+    <Property Name="DateModified" Nullable="false" Precision="3" Type="DateTime" />
+  </EntityType>
+  <EntityType Name="LogisticsComposit">
+    <Key>
+      <PropertyRef Name="NBT_Reference" />
+      <PropertyRef Name="Surname" />
+      <PropertyRef Name="First_Name" />
+      <PropertyRef Name="WroteAL" />
+      <PropertyRef Name="WroteQL" />
+      <PropertyRef Name="WroteMat" />
+    </Key>
+    <Property Name="Test_Session_ID" Type="Int64" />
+    <Property Name="NBT_Reference" Nullable="false" Type="Int64" />
+    <Property Name="Registered_Walk_in" MaxLength="30" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Surname" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="First_Name" Nullable="false" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Middle_Initials" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="South_African_ID" Type="Int64" />
+    <Property Name="Foreign_ID" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Date_of_Birth" MaxLength="10" FixedLength="true" Unicode="false" Type="String" />
+    <Property Name="WroteAL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteQL" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="WroteMat" Nullable="false" MaxLength="3" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Student_Number" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Faculty" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Programme" MaxLength="50" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Date_of_Test" MaxLength="8" FixedLength="true" Unicode="false" Type="String" />
+    <Property Name="VenueName" MaxLength="100" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Province_Region" MaxLength="100" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="Gender" MaxLength="20" FixedLength="true" Unicode="true" Type="String" />
+    <Property Name="AL_Score" Type="Int32" />
+    <Property Name="AL_Performance" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="QLScore" Type="Int32" />
+    <Property Name="QL_Performance" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="MATScore" Type="Int32" />
+    <Property Name="Maths_Performance" MaxLength="20" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="AQL_TEST_LANGUAGE" MaxLength="1" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="MATHS_TEST_LANGUAGE" MaxLength="1" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="EasyPay_Payment" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="Bank_Payment" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+    <Property Name="AmountPaid" MaxLength="12" FixedLength="false" Unicode="false" Type="String" />
+    <Property Name="Client" MaxLength="50" FixedLength="false" Unicode="true" Type="String" />
+  </EntityType>
+</Schema>

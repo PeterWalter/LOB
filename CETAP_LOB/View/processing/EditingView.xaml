@@ -1,0 +1,58 @@
+﻿<UserControl x:Class="CETAP_LOB.View.processing.EditingView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+              xmlns:mui="http://firstfloorsoftware.com/ModernUI"
+             BorderBrush="{Binding SettingsAppearance.SelectedAccentColor,
+                                   Source={StaticResource Locator}}"
+             BorderThickness="0,1,0,0"
+             DataContext="{Binding Editing,
+                                   Source={StaticResource Locator}}">
+    <!--d:DesignHeight="506.567"
+             d:DesignWidth="699.104"
+             mc:Ignorable="d ignore">-->
+
+    <Grid>
+        <Label Width="136"
+               Height="33"
+               Margin="10,10,0,0"
+               HorizontalAlignment="Left"
+               VerticalAlignment="Top"
+               Content="Scanned Files" />
+        <ListBox Width="261"
+                 Height="254"
+                 Margin="10,48,0,0"
+                 HorizontalAlignment="Left"
+                 VerticalAlignment="Top"
+                 ItemsSource="{Binding Editing.DirList,
+                                       Source={StaticResource Locator}}"
+                 SelectionMode="Multiple">
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="IsSelected" Value="{Binding IsSelected, Mode=TwoWay}" />
+                    <Setter Property="Foreground" Value="{DynamicResource ItemText}" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+        </ListBox>
+        <Button Width="119"
+                Height="35"
+                Margin="27,321,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Command="{Binding Editing.FolderBowserCommand,
+                                  Mode=OneWay,
+                                  Source={StaticResource Locator}}"
+                Content="Get Directory" />
+        <Button Width="104"
+                Height="37"
+                Margin="167,319,0,0"
+                HorizontalAlignment="Left"
+                VerticalAlignment="Top"
+                Command="{Binding Editing.SaveScannedFileCommand,
+                                  Mode=OneWay,
+                                  Source={StaticResource Locator}}"
+                Content="Button" />
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,356 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "D:\\test\\LOB-master\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|d:\\test\\lob-master\\cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\model\\dataservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\utilities\\onlineviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\utilities\\onlineviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\view\\utilities\\onlineview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\utilities\\onlineview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\scoring\\moderationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\scoring\\moderationviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\scoring\\scoringviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\composite\\compositeviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\writers\\loadwritersviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\writers\\loadwritersviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\viewmodel\\processing\\qaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\viewmodel\\processing\\qaviewmodel.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\view\\processing\\editingview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\processing\\editingview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|D:\\test\\LOB-master\\cetap_lob\\view\\writers\\loadfileview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}",
+      "RelativeMoniker": "D:0:0:{3A687CE5-BFD9-46F7-95E4-C8BA99B15A12}|CETAP_LOB\\CETAP_LOB.csproj|solutionrelative:cetap_lob\\view\\writers\\loadfileview.xaml||{F11ACC28-31D1-4C80-A34B-F4E09D3D753C}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 333,
+          "SelectedChildIndex": 47,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:149:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:144:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:145:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:146:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:147:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:148:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:143:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:142:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:141:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:140:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:139:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:138:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:137:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:136:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:135:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:134:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:133:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:132:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:131:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:130:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:128:0:{1fc202d4-d401-403c-9834-5b218574bb67}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{e506b91c-c606-466a-90a9-123d1d1e12b3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c388b845-4151-3732-91f2-74ee20babafc}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1840856777:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:3:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:4:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:5:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:1951589028:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:617199321:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:6:0:{fabf9319-47eb-497e-b8f6-d9f73fba5f55}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{bf84ea66-d821-4dba-b1b1-2777d8574775}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{f528058d-fa8f-3483-a6b9-07e1f506eff3}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{4bc05575-bd5c-3f5c-a645-ed962d0b8662}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d40b92cc-e61e-39d8-b0a3-db3f6ee92b33}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{673a989b-a429-376c-a584-d56b20ce6e41}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{ae3699ed-404e-3bfd-a56a-e9d5efcc7ba1}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:129:0:{75188d03-9892-4ae2-abf1-207126247ce5}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{aa2115a1-9712-457b-9047-dbb71ca2cdd2}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "OnlineViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\Utilities\\OnlineViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\Utilities\\OnlineViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\Utilities\\OnlineViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\Utilities\\OnlineViewModel.cs",
+              "ViewState": "AgIAAOYAAAAAAAAAAADwv/oAAAAuAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-06T12:21:59.321Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "ModerationViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\scoring\\ModerationViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\scoring\\ModerationViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\scoring\\ModerationViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\scoring\\ModerationViewModel.cs",
+              "ViewState": "AgIAACkAAAAAAAAAAAAIwCoAAABAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-08-04T10:18:31.408Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "OnlineView.xaml",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\View\\Utilities\\OnlineView.xaml",
+              "RelativeDocumentMoniker": "CETAP_LOB\\View\\Utilities\\OnlineView.xaml",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\View\\Utilities\\OnlineView.xaml",
+              "RelativeToolTip": "CETAP_LOB\\View\\Utilities\\OnlineView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-07-10T09:30:10.5Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "CompositeViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\composite\\CompositeViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-07-10T09:29:53.616Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "LoadWritersViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\writers\\LoadWritersViewModel.cs",
+              "ViewState": "AgIAAIUBAAAAAAAAAAAgwKIBAAASAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-24T11:08:04.087Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "LoadFileView.xaml",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\View\\writers\\LoadFileView.xaml",
+              "RelativeDocumentMoniker": "CETAP_LOB\\View\\writers\\LoadFileView.xaml",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\View\\writers\\LoadFileView.xaml",
+              "RelativeToolTip": "CETAP_LOB\\View\\writers\\LoadFileView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-24T11:07:40.059Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "EditingView.xaml",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\View\\processing\\EditingView.xaml",
+              "RelativeDocumentMoniker": "CETAP_LOB\\View\\processing\\EditingView.xaml",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\View\\processing\\EditingView.xaml",
+              "RelativeToolTip": "CETAP_LOB\\View\\processing\\EditingView.xaml",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003549|",
+              "WhenOpened": "2026-06-24T11:07:11.765Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "QAViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\processing\\QAViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\processing\\QAViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\processing\\QAViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\processing\\QAViewModel.cs",
+              "ViewState": "AgIAAI0CAAAAAAAAAAAmwJMCAAAUAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-24T10:48:02.898Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "DataService.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\Model\\DataService.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\Model\\DataService.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\Model\\DataService.cs",
+              "RelativeToolTip": "CETAP_LOB\\Model\\DataService.cs",
+              "ViewState": "AgIAACsVAAAAAAAAAAAcwMsUAAA5AAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-24T07:37:55.767Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "ScoringViewModel.cs",
+              "DocumentMoniker": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "RelativeDocumentMoniker": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "ToolTip": "D:\\test\\LOB-master\\CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "RelativeToolTip": "CETAP_LOB\\ViewModel\\scoring\\ScoringViewModel.cs",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAANMAAAAQAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2026-06-19T12:04:24.091Z"
+            }
+          ]
+        },
+        {
+          "DockedHeight": 141,
+          "SelectedChildIndex": -1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{d78612c7-9962-4b83-95d9-268046dad23a}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{4a9b7e51-aa16-11d0-a8c5-00a0c921a4d2}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{605322a2-17ae-43f4-b60f-766556e46c87}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{34e76e81-ee4a-11d0-ae2e-00a0c90fffc3}"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
