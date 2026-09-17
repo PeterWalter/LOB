@@ -1,7 +1,9 @@
-﻿
 
+
+using CETAP_LOB.BDO;
 using CETAP_LOB.Helper;
 using System;
+using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Text.RegularExpressions;
@@ -53,6 +55,8 @@ namespace CETAP_LOB.Model.QA
     public const string EditedPropertyName = "Edited";
     public const string ScanNoPropertyName = "ScanNo";
     public const string IsSelectedPropertyName = "IsSelected";
+    public const string BioInfoMismatchPropertyName = "BioInfoMismatch";
+    public const string BioInfoMismatchDetailPropertyName = "BioInfoMismatchDetail";
     private DateTime _testDate;
     private int _mycount;
     private datFileAttributes _mydatFile;
@@ -86,6 +90,17 @@ namespace CETAP_LOB.Model.QA
     private string _myEdited;
     private int _myScanNo;
     private bool _isSelected;
+    private bool _bioInfoMismatch;
+    private string _bioInfoMismatchDetail = "";
+    private WritersBDO _writerRecord;
+    private bool _nameMismatch;
+    private bool _surnameMismatch;
+    private bool _referenceMismatch;
+    private bool _saidMismatch;
+    private bool _foreignIdMismatch;
+    private bool _dobMismatch;
+    private bool _genderMismatch;
+    private bool _dotMismatch;
         private int MathsOnly;
 
     public string CSX_Number { get; set; }
@@ -384,7 +399,7 @@ namespace CETAP_LOB.Model.QA
           return;
         _dob = value;
         TimeSpan timeSpan = DateTime.Now - _dob;
-        if (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 29100.0)
+        if (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 36160.0)
           AddError("DOB", "Wrong age for Matric");
         else if (!string.IsNullOrWhiteSpace(_said) || !string.IsNullOrEmpty(_said))
           CheckDOB();
@@ -438,7 +453,24 @@ namespace CETAP_LOB.Model.QA
           else
             RemoveError("IDType");
         }
-        checkerrors();
+        else if(string.IsNullOrWhiteSpace(_said) || string.IsNullOrEmpty(_said))
+        {
+                    if (CSX_Number == "761" || CSX_Number == "886" || CSX_Number == "909")
+                    {
+                        if (str != "2")
+                            AddError("IDType", "type should be 2");
+                        else
+                            RemoveError("IDType");
+                    }
+                    else if (CSX_Number == "667")
+                    {
+                        if (_myIdType == "S")
+                            AddError("IDType", "type should be F");
+                        else
+                            RemoveError("IDType");
+                    }
+                }
+                    checkerrors();
         RaisePropertyChanged("IDType");
       }
     }
@@ -1179,6 +1211,464 @@ namespace CETAP_LOB.Model.QA
       }
     }
 
+    /// <summary>
+    /// True when a matching WriterList record was found and one or more of
+    /// the candidate's biographical fields differ from it.
+    /// </summary>
+    public bool BioInfoMismatch
+    {
+      get
+      {
+        return _bioInfoMismatch;
+      }
+      private set
+      {
+        if (_bioInfoMismatch == value)
+          return;
+        _bioInfoMismatch = value;
+        RaisePropertyChanged("BioInfoMismatch");
+      }
+    }
+
+    /// <summary>
+    /// Comma separated list of the biographical fields that differ from the
+    /// matching WriterList record. Empty when there is no mismatch.
+    /// </summary>
+    public string BioInfoMismatchDetail
+    {
+      get
+      {
+        return _bioInfoMismatchDetail;
+      }
+      private set
+      {
+        if (_bioInfoMismatchDetail == value)
+          return;
+        _bioInfoMismatchDetail = value;
+        RaisePropertyChanged("BioInfoMismatchDetail");
+      }
+    }
+
+    /// <summary>True when the first name differs from the matching WriterList record.</summary>
+    public bool NameMismatch
+    {
+      get { return _nameMismatch; }
+      private set
+      {
+        if (_nameMismatch == value)
+          return;
+        _nameMismatch = value;
+        RaisePropertyChanged("NameMismatch");
+      }
+    }
+
+    /// <summary>True when the surname differs from the matching WriterList record.</summary>
+    public bool SurnameMismatch
+    {
+      get { return _surnameMismatch; }
+      private set
+      {
+        if (_surnameMismatch == value)
+          return;
+        _surnameMismatch = value;
+        RaisePropertyChanged("SurnameMismatch");
+      }
+    }
+
+    /// <summary>True when the Reference/NBT differs from the matching WriterList record.</summary>
+    public bool ReferenceMismatch
+    {
+      get { return _referenceMismatch; }
+      private set
+      {
+        if (_referenceMismatch == value)
+          return;
+        _referenceMismatch = value;
+        RaisePropertyChanged("ReferenceMismatch");
+      }
+    }
+
+    /// <summary>True when the SA ID differs from the matching WriterList record.</summary>
+    public bool SAIDMismatch
+    {
+      get { return _saidMismatch; }
+      private set
+      {
+        if (_saidMismatch == value)
+          return;
+        _saidMismatch = value;
+        RaisePropertyChanged("SAIDMismatch");
+      }
+    }
+
+    /// <summary>True when the foreign ID differs from the matching WriterList record.</summary>
+    public bool ForeignIDMismatch
+    {
+      get { return _foreignIdMismatch; }
+      private set
+      {
+        if (_foreignIdMismatch == value)
+          return;
+        _foreignIdMismatch = value;
+        RaisePropertyChanged("ForeignIDMismatch");
+      }
+    }
+
+    /// <summary>True when the date of birth differs from the matching WriterList record.</summary>
+    public bool DOBMismatch
+    {
+      get { return _dobMismatch; }
+      private set
+      {
+        if (_dobMismatch == value)
+          return;
+        _dobMismatch = value;
+        RaisePropertyChanged("DOBMismatch");
+      }
+    }
+
+    /// <summary>True when the gender differs from the matching WriterList record.</summary>
+    public bool GenderMismatch
+    {
+      get { return _genderMismatch; }
+      private set
+      {
+        if (_genderMismatch == value)
+          return;
+        _genderMismatch = value;
+        RaisePropertyChanged("GenderMismatch");
+      }
+    }
+
+    /// <summary>True when the date of test differs from the matching WriterList record.</summary>
+    public bool DOTMismatch
+    {
+      get { return _dotMismatch; }
+      private set
+      {
+        if (_dotMismatch == value)
+          return;
+        _dotMismatch = value;
+        RaisePropertyChanged("DOTMismatch");
+      }
+    }
+
+    /// <summary>True when a matching WriterList record is attached to this record.</summary>
+    public bool HasWriterRecord
+    {
+      get { return _writerRecord != null; }
+    }
+
+    /// <summary>WriterList first name, for display next to a Name mismatch.</summary>
+    public string WriterName
+    {
+      get { return _writerRecord == null ? "" : _writerRecord.Name; }
+    }
+
+    /// <summary>WriterList surname, for display next to a Surname mismatch.</summary>
+    public string WriterSurname
+    {
+      get { return _writerRecord == null ? "" : _writerRecord.Surname; }
+    }
+
+    /// <summary>WriterList NBT reference, for display next to a Reference mismatch.</summary>
+    public string WriterReference
+    {
+      get { return _writerRecord == null ? "" : _writerRecord.NBT.ToString(); }
+    }
+
+    /// <summary>WriterList SA ID, for display next to an SA ID mismatch.</summary>
+    public string WriterSAID
+    {
+      get { return _writerRecord == null || !_writerRecord.SAID.HasValue ? "" : _writerRecord.SAID.Value.ToString("D13"); }
+    }
+
+    /// <summary>WriterList foreign ID, for display next to a Foreign ID mismatch.</summary>
+    public string WriterForeignID
+    {
+      get { return _writerRecord == null ? "" : _writerRecord.ForeignID; }
+    }
+
+    /// <summary>WriterList date of birth, for display next to a DOB mismatch.</summary>
+    public string WriterDOB
+    {
+      get { return _writerRecord == null || _writerRecord.DOB == default(DateTime) ? "" : _writerRecord.DOB.ToString("yyyy/MM/dd"); }
+    }
+
+    /// <summary>WriterList gender, for display next to a Gender mismatch.</summary>
+    public string WriterGender
+    {
+      get { return _writerRecord == null ? "" : _writerRecord.Gender; }
+    }
+
+    /// <summary>WriterList date of test, for display next to a Date of Test mismatch.</summary>
+    public string WriterDOT
+    {
+      get { return _writerRecord == null || _writerRecord.DOT == default(DateTime) ? "" : _writerRecord.DOT.ToString("yyyy/MM/dd"); }
+    }
+
+    /// <summary>
+    /// Corrects a single biography field from the attached WriterList record.
+    /// The field name matches the context menu Tag used in QAView. Setting the
+    /// field re-runs validation, so the red highlight clears when it now matches.
+    /// </summary>
+    public void ApplyWriterValue(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrEmpty(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          FirstName = _writerRecord.Name;
+          break;
+        case "Surname":
+          Surname = _writerRecord.Surname;
+          break;
+        case "Reference":
+          string writerReference = _writerRecord.NBT.ToString();
+          if (writerReference.Length == 14)
+            Reference = writerReference;
+          break;
+        case "SAID":
+          SAID = _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "";
+          break;
+        case "ForeignID":
+          ForeignID = _writerRecord.ForeignID;
+          break;
+        case "DOB":
+          DOB = _writerRecord.DOB;
+          break;
+        case "Gender":
+          Gender = _writerRecord.Gender;
+          break;
+        case "DOT":
+          DOT = _writerRecord.DOT;
+          break;
+      }
+    }
+
+    /// <summary>
+    /// True when applying the WriterList value would actually change this field.
+    /// Unlike the mismatch flags this also returns true when the scanned value is
+    /// missing or unreadable (for example a Reference of "*"), so the field can
+    /// still be corrected from the WriterList. Used to enable the
+    /// "Use WriterList value" context menu entry.
+    /// </summary>
+    public bool CanApplyWriterValue(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrEmpty(field))
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return !string.IsNullOrWhiteSpace(_writerRecord.Name) && NormaliseText(_myname) != NormaliseText(_writerRecord.Name);
+        case "Surname":
+          return !string.IsNullOrWhiteSpace(_writerRecord.Surname) && NormaliseText(_surname) != NormaliseText(_writerRecord.Surname);
+        case "Reference":
+          string writerReference = _writerRecord.NBT.ToString();
+          return writerReference.Length == 14 && NormaliseText(_nbt) != NormaliseText(writerReference);
+        case "SAID":
+          return _writerRecord.SAID.HasValue && NormaliseText(_said) != NormaliseText(_writerRecord.SAID.Value.ToString("D13"));
+        case "ForeignID":
+          return !string.IsNullOrWhiteSpace(_writerRecord.ForeignID) && NormaliseText(_foreignID) != NormaliseText(_writerRecord.ForeignID);
+        case "DOB":
+          return _writerRecord.DOB != default(DateTime) && _dob.Date != _writerRecord.DOB.Date;
+        case "Gender":
+          if (string.IsNullOrWhiteSpace(_writerRecord.Gender))
+            return false;
+          string mine = NormaliseText(_gender);
+          string theirs = NormaliseText(_writerRecord.Gender);
+          string codeMine = GenderCode(mine);
+          string codeTheirs = GenderCode(theirs);
+          if (codeMine.Length > 0 && codeTheirs.Length > 0)
+            return codeMine != codeTheirs;
+          return mine != theirs;
+        case "DOT":
+          return _writerRecord.DOT != default(DateTime) && _dot.Date != _writerRecord.DOT.Date;
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>
+    /// Attaches the WriterList record matched by Reference (NBT) or, when
+    /// there is no NBT match, by SA ID. A null snapshot leaves this record
+    /// untouched by the bio information validation.
+    /// </summary>
+    public void AttachWriterRecord(WritersBDO writer)
+    {
+      _writerRecord = writer;
+      RaisePropertyChanged("HasWriterRecord");
+      RaisePropertyChanged("WriterName");
+      RaisePropertyChanged("WriterSurname");
+      RaisePropertyChanged("WriterReference");
+      RaisePropertyChanged("WriterSAID");
+      RaisePropertyChanged("WriterForeignID");
+      RaisePropertyChanged("WriterDOB");
+      RaisePropertyChanged("WriterGender");
+      RaisePropertyChanged("WriterDOT");
+      checkerrors();
+    }
+
+    /// <summary>
+    /// Compares this record's biographical information with the attached
+    /// WriterList record. Only records that matched a WriterList entry are
+    /// checked, so the existing "not found in WriterList" handling is left
+    /// untouched. A blank WriterList field is not comparable and never a
+    /// mismatch.
+    /// </summary>
+    private void ValidateBioInfo()
+    {
+      if (_writerRecord == null)
+      {
+        ClearMismatchFlags();
+        BioInfoMismatch = false;
+        BioInfoMismatchDetail = "";
+        if (_errors.ContainsKey("BioInfoMismatch"))
+          RemoveError("BioInfoMismatch");
+        return;
+      }
+
+      NameMismatch = !MatchesText(_myname, _writerRecord.Name);
+      SurnameMismatch = !MatchesText(_surname, _writerRecord.Surname);
+      ReferenceMismatch = !MatchesReference(_nbt, _writerRecord.NBT);
+      SAIDMismatch = !MatchesSAID(_said, _writerRecord.SAID);
+      ForeignIDMismatch = !MatchesText(_foreignID, _writerRecord.ForeignID);
+      DOBMismatch = !MatchesDate(_dob, _writerRecord.DOB);
+      GenderMismatch = !MatchesGender(_gender, _writerRecord.Gender);
+      DOTMismatch = !MatchesDate(_dot, _writerRecord.DOT);
+
+      List<string> mismatched = new List<string>();
+      if (NameMismatch)
+        mismatched.Add("Name");
+      if (SurnameMismatch)
+        mismatched.Add("Surname");
+      if (ReferenceMismatch)
+        mismatched.Add("NBT Reference");
+      if (SAIDMismatch)
+        mismatched.Add("SA ID");
+      if (ForeignIDMismatch)
+        mismatched.Add("Foreign ID");
+      if (DOBMismatch)
+        mismatched.Add("Date of Birth");
+      if (GenderMismatch)
+        mismatched.Add("Gender");
+      if (DOTMismatch)
+        mismatched.Add("Date of Test");
+
+      if (mismatched.Count > 0)
+      {
+        BioInfoMismatchDetail = string.Join(", ", mismatched);
+        BioInfoMismatch = true;
+        AddError("BioInfoMismatch", "Candidate's biographical information does not match the WriterList record. Fields: " + BioInfoMismatchDetail + ".");
+      }
+      else
+      {
+        BioInfoMismatchDetail = "";
+        BioInfoMismatch = false;
+        if (_errors.ContainsKey("BioInfoMismatch"))
+          RemoveError("BioInfoMismatch");
+      }
+    }
+
+    private void ClearMismatchFlags()
+    {
+      NameMismatch = false;
+      SurnameMismatch = false;
+      ReferenceMismatch = false;
+      SAIDMismatch = false;
+      ForeignIDMismatch = false;
+      DOBMismatch = false;
+      GenderMismatch = false;
+      DOTMismatch = false;
+    }
+
+    private static string NormaliseText(string value)
+    {
+      return string.IsNullOrWhiteSpace(value) ? "" : value.Trim().ToUpperInvariant();
+    }
+
+    /// <summary>Blank on either side is not comparable and never a mismatch.</summary>
+    private static bool MatchesText(string left, string right)
+    {
+      string a = NormaliseText(left);
+      string b = NormaliseText(right);
+      if (a.Length == 0 || b.Length == 0)
+        return true;
+      return a == b;
+    }
+
+    private static long? ToLong(string value)
+    {
+      long parsed;
+      if (!string.IsNullOrWhiteSpace(value) && long.TryParse(value.Trim(), out parsed))
+        return parsed;
+      return null;
+    }
+
+    private static bool MatchesSAID(string said, long? writerSAID)
+    {
+      long? mine = ToLong(said);
+      if (!mine.HasValue || !writerSAID.HasValue)
+        return true;
+      return mine.Value == writerSAID.Value;
+    }
+
+    /// <summary>
+    /// Compares the Reference/NBT with the WriterList NBT. An unparseable
+    /// reference is not comparable and never a mismatch.
+    /// </summary>
+    private static bool MatchesReference(string reference, long writerNBT)
+    {
+      long? mine = ToLong(reference);
+      if (!mine.HasValue)
+        return true;
+      return mine.Value == writerNBT;
+    }
+
+    private static string GenderCode(string value)
+    {
+      switch (NormaliseText(value))
+      {
+        case "1":
+        case "M":
+        case "MALE":
+          return "M";
+        case "2":
+        case "F":
+        case "FEMALE":
+          return "F";
+        default:
+          return "";
+      }
+    }
+
+    /// <summary>
+    /// Gender is stored as 1/2 on some CSX files and M/F on others, so the
+    /// equivalent encodings are normalised before comparing.
+    /// </summary>
+    private static bool MatchesGender(string mine, string writerGender)
+    {
+      string a = NormaliseText(mine);
+      string b = NormaliseText(writerGender);
+      if (a.Length == 0 || b.Length == 0)
+        return true;
+      string codeA = GenderCode(a);
+      string codeB = GenderCode(b);
+      if (codeA.Length == 0 || codeB.Length == 0)
+        return true;
+      return codeA == codeB;
+    }
+
+    private static bool MatchesDate(DateTime mine, DateTime writerDate)
+    {
+      if (mine == default(DateTime) || writerDate == default(DateTime))
+        return true;
+      return mine.Date == writerDate.Date;
+    }
+
     public QADatRecord()
     {
     }
@@ -1192,6 +1682,7 @@ namespace CETAP_LOB.Model.QA
 
     private void checkerrors()
     {
+      ValidateBioInfo();
       if (HasErrors)
         errorCount = _errors.Count;
       else
@@ -1204,6 +1695,84 @@ namespace CETAP_LOB.Model.QA
         AddError("DOB", "ID and DOB not the same");
       else
         RemoveError("DOB");
+    }
+
+    /// <summary>
+    /// Fields that are constants for a whole QA file. Every record in a file
+    /// must carry the same venue, test codes, test date and test languages.
+    /// </summary>
+    public static readonly string[] FileLevelFieldNames = { "VenueCode", "AQL_Code", "MatCode", "DOT", "AQL_Language", "Mat_Language" };
+
+    public static bool IsFileLevelField(string propertyName)
+    {
+      return !string.IsNullOrEmpty(propertyName) && Array.IndexOf(FileLevelFieldNames, propertyName) >= 0;
+    }
+
+    /// <summary>Reads one of the file level fields.</summary>
+    public object GetFileLevelValue(string propertyName)
+    {
+      switch (propertyName)
+      {
+        case "VenueCode":
+          return VenueCode;
+        case "AQL_Code":
+          return AQL_Code;
+        case "MatCode":
+          return MatCode;
+        case "DOT":
+          return DOT;
+        case "AQL_Language":
+          return AQL_Language;
+        case "Mat_Language":
+          return Mat_Language;
+        default:
+          return null;
+      }
+    }
+
+    /// <summary>Writes one of the file level fields.</summary>
+    public void SetFileLevelValue(string propertyName, object value)
+    {
+      switch (propertyName)
+      {
+        case "VenueCode":
+          VenueCode = value as string;
+          break;
+        case "AQL_Code":
+          AQL_Code = value as string;
+          break;
+        case "MatCode":
+          MatCode = value as string;
+          break;
+        case "DOT":
+          if (value is DateTime)
+            DOT = (DateTime)value;
+          break;
+        case "AQL_Language":
+          AQL_Language = value as string;
+          break;
+        case "Mat_Language":
+          Mat_Language = value as string;
+          break;
+      }
+    }
+
+    /// <summary>
+    /// Copies a file level field from one record to every other record so the
+    /// whole file keeps a single value for the venue, test codes, test date and
+    /// test languages. Correcting one record therefore corrects the file.
+    /// </summary>
+    public static void PropagateFileLevelField(IEnumerable<QADatRecord> records, QADatRecord source, string propertyName)
+    {
+      if (records == null || source == null || !IsFileLevelField(propertyName))
+        return;
+      object value = source.GetFileLevelValue(propertyName);
+      foreach (QADatRecord record in records)
+      {
+        if (record == null || ReferenceEquals(record, source))
+          continue;
+        record.SetFileLevelValue(propertyName, value);
+      }
     }
   }
 }

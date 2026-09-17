@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.Helper.HelperUtils
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -207,11 +207,19 @@ namespace CETAP_LOB.Helper
 
     public static string DOBfromSAID(string SAID)
     {
-      if (SAID.Length < 10)
+      // SA ID values arriving from the scan files are not guaranteed to be
+      // numeric (blank, spaces or letters are common). Guard before parsing so
+      // an unparseable value is reported as a validation error instead of
+      // throwing a FormatException out of the QA load.
+      if (string.IsNullOrWhiteSpace(SAID))
         return "";
-      SAID = Convert.ToInt64(SAID).ToString("D13");
-      if (!HelperUtils.IsNumeric(SAID.Substring(0, 6)))
-        return (string) null;
+      SAID = SAID.Trim();
+      if (SAID.Length < 10 || !HelperUtils.IsNumeric(SAID))
+        return "";
+      long value;
+      if (!long.TryParse(SAID, out value))
+        return "";
+      SAID = value.ToString("D13");
       string str1 = SAID.Substring(4, 2);
       string str2 = SAID.Substring(2, 2);
       string str3 = SAID.Substring(0, 2);

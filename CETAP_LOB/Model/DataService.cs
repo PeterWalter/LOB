@@ -1,4 +1,4 @@
-﻿using CETAP_LOB.BDO;
+using CETAP_LOB.BDO;
 using CETAP_LOB.Database;
 using CETAP_LOB.Helper;
 using CETAP_LOB.Mapping;
@@ -5523,13 +5523,13 @@ namespace CETAP_LOB.Model
             using (var context = new CETAPEntities())
             {
                 var venuesdb = context.TestVenues.ToList();
-                //var testdate = context.WriterLists
-                //    .Where(w => (w.VenueID == 99999 && w.DOT < DateTime.Now))
-                //    .OrderByDescending(w => w.DOT)
-                //    .Select(w => w.DOT)
-                //    .FirstOrDefault();
-                string mydate = "2026-06-20";
-                DateTime testdate = DateTime.Parse(mydate);
+                var testdate = context.WriterLists
+                    .Where(w => (w.VenueID == 99999 && w.DOT < DateTime.Now))
+                    .OrderByDescending(w => w.DOT)
+                    .Select(w => w.DOT)
+                    .FirstOrDefault();
+                //string mydate = "2026-06-20";
+                //DateTime testdate = DateTime.Parse(mydate);
                 var writersdb = context.WriterLists
                                  .Where(w => w.DOT == testdate)
                                  .ToList();
@@ -7486,12 +7486,122 @@ namespace CETAP_LOB.Model
             }
 
 
+            AttachWriterBioInfo(QaData);
+
             return QaData;
         }
 
         public ObservableCollection<QADatRecord> GetQARecords()
         {
             return QaData;
+        }
+
+        /// <summary>
+        /// Bio information mismatch validation.
+        /// For every QA record with a matching WriterList record (matched by
+        /// NBT/Reference first, then by SA ID) the WriterList record is attached
+        /// so the record can flag itself when name, surname, SA ID, foreign ID,
+        /// date of birth, gender or date of test differ. Records without a
+        /// WriterList match are left untouched for the existing
+        /// "not found in WriterList" handling.
+        /// </summary>
+        private void AttachWriterBioInfo(IEnumerable<QADatRecord> records)
+        {
+            if (!ApplicationSettings.Default.DBAvailable || records == null)
+                return;
+
+            List<QADatRecord> list = records.ToList();
+            if (list.Count == 0)
+                return;
+
+            List<long> nbtKeys = list
+                .Select(rec => TryParseBioKey(rec.Reference))
+                .Where(value => value.HasValue)
+                .Select(value => value.Value)
+                .Distinct()
+                .ToList();
+
+            List<long> saidKeys = list
+                .Select(rec => TryParseBioKey(rec.SAID))
+                .Where(value => value.HasValue)
+                .Select(value => value.Value)
+                .Distinct()
+                .ToList();
+
+            if (nbtKeys.Count == 0 && saidKeys.Count == 0)
+                return;
+
+            List<WriterList> writers = GetWritersForBioInfo(nbtKeys, saidKeys);
+            if (writers.Count == 0)
+                return;
+
+            Dictionary<long, WriterList> byNBT = new Dictionary<long, WriterList>();
+            Dictionary<long, WriterList> bySAID = new Dictionary<long, WriterList>();
+            foreach (WriterList writer in writers)
+            {
+                if (!byNBT.ContainsKey(writer.NBT))
+                    byNBT.Add(writer.NBT, writer);
+                if (writer.SAID.HasValue && !bySAID.ContainsKey(writer.SAID.Value))
+                    bySAID.Add(writer.SAID.Value, writer);
+            }
+
+            foreach (QADatRecord record in list)
+            {
+                WriterList match = null;
+
+                long? nbt = TryParseBioKey(record.Reference);
+                if (nbt.HasValue)
+                    byNBT.TryGetValue(nbt.Value, out match);
+
+                if (match == null)
+                {
+                    long? said = TryParseBioKey(record.SAID);
+                    if (said.HasValue)
+                        bySAID.TryGetValue(said.Value, out match);
+                }
+
+                if (match == null)
+                    continue;
+
+                WritersBDO snapshot = new WritersBDO();
+                WriterListToWriterlistBDO(snapshot, match);
+                record.AttachWriterRecord(snapshot);
+            }
+        }
+
+        /// <summary>
+        /// Loads WriterList rows for the supplied NBT and SA ID keys. The keys are
+        /// queried in chunks so the generated SQL stays below the parameter limit.
+        /// </summary>
+        private List<WriterList> GetWritersForBioInfo(List<long> nbtKeys, List<long> saidKeys)
+        {
+            const int chunkSize = 200;
+            List<WriterList> writers = new List<WriterList>();
+
+            using (var context = new CETAPEntities())
+            {
+                for (int i = 0; i < nbtKeys.Count; i += chunkSize)
+                {
+                    List<long> chunk = nbtKeys.GetRange(i, Math.Min(chunkSize, nbtKeys.Count - i));
+                    writers.AddRange(context.WriterLists.Where(w => chunk.Contains(w.NBT)).ToList());
+                }
+
+                for (int i = 0; i < saidKeys.Count; i += chunkSize)
+                {
+                    List<long> chunk = saidKeys.GetRange(i, Math.Min(chunkSize, saidKeys.Count - i));
+                    writers.AddRange(context.WriterLists.Where(w => w.SAID.HasValue && chunk.Contains(w.SAID.Value)).ToList());
+                }
+            }
+
+            return writers;
+        }
+
+        private static long? TryParseBioKey(string value)
+        {
+            long parsed;
+            if (!string.IsNullOrWhiteSpace(value) && long.TryParse(value.Trim(), out parsed))
+                return parsed;
+            return null;
         }
 
         public QADatRecord GetNBTNumberFromDBbySAID(QADatRecord SelectedRecord)

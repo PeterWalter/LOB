@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.ViewModel.processing.QAViewModel
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -14,6 +14,7 @@ using CETAP_LOB.Model.QA;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Windows;
@@ -61,6 +62,7 @@ namespace CETAP_LOB.ViewModel.processing
         private IntakeYearsBDO _intake_year;
         private QADatRecord _myQARecord;
         private ObservableCollection<QADatRecord> _myQARecords;
+        private bool _propagatingFileLevelFields;
         private datFileAttributes _myQAFile;
         private ObservableCollection<datFileAttributes> _myQAFiles;
         private string _myFolder;
@@ -255,8 +257,57 @@ public IntakeYearsBDO Intake_Year
       {
         if (_myQARecords == value)
           return;
+        DetachFileLevelFieldHandlers(_myQARecords);
         _myQARecords = value;
+        AttachFileLevelFieldHandlers(_myQARecords);
         RaisePropertyChanged("QARecords");
+      }
+    }
+
+    /// <summary>
+    /// Venue, test codes, test date and test languages are constants for a whole
+    /// QA file, so a change on one record is written to every other record. That
+    /// keeps the file consistent and correcting one record corrects them all.
+    /// </summary>
+    private void QARecord_FileLevelFieldChanged(object sender, PropertyChangedEventArgs e)
+    {
+      if (_propagatingFileLevelFields)
+        return;
+      if (!QADatRecord.IsFileLevelField(e.PropertyName))
+        return;
+      QADatRecord source = sender as QADatRecord;
+      if (source == null)
+        return;
+      _propagatingFileLevelFields = true;
+      try
+      {
+        QADatRecord.PropagateFileLevelField(_myQARecords, source, e.PropertyName);
+      }
+      finally
+      {
+        _propagatingFileLevelFields = false;
+      }
+    }
+
+    private void AttachFileLevelFieldHandlers(IEnumerable<QADatRecord> records)
+    {
+      if (records == null)
+        return;
+      foreach (QADatRecord record in records)
+      {
+        if (record != null)
+          record.PropertyChanged += QARecord_FileLevelFieldChanged;
+      }
+    }
+
+    private void DetachFileLevelFieldHandlers(IEnumerable<QADatRecord> records)
+    {
+      if (records == null)
+        return;
+      foreach (QADatRecord record in records)
+      {
+        if (record != null)
+          record.PropertyChanged -= QARecord_FileLevelFieldChanged;
       }
     }
 
