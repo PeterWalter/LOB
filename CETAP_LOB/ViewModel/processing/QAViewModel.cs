@@ -63,6 +63,8 @@ namespace CETAP_LOB.ViewModel.processing
         private QADatRecord _myQARecord;
         private ObservableCollection<QADatRecord> _myQARecords;
         private bool _propagatingFileLevelFields;
+        private readonly Dictionary<long, HashSet<string>> _folderBarcodes = new Dictionary<long, HashSet<string>>();
+        private bool _buildingFolderBarcodeIndex;
         private datFileAttributes _myQAFile;
         private ObservableCollection<datFileAttributes> _myQAFiles;
         private string _myFolder;
@@ -323,7 +325,11 @@ public IntakeYearsBDO Intake_Year
           return;
         _myQAFile = value;
         if (_myQAFile != null)
+        {
           GetQAData();
+          if (!_buildingFolderBarcodeIndex)
+            MarkBarcodeDuplicates(_myQAFile.SName);
+        }
         RaisePropertyChanged("SelectedFile");
       }
     }
@@ -683,6 +689,39 @@ public IntakeYearsBDO Intake_Year
       ModernDialog.ShowMessage(firstName + " Has been Added to Database", "Add Name", MessageBoxButton.OK);
     }
 
+    /// <summary>
+    /// Allocates a new walk-in reference for a record whose details do not match
+    /// the WriterList. The next unused NewNBTNumbers row supplies the new
+    /// reference, and the replaced reference is written back to that same row.
+    /// </summary>
+    public void AllocateWalkInReference(QADatRecord record)
+    {
+      if (record == null)
+        return;
+
+      string replaced = record.Reference;
+      NewNBTNumberBDO allocation = _service.GetNewNBTNumberFromDB();
+      if (allocation == null || allocation.NewNBT == 0)
+      {
+        ModernDialog.ShowMessage("No new NBT numbers are available to allocate.", "Walk-in reference", MessageBoxButton.OK);
+        return;
+      }
+
+      long original;
+      if (long.TryParse((replaced ?? "").Trim(), out original))
+        allocation.OriginalNBT = original;
+
+      string message = "";
+      if (!_service.UpdateNBTNumbers(allocation, ref message))
+      {
+        ModernDialog.ShowMessage(message, "Walk-in reference", MessageBoxButton.OK);
+        return;
+      }
+
+      record.Reference = allocation.NewNBT.ToString();
+      ModernDialog.ShowMessage("Reference changed from " + replaced + " to " + record.Reference + ".", "Walk-in reference", MessageBoxButton.OK);
+    }
+
     private void updateTracker()
     {
       foreach (datFileAttributes dir in (Collection<datFileAttributes>) DirList)
@@ -728,15 +767,20 @@ public IntakeYearsBDO Intake_Year
     private void Selectfolder()
     {
       List<datFileAttributes> source = new List<datFileAttributes>();
+      _folderBarcodes.Clear();
+      string lastFile = null;
       try
       {
+        _buildingFolderBarcodeIndex = true;
         foreach (FileSystemInfo file in new DirectoryInfo(Folder).GetFiles("*.dat"))
         {
           datFileAttributes datFileAttributes = new datFileAttributes(file.FullName);
           SelectedFile = datFileAttributes;
           GetQAData();
           datFileAttributes.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>) (x => x.errorCount));
+          AddFolderBarcodes(QARecords, datFileAttributes.SName);
           source.Add(datFileAttributes);
+          lastFile = datFileAttributes.SName;
           SelectedFile = (datFileAttributes) null;
         }
 
@@ -746,11 +790,116 @@ public IntakeYearsBDO Intake_Year
       {
         int num = (int) ModernDialog.ShowMessage(ex.ToString(), "Update", MessageBoxButton.OK, (Window) null);
       }
+      finally
+      {
+        _buildingFolderBarcodeIndex = false;
+      }
+
+      // The records still loaded belong to the last file read; mark them now
+      // that the folder wide barcode index is complete.
+      MarkBarcodeDuplicates(lastFile);
     }
 
     private void GetQAData()
     {
       QARecords = new ObservableCollection<QADatRecord>(_service.GetQADataFromFile(SelectedFile).OrderByDescending(a => a.errorCount));
+    }
+
+    /// <summary>Records every barcode of a file in the folder wide barcode index.</summary>
+    private void AddFolderBarcodes(IEnumerable<QADatRecord> records, string fileName)
+    {
+      if (records == null || string.IsNullOrEmpty(fileName))
+        return;
+
+      foreach (QADatRecord record in records)
+      {
+        long? barcode = ConvertBarcode(record == null ? null : record.Barcode);
+        if (!barcode.HasValue)
+          continue;
+
+        HashSet<string> files;
+        if (!_folderBarcodes.TryGetValue(barcode.Value, out files))
+        {
+          files = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+          _folderBarcodes.Add(barcode.Value, files);
+        }
+        files.Add(fileName);
+      }
+    }
+
+    /// <summary>
+    /// Marks the loaded records whose barcode is repeated within the file, appears
+    /// in another file of the QA folder, or already exists in the Composit table.
+    /// </summary>
+    private void MarkBarcodeDuplicates(string currentFile)
+    {
+      if (QARecords == null)
+        return;
+
+      List<QADatRecord> records = QARecords.Where(record => record != null).ToList();
+      foreach (QADatRecord record in records)
+        record.ClearBarcodeDuplicate();
+      if (records.Count == 0)
+        return;
+
+      // Repeated within this file.
+      var withinFile = records
+        .GroupBy(record => ConvertBarcode(record.Barcode))
+        .Where(group => group.Key.HasValue && group.Count<QADatRecord>() > 1);
+      foreach (var group in withinFile)
+      {
+        string reason = "duplicated " + group.Count<QADatRecord>() + " times in this file";
+        foreach (QADatRecord record in group)
+          record.MarkBarcodeDuplicate(reason);
+      }
+
+      // Repeated in another file of the QA folder.
+      foreach (QADatRecord record in records)
+      {
+        long? barcode = ConvertBarcode(record.Barcode);
+        if (!barcode.HasValue)
+          continue;
+
+        HashSet<string> files;
+        if (!_folderBarcodes.TryGetValue(barcode.Value, out files))
+          continue;
+
+        List<string> others = files
+          .Where(name => !string.Equals(name, currentFile, StringComparison.OrdinalIgnoreCase))
+          .ToList();
+        if (others.Count > 0)
+          record.MarkBarcodeDuplicate("also in " + string.Join(", ", others.ToArray()));
+      }
+
+      // Already held in the Composit table.
+      List<long> barcodes = records
+        .Select(record => ConvertBarcode(record.Barcode))
+        .Where(value => value.HasValue)
+        .Select(value => value.Value)
+        .Distinct()
+        .ToList();
+      if (barcodes.Count == 0)
+        return;
+
+      List<long> inComposit = _service.FindCompositBarcodes(barcodes);
+      if (inComposit == null || inComposit.Count == 0)
+        return;
+
+      HashSet<long> compositBarcodes = new HashSet<long>(inComposit);
+      foreach (QADatRecord record in records)
+      {
+        long? barcode = ConvertBarcode(record.Barcode);
+        if (barcode.HasValue && compositBarcodes.Contains(barcode.Value))
+          record.MarkBarcodeDuplicate("already exists in Composit");
+      }
+    }
+
+    private static long? ConvertBarcode(string barcode)
+    {
+      long value;
+      if (long.TryParse((barcode ?? "").Trim(), out value))
+        return value;
+      return null;
     }
 
     private void GetNBTNumber()

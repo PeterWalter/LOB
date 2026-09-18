@@ -2129,7 +2129,7 @@ namespace CETAP_LOB.Model
             compositBDO.WroteQL = composit.WroteQL;
             compositBDO.WroteMat = composit.WroteMat;
             compositBDO.DateModified = composit.DateModified;
-            compositBDO.Batch = compositBDO.Batch;
+            compositBDO.Batch = composit.Batch;
 
         }
 
@@ -3614,6 +3614,8 @@ namespace CETAP_LOB.Model
             using (var context = new CETAPEntities())
             {
                 NewNBTNumber name = context.NewNBTNumbers.Where(x => x.OriginalNBT == null).Select(x => x).FirstOrDefault();
+                if (name == null)
+                    return null;
                 NewNBTDALToNewNBTBDO(task, name);
             }
             return task;
@@ -7487,6 +7489,7 @@ namespace CETAP_LOB.Model
 
 
             AttachWriterBioInfo(QaData);
+            AttachCompositWalkInInfo(QaData);
 
             return QaData;
         }
@@ -7595,6 +7598,126 @@ namespace CETAP_LOB.Model
 
             return writers;
         }
+
+        /// <summary>
+        /// Walk-in reference check.
+        /// A reference whose 8th character is a 9 is a walk-in writer number. For
+        /// every such record the Composit table is searched by SA ID or Foreign ID
+        /// to see whether the same person already appears under a different RefNo.
+        /// </summary>
+        private void AttachCompositWalkInInfo(IEnumerable<QADatRecord> records)
+        {
+            if (!ApplicationSettings.Default.DBAvailable || records == null)
+                return;
+
+            List<QADatRecord> walkIns = records
+                .Where(rec => rec != null && QADatRecord.IsWalkInReference(rec.Reference))
+                .ToList();
+            if (walkIns.Count == 0)
+                return;
+
+            List<long> saidKeys = walkIns
+                .Select(rec => TryParseBioKey(rec.SAID))
+                .Where(value => value.HasValue)
+                .Select(value => value.Value)
+                .Distinct()
+                .ToList();
+
+            List<string> foreignKeys = walkIns
+                .Select(rec => (rec.ForeignID ?? "").Trim())
+                .Where(value => value.Length > 0)
+                .Distinct()
+                .ToList();
+
+            if (saidKeys.Count == 0 && foreignKeys.Count == 0)
+                return;
+
+            List<Composit> composits = GetCompositsForWalkIns(saidKeys, foreignKeys);
+            if (composits.Count == 0)
+                return;
+
+            Dictionary<long, List<Composit>> bySAID = new Dictionary<long, List<Composit>>();
+            Dictionary<string, List<Composit>> byForeignID = new Dictionary<string, List<Composit>>();
+            foreach (Composit composit in composits)
+            {
+                if (composit.SAID.HasValue)
+                {
+                    if (!bySAID.ContainsKey(composit.SAID.Value))
+                        bySAID.Add(composit.SAID.Value, new List<Composit>());
+                    bySAID[composit.SAID.Value].Add(composit);
+                }
+                string foreign = (composit.ForeignID ?? "").Trim();
+                if (foreign.Length > 0)
+                {
+                    if (!byForeignID.ContainsKey(foreign))
+                        byForeignID.Add(foreign, new List<Composit>());
+                    byForeignID[foreign].Add(composit);
+                }
+            }
+
+            foreach (QADatRecord record in walkIns)
+            {
+                long? recordReference = TryParseBioKey(record.Reference);
+                Composit match = null;
+
+                long? said = TryParseBioKey(record.SAID);
+                if (said.HasValue && bySAID.ContainsKey(said.Value))
+                    match = FirstDifferentCompositReference(bySAID[said.Value], recordReference);
+
+                if (match == null)
+                {
+                    string foreign = (record.ForeignID ?? "").Trim();
+                    if (foreign.Length > 0 && byForeignID.ContainsKey(foreign))
+                        match = FirstDifferentCompositReference(byForeignID[foreign], recordReference);
+                }
+
+                if (match != null)
+                {
+                    CompositBDO snapshot = new CompositBDO();
+                    CompositDALToCompositBDO(snapshot, match);
+                    record.AttachCompositRecord(snapshot);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Picks the first Composit row carrying a reference different from the
+        /// scanned one, so a person who only ever appears under one reference is
+        /// not flagged.
+        /// </summary>
+        private static Composit FirstDifferentCompositReference(List<Composit> candidates, long? reference)
+        {
+            foreach (Composit candidate in candidates)
+            {
+                if (!reference.HasValue || candidate.RefNo != reference.Value)
+                    return candidate;
+            }
+            return null;
+        }
+
+        private List<Composit> GetCompositsForWalkIns(List<long> saidKeys, List<string> foreignKeys)
+        {
+            const int chunkSize = 200;
+            List<Composit> composits = new List<Composit>();
+
+            using (var context = new CETAPEntities())
+            {
+                for (int i = 0; i < saidKeys.Count; i += chunkSize)
+                {
+                    List<long> chunk = saidKeys.GetRange(i, Math.Min(chunkSize, saidKeys.Count - i));
+                    composits.AddRange(context.Composits.Where(c => c.SAID.HasValue && chunk.Contains(c.SAID.Value)).ToList());
+                }
+
+                for (int i = 0; i < foreignKeys.Count; i += chunkSize)
+                {
+                    List<string> chunk = foreignKeys.GetRange(i, Math.Min(chunkSize, foreignKeys.Count - i));
+                    composits.AddRange(context.Composits.Where(c => chunk.Contains(c.ForeignID)).ToList());
+                }
+            }
+
+            return composits;
+        }
+
 
         private static long? TryParseBioKey(string value)
         {
@@ -8483,6 +8606,38 @@ namespace CETAP_LOB.Model
             return TrialData;
         }
         #endregion
+
+        /// <summary>
+        /// Returns the supplied barcodes that already exist in the Composit table.
+        /// The lookup is not limited to an intake year, so a barcode reused in a
+        /// later year is reported as well.
+        /// </summary>
+        public List<long> FindCompositBarcodes(IEnumerable<long> barcodes)
+        {
+            List<long> found = new List<long>();
+            if (barcodes == null || !ApplicationSettings.Default.DBAvailable)
+                return found;
+
+            List<long> keys = barcodes.Distinct().ToList();
+            if (keys.Count == 0)
+                return found;
+
+            const int chunkSize = 200;
+            using (var context = new CETAPEntities())
+            {
+                for (int i = 0; i < keys.Count; i += chunkSize)
+                {
+                    List<long> chunk = keys.GetRange(i, Math.Min(chunkSize, keys.Count - i));
+                    found.AddRange(context.Composits
+                        .Where(c => chunk.Contains(c.Barcode))
+                        .Select(c => c.Barcode)
+                        .Distinct()
+                        .ToList());
+                }
+            }
+
+            return found;
+        }
 
         public List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords)
         {

@@ -102,7 +102,7 @@ One row per candidate. Rows are sorted by error count, highest first.
 | **Errors** | Number of validation errors on the record (see section 7) |
 | **ScanNo** | Scan sequence number within the batch |
 | **Edited** | Edit marker carried on the record |
-| **Barcode** | 12-character session/barcode |
+| **Barcode** | 12-character session/barcode. Shown in **amber** when the barcode is a duplicate (section 11.1) |
 | **NBT Reference** | 14-character NBT number |
 | **Surname** | Candidate surname |
 | **First Name** | Candidate first name |
@@ -171,8 +171,12 @@ field adds an error; the **Errors** column is the number of failing fields.
   message appears as a tooltip on the field - **red always means a validation error**.
 - Bio-information differences against the WriterList are shown in **purple** on the
   affected fields (section 9), so they are never confused with validation errors.
+- A walk-in reference that already exists in Composit under a different reference is
+  shown in **blue** on the **NBT Reference** field (section 9.5).
+- A duplicated barcode is shown in **amber** on the **Barcode** field (section 11.1).
 - Correcting a field clears its marking immediately: a field is only coloured while its
-  value still fails validation, or still differs from the matching WriterList record.
+  value still fails validation, still differs from the matching WriterList record, or is
+  still a conflicting walk-in reference.
 
 ---
 
@@ -212,7 +216,7 @@ AutoClean only changes records that failed validation; clean records are untouch
 
 ---
 
-## 9. Bio information mismatch against the WriterList
+## 9. Comparison against the WriterList and Composit
 
 Every record that can be matched to a candidate in the WriterList is compared with
 the WriterList details.
@@ -235,11 +239,15 @@ A record with no match is left alone. It is **not** flagged by this check.
 | Foreign ID | Foreign ID |
 | Date of Birth | DOB |
 | Gender | Gender |
-| Date of Test | DOT |
 
 Text comparisons ignore letter case and surrounding spaces. Dates are compared by
 calendar day. Gender is treated as equivalent across encodings (`1` = `M`, `2` = `F`).
 A field that is blank on the WriterList side is **not** treated as a mismatch.
+
+**Date of Test is deliberately not compared.** It is a file-level constant (section 10)
+already validated against the batch test date, while the WriterList holds the
+candidate's registered test date - those can differ legitimately, so comparing them
+produced false mismatches.
 
 ### 9.3 How a mismatch is shown
 
@@ -264,6 +272,38 @@ would actually change it - including when the scanned value is missing or unread
 filled in from the WriterList. For all other columns the menu is unchanged.
 
 ---
+
+### 9.5 Walk-in references and Composit
+
+A reference whose **8th character is a `9`** is a **walk-in writer number**. It is
+issued on the spot, so the candidate normally has no WriterList entry.
+
+For every walk-in reference QAView searches the **Composit** table by the candidate's
+**SA ID** (or **Foreign ID** when there is no SA ID):
+
+- If the same person already appears in Composit under a **different reference**, the
+  record is marked as an error and the **NBT Reference** field is shown in **blue**.
+- Right-click that reference to see the matching **Composit record** (its reference,
+  name, surname, initials, SA ID, foreign ID, date of birth, gender, date of test,
+  classification, venue and batch) for comparison, plus a **Use Composit reference**
+  entry that replaces the walk-in reference with the Composit reference.
+- If the person is not found, or only appears under the same reference, nothing is
+  flagged.
+
+### 9.6 Allocating a new walk-in reference
+
+When a record carries a **proper** reference (8th character is not `9`) but its
+**name, surname, SA ID or foreign ID** differs from the WriterList, the right-click
+menu offers **Allocate new walk-in reference**. This:
+
+1. Takes the next unused number from the `NewNBTNumbers` table (the first row whose
+   `OriginalNBT` is empty).
+2. Sets it as the record's **NBT Reference**.
+3. Writes the **replaced reference** into that row's `OriginalNBT` and marks the row
+   `Used`, with the current date and time.
+
+If no unused number is available a message is shown and nothing changes. The change
+applies to the record in the grid - save the file afterwards as usual.
 
 ## 10. File-level values (constants for the whole file)
 
@@ -307,6 +347,28 @@ to re-run the option after corrections.
 
 If no duplicates are found the barcodes are placed on the scoring queue and a
 confirmation is shown.
+
+### 11.1 Inline duplicate barcode marking
+
+The grid marks duplicate barcodes as you work, so you can see the problem on the
+record itself instead of waiting for the report. A record whose barcode is repeated
+is shown in **amber** on its **Barcode** field, and hovering it says why:
+
+| Marked when | Reason shown |
+|---|---|
+| The barcode appears more than once **in the same file** | *duplicated N times in this file* |
+| The barcode appears **in another file** in the QA folder | *also in <file names>* |
+| The barcode **already exists in the Composit table** | *already exists in Composit* |
+
+More than one reason is listed together, separated by a semicolon. The duplicate also
+counts towards the record's **Errors** column.
+
+The folder-wide list of barcodes is collected during **Refresh**, when every file in
+the QA folder is read anyway, so opening a file marks it immediately. Choose
+**Refresh Directory** after files are added to or removed from the QA folder. Editing
+a barcode clears its marking; the record is re-checked the next time the file is
+opened. The Composit lookup is not limited to the intake year, so a barcode reused in
+a later year is reported too.
 
 ---
 
@@ -360,8 +422,16 @@ Right-click a candidate row (or any non-bio cell) to reach:
 | **Add Surname to Database** | Adds the record's surname to the database surname list. |
 | **Add First Name to Database** | Adds the record's first name to the database first-name list. |
 
-On the eight bio columns the menu instead shows the **Use WriterList value** entry
-(section 9.4) at the top, followed by a separator and the items above.
+QAView adds the comparison entries that apply to the record you right-clicked at the
+top of the menu, followed by a separator and the items above:
+
+| Entry | Shown when | Action |
+|---|---|---|
+| **Use WriterList value: <value>** | a biography column is right-clicked and the record has a WriterList match | copies that field's WriterList value (section 9.4) |
+| **WriterList record** block | the record has a WriterList match | shows the full WriterList record for comparison |
+| **Use Composit reference: <RefNo>** | the walk-in reference exists in Composit under another reference | replaces the reference (section 9.5) |
+| **Composit record** block | as above | shows the matching Composit record |
+| **Allocate new walk-in reference** | the reference is proper and the name, surname, SA ID or foreign ID differs from the WriterList | allocates a new walk-in reference (section 9.6) |
 
 ---
 
@@ -414,6 +484,11 @@ formats are `667`, `761`, `886` and `909`.
 | Every row shows the same venue/date/language error | The file-level value is wrong (or the file name is wrong). Correct it once on any row; it applies to the whole file. |
 | Database commands do nothing | The database is unavailable. Check connectivity and restart; `DBAvailable` is set at start-up. |
 | A purple bio field will not clear | The WriterList value and the scanned value may both be wrong, or the candidate is genuinely different. Use the right-click **Use WriterList value** entry or edit the field; check the database record. |
+| An **NBT Reference** is shown in blue | The walk-in reference already exists in Composit under a different reference (section 9.5). Right-click it to compare the two records and, if the Composit reference is the right one, click **Use Composit reference**. |
+| **Allocate new walk-in reference** reports that no numbers are available | Every row in `NewNBTNumbers` has been used (`OriginalNBT` filled). A new batch of walk-in numbers has to be loaded into that table before more can be issued. |
+| **Allocate new walk-in reference** is not on the menu | It only appears for a *proper* reference (8th character not `9`) whose name, surname, SA ID or foreign ID differs from the WriterList (section 9.6). |
+| A **Barcode** is shown in amber | The barcode is a duplicate - repeated in the file, present in another QA file, or already in Composit (section 11.1). Hover it for the reason. |
+| Ambers barcodes are not shown after adding files to the QA folder | The folder barcode list is built during Refresh. Click **Refresh Directory**. |
 | **Duplicate Barcodes** / **Write Excel Summary data** are greyed out | They only enable when every file in the QA list has zero errors. |
 | **SummaryForScoring.xlsx** cannot be saved | The file may be open in Excel. Close it and re-run. |
 
@@ -431,3 +506,7 @@ formats are `667`, `761`, `886` and `909`.
 | **File-level value** | A value that must be identical for every record in the file (venue, test date, languages, test codes). |
 | **AutoClean** | The automatic repair pass over all failing records. |
 | **Tracker** | The scan tracker that records when a batch was QA'd and sent for scoring. |
+| **Walk-in reference** | An NBT number issued on the spot. Its 8th character is `9`, and the candidate normally has no WriterList entry. |
+| **Composit** | The database table holding a candidate's composite (scored) record, keyed by `RefNo`. QAView uses it to find a walk-in who already exists under a different reference. |
+| **NewNBTNumbers** | The database table of unused walk-in numbers. `NewNBT` is the number issued; `OriginalNBT` records the reference it replaced. |
+| **Duplicate barcode** | A barcode that appears more than once in a file, in more than one QA file, or already in the Composit table. Shown in amber in the grid (section 11.1). |

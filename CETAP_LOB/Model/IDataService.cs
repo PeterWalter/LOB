@@ -1,4 +1,4 @@
-﻿using CETAP_LOB.BDO;
+using CETAP_LOB.BDO;
 using CETAP_LOB.Database;
 using CETAP_LOB.Helper;
 using CETAP_LOB.Model.QA;
@@ -189,6 +189,9 @@ namespace CETAP_LOB.Model
         ObservableCollection<ForDuplicatesBarcodesBDO> GetBatchesInQueue();
         bool DuplicateReportGeneration(List<ForDuplicatesBarcodesBDO> Duplicates, string filename);
         List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords);
+
+    /// <summary>Returns the supplied barcodes that already exist in the Composit table.</summary>
+    List<long> FindCompositBarcodes(IEnumerable<long> barcodes);
        
         // Remotes reports queries
         ObservableCollection<CompositBDO> GetAllRemoteScoresByIntakeYear(IntakeYearsBDO intakeYear);

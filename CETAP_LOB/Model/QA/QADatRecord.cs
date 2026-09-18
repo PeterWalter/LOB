@@ -100,7 +100,10 @@ namespace CETAP_LOB.Model.QA
     private bool _foreignIdMismatch;
     private bool _dobMismatch;
     private bool _genderMismatch;
-    private bool _dotMismatch;
+    private bool _walkInReferenceMismatch;
+    private CompositBDO _compositRecord;
+    private bool _barcodeDuplicate;
+    private string _barcodeDuplicateReason = "";
         private int MathsOnly;
 
     public string CSX_Number { get; set; }
@@ -206,6 +209,8 @@ namespace CETAP_LOB.Model.QA
         }
         else
           AddError("Barcode", "Barcode number cannot be empty");
+        // A changed barcode invalidates any previous duplicate determination.
+        ClearBarcodeDuplicate();
         checkerrors();
         RaisePropertyChanged("Barcode");
       }
@@ -1398,19 +1403,6 @@ namespace CETAP_LOB.Model.QA
       }
     }
 
-    /// <summary>True when the date of test differs from the matching WriterList record.</summary>
-    public bool DOTMismatch
-    {
-      get { return _dotMismatch; }
-      private set
-      {
-        if (_dotMismatch == value)
-          return;
-        _dotMismatch = value;
-        RaisePropertyChanged("DOTMismatch");
-      }
-    }
-
     /// <summary>True when a matching WriterList record is attached to this record.</summary>
     public bool HasWriterRecord
     {
@@ -1463,6 +1455,201 @@ namespace CETAP_LOB.Model.QA
     public string WriterDOT
     {
       get { return _writerRecord == null || _writerRecord.DOT == default(DateTime) ? "" : _writerRecord.DOT.ToString("yyyy/MM/dd"); }
+    }
+
+    /// <summary>True when a Composit record was found for this walk-in reference.</summary>
+    public bool HasCompositRecord
+    {
+      get { return _compositRecord != null; }
+    }
+
+    /// <summary>
+    /// True when this record carries a walk-in reference that already exists in
+    /// Composit under a different RefNo for the same person.
+    /// </summary>
+    public bool WalkInReferenceMismatch
+    {
+      get { return _walkInReferenceMismatch; }
+      private set
+      {
+        if (_walkInReferenceMismatch == value)
+          return;
+        _walkInReferenceMismatch = value;
+        RaisePropertyChanged("WalkInReferenceMismatch");
+      }
+    }
+
+    public string CompositReference
+    {
+      get { return _compositRecord == null ? "" : _compositRecord.RefNo.ToString(); }
+    }
+
+    public string CompositName
+    {
+      get { return _compositRecord == null ? "" : _compositRecord.Name; }
+    }
+
+    public string CompositSurname
+    {
+      get { return _compositRecord == null ? "" : _compositRecord.Surname; }
+    }
+
+    public string CompositSAID
+    {
+      get { return _compositRecord == null || !_compositRecord.SAID.HasValue ? "" : _compositRecord.SAID.Value.ToString("D13"); }
+    }
+
+    public string CompositForeignID
+    {
+      get { return _compositRecord == null ? "" : _compositRecord.ForeignID; }
+    }
+
+    public string CompositDOB
+    {
+      get { return _compositRecord == null || _compositRecord.DOB == default(DateTime) ? "" : _compositRecord.DOB.ToString("yyyy/MM/dd"); }
+    }
+
+    public string CompositGender
+    {
+      get { return _compositRecord == null ? "" : _compositRecord.Gender; }
+    }
+
+    public string CompositDOT
+    {
+      get { return _compositRecord == null || _compositRecord.DOT == default(DateTime) ? "" : _compositRecord.DOT.ToString("yyyy/MM/dd"); }
+    }
+
+    /// <summary>True when the Composit reference would change this record.</summary>
+    public bool CanApplyCompositReference
+    {
+      get { return _compositRecord != null && ToLong(_nbt) != _compositRecord.RefNo; }
+    }
+
+    /// <summary>
+    /// True when the reference is a walk-in writer number, that is a reference
+    /// whose 8th character is a 9.
+    /// </summary>
+    public static bool IsWalkInReference(string reference)
+    {
+      if (string.IsNullOrWhiteSpace(reference))
+        return false;
+      string value = reference.Trim();
+      return value.Length >= 8 && value[7] == '9';
+    }
+
+    /// <summary>Attaches the Composit record found for a walk-in reference.</summary>
+    public void AttachCompositRecord(CompositBDO composit)
+    {
+      _compositRecord = composit;
+      RaisePropertyChanged("HasCompositRecord");
+      RaisePropertyChanged("CompositReference");
+      RaisePropertyChanged("CompositName");
+      RaisePropertyChanged("CompositSurname");
+      RaisePropertyChanged("CompositSAID");
+      RaisePropertyChanged("CompositForeignID");
+      RaisePropertyChanged("CompositDOB");
+      RaisePropertyChanged("CompositGender");
+      RaisePropertyChanged("CompositDOT");
+      RaisePropertyChanged("CanApplyCompositReference");
+      checkerrors();
+    }
+
+    /// <summary>Replaces this record's walk-in reference with the Composit reference.</summary>
+    public void ApplyCompositReference()
+    {
+      if (_compositRecord == null)
+        return;
+      string value = _compositRecord.RefNo.ToString();
+      if (value.Length == 14)
+        Reference = value;
+    }
+
+    /// <summary>True when this record's barcode is duplicated.</summary>
+    public bool BarcodeDuplicate
+    {
+      get { return _barcodeDuplicate; }
+      private set
+      {
+        if (_barcodeDuplicate == value)
+          return;
+        _barcodeDuplicate = value;
+        RaisePropertyChanged("BarcodeDuplicate");
+      }
+    }
+
+    /// <summary>Why the barcode is considered a duplicate.</summary>
+    public string BarcodeDuplicateReason
+    {
+      get { return _barcodeDuplicateReason; }
+      private set
+      {
+        if (_barcodeDuplicateReason == value)
+          return;
+        _barcodeDuplicateReason = value;
+        RaisePropertyChanged("BarcodeDuplicateReason");
+      }
+    }
+
+    /// <summary>
+    /// Marks this record's barcode as duplicated. Reasons accumulate, so a
+    /// barcode repeated in the file and already held in Composit reports both.
+    /// </summary>
+    public void MarkBarcodeDuplicate(string reason)
+    {
+      if (string.IsNullOrWhiteSpace(reason))
+        return;
+
+      List<string> reasons = new List<string>();
+      if (!string.IsNullOrEmpty(_barcodeDuplicateReason))
+        reasons.AddRange(_barcodeDuplicateReason.Split(new string[] { "; " }, StringSplitOptions.RemoveEmptyEntries));
+      if (!reasons.Contains(reason))
+        reasons.Add(reason);
+
+      BarcodeDuplicateReason = string.Join("; ", reasons.ToArray());
+      BarcodeDuplicate = true;
+      AddError("BarcodeDuplicate", "Duplicate barcode: " + BarcodeDuplicateReason + ".");
+      checkerrors();
+    }
+
+    /// <summary>Clears the duplicate barcode marking.</summary>
+    public void ClearBarcodeDuplicate()
+    {
+      if (_barcodeDuplicate)
+        BarcodeDuplicate = false;
+      if (!string.IsNullOrEmpty(_barcodeDuplicateReason))
+        BarcodeDuplicateReason = "";
+      if (_errors.ContainsKey("BarcodeDuplicate"))
+        RemoveError("BarcodeDuplicate");
+      checkerrors();
+    }
+
+    /// <summary>
+    /// The matching Composit record as display lines for the grid context menu.
+    /// Only populated values are listed.
+    /// </summary>
+    public List<string> GetCompositRecordLines()
+    {
+      List<string> lines = new List<string>();
+      if (_compositRecord == null)
+        return lines;
+
+      lines.Add("Composit record");
+      AddWriterLine(lines, "Name", _compositRecord.Name);
+      AddWriterLine(lines, "Surname", _compositRecord.Surname);
+      AddWriterLine(lines, "Initials", _compositRecord.Initials);
+      lines.Add("Reference: " + _compositRecord.RefNo);
+      if (_compositRecord.SAID.HasValue)
+        lines.Add("SA ID: " + _compositRecord.SAID.Value.ToString("D13"));
+      AddWriterLine(lines, "Foreign ID", _compositRecord.ForeignID);
+      if (_compositRecord.DOB != default(DateTime))
+        lines.Add("Date of Birth: " + _compositRecord.DOB.ToString("yyyy/MM/dd"));
+      AddWriterLine(lines, "Gender", _compositRecord.Gender);
+      if (_compositRecord.DOT != default(DateTime))
+        lines.Add("Date of Test: " + _compositRecord.DOT.ToString("yyyy/MM/dd"));
+      AddWriterLine(lines, "Classification", _compositRecord.Classification);
+      AddWriterLine(lines, "Venue", _compositRecord.VenueName);
+      AddWriterLine(lines, "Batch", _compositRecord.Batch);
+      return lines;
     }
 
     /// <summary>
@@ -1637,7 +1824,6 @@ namespace CETAP_LOB.Model.QA
       ForeignIDMismatch = !MatchesText(_foreignID, _writerRecord.ForeignID);
       DOBMismatch = !MatchesDate(_dob, _writerRecord.DOB);
       GenderMismatch = !MatchesGender(_gender, _writerRecord.Gender);
-      DOTMismatch = !MatchesDate(_dot, _writerRecord.DOT);
 
       List<string> mismatched = new List<string>();
       if (NameMismatch)
@@ -1654,8 +1840,6 @@ namespace CETAP_LOB.Model.QA
         mismatched.Add("Date of Birth");
       if (GenderMismatch)
         mismatched.Add("Gender");
-      if (DOTMismatch)
-        mismatched.Add("Date of Test");
 
       if (mismatched.Count > 0)
       {
@@ -1672,6 +1856,26 @@ namespace CETAP_LOB.Model.QA
       }
     }
 
+    /// <summary>
+    /// Flags a walk-in reference that already exists in Composit under a
+    /// different RefNo for the same person.
+    /// </summary>
+    private void ValidateWalkInReference()
+    {
+      long? reference = ToLong(_nbt);
+      bool conflict = _compositRecord != null
+                      && IsWalkInReference(_nbt)
+                      && reference.HasValue
+                      && reference.Value != _compositRecord.RefNo;
+
+      WalkInReferenceMismatch = conflict;
+
+      if (conflict)
+        AddError("WalkInReference", "Walk-in reference " + reference.Value + " already exists in Composit as " + _compositRecord.RefNo + ".");
+      else if (_errors.ContainsKey("WalkInReference"))
+        RemoveError("WalkInReference");
+    }
+
     private void ClearMismatchFlags()
     {
       NameMismatch = false;
@@ -1681,7 +1885,6 @@ namespace CETAP_LOB.Model.QA
       ForeignIDMismatch = false;
       DOBMismatch = false;
       GenderMismatch = false;
-      DOTMismatch = false;
     }
 
     private static string NormaliseText(string value)
@@ -1794,6 +1997,7 @@ namespace CETAP_LOB.Model.QA
     private void checkerrors()
     {
       ValidateBioInfo();
+      ValidateWalkInReference();
       if (HasErrors)
         errorCount = _errors.Count;
       else

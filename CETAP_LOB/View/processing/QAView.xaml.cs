@@ -13,6 +13,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using CETAP_LOB.Model.QA;
+using CETAP_LOB.ViewModel.processing;
 
 namespace CETAP_LOB.View.processing
 {
@@ -21,10 +22,14 @@ namespace CETAP_LOB.View.processing
     /// </summary>
     public partial class QAView : UserControl
     {
+        private readonly List<object> _dynamicMenuItems = new List<object>();
         private MenuItem _writerValueMenuItem;
         private MenuItem _writerRecordMenuItem;
-        private Separator _writerValueSeparator;
-        private QADatRecord _writerValueRecord;
+        private MenuItem _compositValueMenuItem;
+        private MenuItem _compositRecordMenuItem;
+        private MenuItem _allocateWalkInMenuItem;
+        private Separator _dynamicMenuSeparator;
+        private QADatRecord _menuRecord;
 
         public QAView()
         {
@@ -33,13 +38,11 @@ namespace CETAP_LOB.View.processing
 
         private void ModernButton_Click(object sender, RoutedEventArgs e)
         {
-
         }
 
         /// <summary>
-        /// Adds the WriterList value for the right clicked column to the grid's
-        /// existing context menu. The item is only added for the biography
-        /// columns when the record has a matching WriterList entry.
+        /// Adds the WriterList and Composit comparison entries to the top of the
+        /// grid's existing context menu for the record that was right clicked.
         /// </summary>
         private void QAGrid_ContextMenuOpening(object sender, ContextMenuEventArgs e)
         {
@@ -47,50 +50,119 @@ namespace CETAP_LOB.View.processing
             if (grid == null || grid.ContextMenu == null)
                 return;
 
-            RemoveWriterValueItems(grid);
+            RemoveDynamicMenuItems(grid);
 
             DataGridCell cell = FindAncestor<DataGridCell>(e.OriginalSource as DependencyObject);
             QADatRecord record = cell == null ? null : cell.DataContext as QADatRecord;
             if (record == null)
                 record = grid.SelectedItem as QADatRecord;
+            if (record == null)
+                return;
+
+            EnsureMenuItems();
 
             string field = FieldForColumn(cell == null || cell.Column == null ? null : cell.Column.Header as string);
-            if (record == null || field == null || !record.HasWriterRecord)
-                return;
+            _menuRecord = record;
 
-            if (_writerValueMenuItem == null)
+            List<object> entries = new List<object>();
+
+            if (record.HasWriterRecord)
             {
-                _writerValueMenuItem = new MenuItem();
-                _writerValueMenuItem.Click += UseWriterListValue_Click;
-                _writerRecordMenuItem = new MenuItem();
-                _writerRecordMenuItem.IsHitTestVisible = false;
-                _writerRecordMenuItem.Focusable = false;
-                _writerValueSeparator = new Separator();
+                if (field != null)
+                {
+                    _writerValueMenuItem.Header = "Use WriterList value: " + WriterValueFor(record, field);
+                    _writerValueMenuItem.Tag = field;
+                    _writerValueMenuItem.ToolTip = "Copy the value recorded in the WriterList for this column";
+                    _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
+                    entries.Add(_writerValueMenuItem);
+                }
+
+                _writerRecordMenuItem.Header = BuildRecordHeader(record.GetWriterRecordLines());
+                _writerRecordMenuItem.ToolTip = "The matching WriterList record";
+                entries.Add(_writerRecordMenuItem);
             }
 
-            _writerValueRecord = record;
-            _writerValueMenuItem.Header = "Use WriterList value: " + WriterValueFor(record, field);
-            _writerValueMenuItem.Tag = field;
-            _writerValueMenuItem.ToolTip = "Copy the value recorded in the WriterList for this column";
-            _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
+            if (record.HasCompositRecord)
+            {
+                _compositValueMenuItem.Header = "Use Composit reference: " + record.CompositReference;
+                _compositValueMenuItem.ToolTip = "Change the walk-in reference to the reference held in Composit";
+                _compositValueMenuItem.IsEnabled = record.CanApplyCompositReference;
+                entries.Add(_compositValueMenuItem);
 
-            // The full matching WriterList record, shown directly below the value.
-            _writerRecordMenuItem.Header = new TextBlock { Text = string.Join(Environment.NewLine, record.GetWriterRecordLines()) };
-            _writerRecordMenuItem.ToolTip = "The matching WriterList record";
+                _compositRecordMenuItem.Header = BuildRecordHeader(record.GetCompositRecordLines());
+                _compositRecordMenuItem.ToolTip = "The matching Composit record";
+                entries.Add(_compositRecordMenuItem);
+            }
 
-            grid.ContextMenu.Items.Insert(0, _writerValueSeparator);
-            grid.ContextMenu.Items.Insert(0, _writerRecordMenuItem);
-            grid.ContextMenu.Items.Insert(0, _writerValueMenuItem);
+            if (CanAllocateWalkInReference(record))
+            {
+                _allocateWalkInMenuItem.ToolTip = "Allocate an unused walk-in reference and record the replaced reference";
+                entries.Add(_allocateWalkInMenuItem);
+            }
+
+            if (entries.Count == 0)
+            {
+                _menuRecord = null;
+                return;
+            }
+
+            entries.Add(_dynamicMenuSeparator);
+            for (int i = entries.Count - 1; i >= 0; i--)
+                grid.ContextMenu.Items.Insert(0, entries[i]);
+            _dynamicMenuItems.AddRange(entries);
         }
 
-        private void RemoveWriterValueItems(DataGrid grid)
+        private void EnsureMenuItems()
         {
-            if (_writerValueMenuItem == null)
+            if (_writerValueMenuItem != null)
                 return;
-            grid.ContextMenu.Items.Remove(_writerValueMenuItem);
-            grid.ContextMenu.Items.Remove(_writerRecordMenuItem);
-            grid.ContextMenu.Items.Remove(_writerValueSeparator);
-            _writerValueRecord = null;
+
+            _writerValueMenuItem = new MenuItem();
+            _writerValueMenuItem.Click += UseWriterListValue_Click;
+            _writerRecordMenuItem = CreateDisplayItem();
+
+            _compositValueMenuItem = new MenuItem();
+            _compositValueMenuItem.Click += UseCompositReference_Click;
+            _compositRecordMenuItem = CreateDisplayItem();
+
+            _allocateWalkInMenuItem = new MenuItem();
+            _allocateWalkInMenuItem.Header = "Allocate new walk-in reference";
+            _allocateWalkInMenuItem.Click += AllocateWalkInReference_Click;
+
+            _dynamicMenuSeparator = new Separator();
+        }
+
+        /// <summary>A read only menu item used to show a record block.</summary>
+        private static MenuItem CreateDisplayItem()
+        {
+            MenuItem item = new MenuItem();
+            item.IsHitTestVisible = false;
+            item.Focusable = false;
+            return item;
+        }
+
+        private static TextBlock BuildRecordHeader(List<string> lines)
+        {
+            return new TextBlock { Text = string.Join(Environment.NewLine, lines) };
+        }
+
+        /// <summary>
+        /// A new walk-in reference is only offered for a proper reference whose
+        /// name, surname, SA ID or foreign ID differs from the WriterList.
+        /// </summary>
+        private static bool CanAllocateWalkInReference(QADatRecord record)
+        {
+            return record.HasWriterRecord
+                && !QADatRecord.IsWalkInReference(record.Reference)
+                && (record.NameMismatch || record.SurnameMismatch || record.SAIDMismatch || record.ForeignIDMismatch);
+        }
+
+        private void RemoveDynamicMenuItems(DataGrid grid)
+        {
+            foreach (object item in _dynamicMenuItems)
+                grid.ContextMenu.Items.Remove(item);
+            _dynamicMenuItems.Clear();
+            _menuRecord = null;
         }
 
         /// <summary>
@@ -100,9 +172,28 @@ namespace CETAP_LOB.View.processing
         private void UseWriterListValue_Click(object sender, RoutedEventArgs e)
         {
             MenuItem item = sender as MenuItem;
-            if (item == null || _writerValueRecord == null)
+            if (item == null || _menuRecord == null)
                 return;
-            _writerValueRecord.ApplyWriterValue(item.Tag as string);
+            _menuRecord.ApplyWriterValue(item.Tag as string);
+        }
+
+        /// <summary>Replaces the walk-in reference with the reference held in Composit.</summary>
+        private void UseCompositReference_Click(object sender, RoutedEventArgs e)
+        {
+            if (_menuRecord == null)
+                return;
+            _menuRecord.ApplyCompositReference();
+        }
+
+        /// <summary>Allocates an unused walk-in reference for the right clicked record.</summary>
+        private void AllocateWalkInReference_Click(object sender, RoutedEventArgs e)
+        {
+            if (_menuRecord == null)
+                return;
+            QAViewModel viewModel = QAGrid == null ? null : QAGrid.DataContext as QAViewModel;
+            if (viewModel == null)
+                return;
+            viewModel.AllocateWalkInReference(_menuRecord);
         }
 
         /// <summary>Maps the grid column header to the field name used by ApplyWriterValue.</summary>
@@ -124,8 +215,6 @@ namespace CETAP_LOB.View.processing
                     return "DOB";
                 case "Gender":
                     return "Gender";
-                case "Date of Test":
-                    return "DOT";
                 default:
                     return null;
             }
@@ -149,8 +238,6 @@ namespace CETAP_LOB.View.processing
                     return record.WriterDOB;
                 case "Gender":
                     return record.WriterGender;
-                case "DOT":
-                    return record.WriterDOT;
                 default:
                     return "";
             }
