@@ -8608,9 +8608,9 @@ namespace CETAP_LOB.Model
         #endregion
 
         /// <summary>
-        /// Returns the supplied barcodes that already exist in the Composit table.
-        /// The lookup is not limited to an intake year, so a barcode reused in a
-        /// later year is reported as well.
+        /// Returns the supplied barcodes that already exist in the Composit table
+        /// for the current intake year - the same date range the duplicate report
+        /// uses, so a candidate scored in an earlier intake is not reported.
         /// </summary>
         public List<long> FindCompositBarcodes(IEnumerable<long> barcodes)
         {
@@ -8622,6 +8622,10 @@ namespace CETAP_LOB.Model
             if (keys.Count == 0)
                 return found;
 
+            IntakeYearsBDO intake = GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
+            if (intake == null)
+                return found;
+
             const int chunkSize = 200;
             using (var context = new CETAPEntities())
             {
@@ -8629,7 +8633,9 @@ namespace CETAP_LOB.Model
                 {
                     List<long> chunk = keys.GetRange(i, Math.Min(chunkSize, keys.Count - i));
                     found.AddRange(context.Composits
-                        .Where(c => chunk.Contains(c.Barcode))
+                        .Where(c => c.DOT >= intake.yearStart
+                                    && c.DOT <= intake.yearEnd
+                                    && chunk.Contains(c.Barcode))
                         .Select(c => c.Barcode)
                         .Distinct()
                         .ToList());

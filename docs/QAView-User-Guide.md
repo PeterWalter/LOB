@@ -367,8 +367,9 @@ The folder-wide list of barcodes is collected during **Refresh**, when every fil
 the QA folder is read anyway, so opening a file marks it immediately. Choose
 **Refresh Directory** after files are added to or removed from the QA folder. Editing
 a barcode clears its marking; the record is re-checked the next time the file is
-opened. The Composit lookup is not limited to the intake year, so a barcode reused in
-a later year is reported too.
+opened. The Composit lookup covers the **current intake year** only (the same date
+range the Duplicate Barcodes report uses), so a candidate scored in an earlier intake
+is not reported.
 
 ---
 

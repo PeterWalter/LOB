@@ -190,7 +190,7 @@ namespace CETAP_LOB.Model
         bool DuplicateReportGeneration(List<ForDuplicatesBarcodesBDO> Duplicates, string filename);
         List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords);
 
-    /// <summary>Returns the supplied barcodes that already exist in the Composit table.</summary>
+    /// <summary>Returns the supplied barcodes already held in Composit for the current intake year.</summary>
     List<long> FindCompositBarcodes(IEnumerable<long> barcodes);
        
         // Remotes reports queries
