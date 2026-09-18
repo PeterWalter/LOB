@@ -46,6 +46,7 @@ Useful switches:
 msbuild CETAP_LOB.sln /t:Build /p:Configuration=Release
 
 # 2. compile the installer
+#    (a per-user install also works: %LOCALAPPDATA%\Programs\Inno Setup 6\ISCC.exe)
 %ProgramFiles(x86)%\Inno Setup 6\ISCC.exe InnoSetup\CETAP_LOB.iss
 ```
 
