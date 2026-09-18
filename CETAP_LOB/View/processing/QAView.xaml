@@ -26,71 +26,128 @@
             </Style.Triggers>
         </Style>
 
-        <!-- Per-field red text: only the biography fields that differ from the
-             matching WriterList record are coloured. Every other validation
-             error visual is left exactly as it was. -->
+        <!-- WriterList difference highlight: only the biography fields that differ
+             from the matching WriterList record are coloured, and they use purple
+             so they are never confused with the red used for validation errors.
+             The lighter purple keeps them readable on the blue selected row. -->
         <Style x:Key="NameMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding NameMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding NameMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="SurnameMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SurnameMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding SurnameMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="ReferenceMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ReferenceMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ReferenceMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="SAIDMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SAIDMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding SAIDMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="ForeignIDMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ForeignIDMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding ForeignIDMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="DOBMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DOBMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding DOBMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="GenderMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding GenderMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding GenderMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="DOTMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DOTMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="Red" />
+                    <Setter Property="Foreground" Value="#FF7B1FA2" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
+                <MultiDataTrigger>
+                    <MultiDataTrigger.Conditions>
+                        <Condition Binding="{Binding DOTMismatch}" Value="True" />
+                        <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
+                    </MultiDataTrigger.Conditions>
+                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                </MultiDataTrigger>
             </Style.Triggers>
         </Style>
 

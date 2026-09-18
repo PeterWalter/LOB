@@ -22,6 +22,7 @@ namespace CETAP_LOB.View.processing
     public partial class QAView : UserControl
     {
         private MenuItem _writerValueMenuItem;
+        private MenuItem _writerRecordMenuItem;
         private Separator _writerValueSeparator;
         private QADatRecord _writerValueRecord;
 
@@ -61,6 +62,9 @@ namespace CETAP_LOB.View.processing
             {
                 _writerValueMenuItem = new MenuItem();
                 _writerValueMenuItem.Click += UseWriterListValue_Click;
+                _writerRecordMenuItem = new MenuItem();
+                _writerRecordMenuItem.IsHitTestVisible = false;
+                _writerRecordMenuItem.Focusable = false;
                 _writerValueSeparator = new Separator();
             }
 
@@ -70,7 +74,12 @@ namespace CETAP_LOB.View.processing
             _writerValueMenuItem.ToolTip = "Copy the value recorded in the WriterList for this column";
             _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
 
+            // The full matching WriterList record, shown directly below the value.
+            _writerRecordMenuItem.Header = new TextBlock { Text = string.Join(Environment.NewLine, record.GetWriterRecordLines()) };
+            _writerRecordMenuItem.ToolTip = "The matching WriterList record";
+
             grid.ContextMenu.Items.Insert(0, _writerValueSeparator);
+            grid.ContextMenu.Items.Insert(0, _writerRecordMenuItem);
             grid.ContextMenu.Items.Insert(0, _writerValueMenuItem);
         }
 
@@ -79,6 +88,7 @@ namespace CETAP_LOB.View.processing
             if (_writerValueMenuItem == null)
                 return;
             grid.ContextMenu.Items.Remove(_writerValueMenuItem);
+            grid.ContextMenu.Items.Remove(_writerRecordMenuItem);
             grid.ContextMenu.Items.Remove(_writerValueSeparator);
             _writerValueRecord = null;
         }

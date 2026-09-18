@@ -151,9 +151,9 @@ field adds an error; the **Errors** column is the number of failing fields.
 | **Home Language** | Must be present; a numeric value must be below 13 |
 | **School Language** | Must be present; a numeric value must be 01, 02 or 03 |
 | **AQL Language** | Must equal the file's AQL language |
-| **AQL Code** | Must equal the AQL test code expected for the file's profile |
+| **AQL Code** | Must equal the AQL test code expected for the file's profile. If the profile yields no AQL code, the value is not checked - except on a Maths-only file, where it must be blank |
 | **Mat Language** | Must equal the file's Maths language |
-| **Mat Code** | Must equal the Maths test code expected for the file's profile |
+| **Mat Code** | Must equal the Maths test code expected for the file's profile. If the profile yields no Maths code, the value is not checked - except on an AQL-only file, where it must be blank |
 | **Sections 1–7** | Every answer must be A, B, C, D, N, X or blank |
 | **Maths Section** | Every answer must be a valid answer value |
 | **Faculty1 / 2 / 3** | Faculty 1 required; no `*` placeholders |
@@ -168,9 +168,11 @@ field adds an error; the **Errors** column is the number of failing fields.
 
 - The **Errors** column and the file-list colour give the count.
 - A field that fails validation is outlined with a red validation border and the
-  message appears as a tooltip on the field.
-- Bio-information differences against the WriterList are shown as **red text** on the
-  affected fields (section 9).
+  message appears as a tooltip on the field - **red always means a validation error**.
+- Bio-information differences against the WriterList are shown in **purple** on the
+  affected fields (section 9), so they are never confused with validation errors.
+- Correcting a field clears its marking immediately: a field is only coloured while its
+  value still fails validation, or still differs from the matching WriterList record.
 
 ---
 
@@ -241,18 +243,19 @@ A field that is blank on the WriterList side is **not** treated as a mismatch.
 
 ### 9.3 How a mismatch is shown
 
-- Only the fields that actually differ are shown in **red text** - the rest of the
+- Only the fields that actually differ are shown in **purple text** - the rest of the
   record keeps its normal appearance, and the normal validation borders are not
-  affected.
-- Hovering a red field shows which fields differ.
+  affected. Purple is used so a WriterList difference is never mistaken for the red
+  validation errors (section 7.3).
+- Hovering a purple field shows which fields differ.
 - The record's error count includes the mismatch.
 
 ### 9.4 Correcting a mismatch
 
-Right-click the red field. The grid's context menu opens with a
+Right-click the purple field. The grid's context menu opens with a
 **Use WriterList value: <value>** entry at the top, for example
 `Use WriterList value: MOKOENA`. Clicking it copies the WriterList value into that
-field; the field re-validates and the red marking clears if it now agrees.
+field; the field re-validates and the purple marking clears if it now agrees.
 
 The entry is offered only for the eight comparable columns and only when the candidate
 has a WriterList match. It is enabled for a field whenever using the WriterList value
@@ -410,7 +413,7 @@ formats are `667`, `761`, `886` and `909`.
 | Many fields show `Wrong Language` / `Wrong AQL Code` | The file name's test code and profile decide the expected language and code - check the file name against section 16. |
 | Every row shows the same venue/date/language error | The file-level value is wrong (or the file name is wrong). Correct it once on any row; it applies to the whole file. |
 | Database commands do nothing | The database is unavailable. Check connectivity and restart; `DBAvailable` is set at start-up. |
-| A red bio field will not clear | The WriterList value and the scanned value may both be wrong, or the candidate is genuinely different. Use the right-click **Use WriterList value** entry or edit the field; check the database record. |
+| A purple bio field will not clear | The WriterList value and the scanned value may both be wrong, or the candidate is genuinely different. Use the right-click **Use WriterList value** entry or edit the field; check the database record. |
 | **Duplicate Barcodes** / **Write Excel Summary data** are greyed out | They only enable when every file in the QA list has zero errors. |
 | **SummaryForScoring.xlsx** cannot be saved | The file may be open in Excel. Close it and re-run. |
 

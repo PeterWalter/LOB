@@ -497,6 +497,8 @@ namespace CETAP_LOB.Model.QA
                 AddError("Gender", "Gender should be 2");
               else if (int32 > 4 && _gender != "1")
                 AddError("Gender", "Wrong Gender should be 1");
+              else
+                RemoveError("Gender");
             }
             if (CSX_Number == "667")
             {
@@ -504,8 +506,12 @@ namespace CETAP_LOB.Model.QA
                 AddError("Gender", "Gender should be F");
               else if (int32 > 4 && _gender != "M")
                 AddError("Gender", "Wrong Gender, should be M");
+              else
+                RemoveError("Gender");
             }
           }
+          else
+            RemoveError("Gender");
         }
         else
           RemoveError("Gender");
@@ -525,17 +531,19 @@ namespace CETAP_LOB.Model.QA
         if (_myCitizenship == value)
           return;
         _myCitizenship = value;
-                bool flag = HelperUtils.IsNumeric(_myCitizenship);
-                if (string.IsNullOrWhiteSpace(_myCitizenship))
-                    AddError("Citizenship", "There should be a value");
-                else if (flag)
-                {
-                    if (Convert.ToInt32(_myCitizenship) > 4)
-                        AddError("Citizenship", "Value should be less than 5");
-                }
-                else
-                    RemoveError("Citizenship");
-                _myCitizenship = _myCitizenship.Trim();
+        _myCitizenship = (_myCitizenship ?? "").Trim();
+        bool flag = HelperUtils.IsNumeric(_myCitizenship);
+        if (string.IsNullOrWhiteSpace(_myCitizenship))
+          AddError("Citizenship", "There should be a value");
+        else if (flag)
+        {
+          if (Convert.ToInt32(_myCitizenship) > 4)
+            AddError("Citizenship", "Value should be less than 5");
+          else
+            RemoveError("Citizenship");
+        }
+        else
+          RemoveError("Citizenship");
         checkerrors();
         RaisePropertyChanged("Citizenship");
       }
@@ -551,24 +559,17 @@ namespace CETAP_LOB.Model.QA
       {
         if (_classi == value)
           return;
-        _classi = value;
+        _classi = (value ?? "").Trim();
         bool flag = HelperUtils.IsNumeric(_classi);
 
-                if (!flag)
-                {
-                    AddError("Classification", "This should be a number");
-
-                    if (string.IsNullOrWhiteSpace(_classi))
-                        AddError("Classification", "There should be a value");
-                }
-                else if (flag)
-                {
-                    if (Convert.ToInt32(_classi) > 5)
-                        AddError("Classification", "Value should be less than 6");
-                }
-                else
-                    RemoveError("Classification");
-        _classi = _classi.Trim();
+        if (string.IsNullOrWhiteSpace(_classi))
+          AddError("Classification", "There should be a value");
+        else if (!flag)
+          AddError("Classification", "This should be a number");
+        else if (Convert.ToInt32(_classi) > 5)
+          AddError("Classification", "Value should be less than 6");
+        else
+          RemoveError("Classification");
         checkerrors();
         RaisePropertyChanged("Classification");
       }
@@ -632,6 +633,8 @@ namespace CETAP_LOB.Model.QA
         {
           if (Convert.ToInt32(_myHomeLanguage) > 12)
             AddError("HomeLanguage", "Language should be below 13");
+          else
+            RemoveError("HomeLanguage");
         }
         else
           RemoveError("HomeLanguage");
@@ -658,6 +661,8 @@ namespace CETAP_LOB.Model.QA
         {
           if (Convert.ToInt32(_Slanguage) > 3)
             AddError("SchoolLanguage", "Language should be 01, 02 or 03");
+          else
+            RemoveError("SchoolLanguage");
         }
         else
           RemoveError("SchoolLanguage");
@@ -708,13 +713,42 @@ namespace CETAP_LOB.Model.QA
         if (_myAQLCode == value)
           return;
         _myAQLCode = value;
-        string str = _myAQLCode.Trim();
-        if (AQLCOD.Length > 0)
-          AQLCOD = Convert.ToInt32(AQLCOD).ToString("000");
-        if (AQLCOD != str)
-          AddError("AQL_Code", "Wrong AQL Code");
+        string str = (_myAQLCode ?? "").Trim();
+        if (string.IsNullOrEmpty(AQLCOD))
+          AQLCOD = "";
         else
+          AQLCOD = Convert.ToInt32(AQLCOD).ToString("000");
+        string expected = AQLCOD;
+
+        int parsed;
+        if (str.Length == 0)
+        {
+          if (expected != "")
+            AddError("AQL_Code", "AQL code should be " + expected);
+          else
+            RemoveError("AQL_Code");
+        }
+        else if (!int.TryParse(str, out parsed))
+        {
+          AddError("AQL_Code", "AQL code cannot have characters");
+        }
+        else if (expected != "")
+        {
+          if (parsed.ToString("000") != expected)
+            AddError("AQL_Code", "AQL code should be " + expected);
+          else
+            RemoveError("AQL_Code");
+        }
+        else if (IsMathsOnlyFile())
+        {
+          AddError("AQL_Code", "AQL code should be blank");
+        }
+        else
+        {
+          // No expected AQL code is available for this file, so the scanned
+          // value cannot be judged - do not flag it.
           RemoveError("AQL_Code");
+        }
         checkerrors();
         RaisePropertyChanged("AQL_Code");
       }
@@ -1018,23 +1052,43 @@ namespace CETAP_LOB.Model.QA
         if (_myMatCode == value)
           return;
         _myMatCode = value;
-        string str = _myMatCode.Trim();
-        if (MATCOD.Length > 0)
+        string str = (_myMatCode ?? "").Trim();
+        if (string.IsNullOrEmpty(MATCOD))
+          MATCOD = "";
+        else
           MATCOD = Convert.ToInt32(MATCOD).ToString("000");
-        if (string.IsNullOrWhiteSpace(str))
+        string expected = MATCOD;
+
+        int parsed;
+        if (str.Length == 0)
         {
-          if (MATCOD != "")
-            AddError("MatCode", "MAT code should be " + MATCOD);
+          if (expected != "")
+            AddError("MatCode", "MAT code should be " + expected);
+          else
+            RemoveError("MatCode");
         }
-        else if (!string.IsNullOrWhiteSpace(str))
+        else if (!int.TryParse(str, out parsed))
         {
-          if (Convert.ToInt32(str).ToString("000") != MATCOD)
-            AddError("MatCode", "MAT code should be " + MATCOD);
+          AddError("MatCode", "MAT code cannot have characters");
+        }
+        else if (expected != "")
+        {
+          if (parsed.ToString("000") != expected)
+            AddError("MatCode", "MAT code should be " + expected);
+          else
+            RemoveError("MatCode");
+        }
+        else if (IsAqlOnlyFile())
+        {
+          // An AQL only file must not carry a Maths code.
+          AddError("MatCode", "MAT code should be blank");
         }
         else
+        {
+          // No expected MAT code is available for this file, so the scanned
+          // value cannot be judged - do not flag it.
           RemoveError("MatCode");
-        if (MATCOD == "" && str == "")
-          RemoveError("MatCode");
+        }
         checkerrors();
         RaisePropertyChanged("MatCode");
       }
@@ -1116,6 +1170,8 @@ namespace CETAP_LOB.Model.QA
         {
           if (_myFaculty2 == "*")
             AddError("Faculty2", "Faculty cannot have (*)");
+          else
+            RemoveError("Faculty2");
         }
         else
           RemoveError("Faculty2");
@@ -1139,6 +1195,8 @@ namespace CETAP_LOB.Model.QA
         {
           if (_myFaculty3 == "*")
             AddError("Faculty3", "Faculty cannot have (*)");
+          else
+            RemoveError("Faculty3");
         }
         else
           RemoveError("Faculty3");
@@ -1408,6 +1466,47 @@ namespace CETAP_LOB.Model.QA
     }
 
     /// <summary>
+    /// The matching WriterList record as display lines for the grid context menu.
+    /// Only populated values are listed, so a sparse record stays compact.
+    /// </summary>
+    public List<string> GetWriterRecordLines()
+    {
+      List<string> lines = new List<string>();
+      if (_writerRecord == null)
+        return lines;
+
+      lines.Add("WriterList record");
+      AddWriterLine(lines, "Name", _writerRecord.Name);
+      AddWriterLine(lines, "Surname", _writerRecord.Surname);
+      AddWriterLine(lines, "Initials", _writerRecord.Initials);
+      if (_writerRecord.NBT != 0)
+        lines.Add("NBT: " + _writerRecord.NBT);
+      if (_writerRecord.SAID.HasValue)
+        lines.Add("SA ID: " + _writerRecord.SAID.Value.ToString("D13"));
+      AddWriterLine(lines, "Foreign ID", _writerRecord.ForeignID);
+      if (_writerRecord.DOB != default(DateTime))
+        lines.Add("Date of Birth: " + _writerRecord.DOB.ToString("yyyy/MM/dd"));
+      AddWriterLine(lines, "Gender", _writerRecord.Gender);
+      if (_writerRecord.DOT != default(DateTime))
+        lines.Add("Date of Test: " + _writerRecord.DOT.ToString("yyyy/MM/dd"));
+      AddWriterLine(lines, "Classification", _writerRecord.Classification);
+      AddWriterLine(lines, "Test Language", _writerRecord.TestLanguage);
+      AddWriterLine(lines, "Test Type", _writerRecord.TestType);
+      if (_writerRecord.VenueID != 0)
+        lines.Add("Venue ID: " + _writerRecord.VenueID);
+      AddWriterLine(lines, "Mobile", _writerRecord.Mobile);
+      AddWriterLine(lines, "Home Telephone", _writerRecord.HomeTelephone);
+      AddWriterLine(lines, "Email", _writerRecord.EMail);
+      return lines;
+    }
+
+    private static void AddWriterLine(List<string> lines, string label, string value)
+    {
+      if (!string.IsNullOrWhiteSpace(value))
+        lines.Add(label + ": " + value.Trim());
+    }
+
+    /// <summary>
     /// Corrects a single biography field from the attached WriterList record.
     /// The field name matches the context menu Tag used in QAView. Setting the
     /// field re-runs validation, so the red highlight clears when it now matches.
@@ -1667,6 +1766,18 @@ namespace CETAP_LOB.Model.QA
       if (mine == default(DateTime) || writerDate == default(DateTime))
         return true;
       return mine.Date == writerDate.Date;
+    }
+
+    /// <summary>True when the file carries AQL only, so its Maths code must be blank.</summary>
+    private bool IsAqlOnlyFile()
+    {
+      return _mydatFile != null && (_mydatFile.TestCode == "0105" || _mydatFile.TestCode == "0115");
+    }
+
+    /// <summary>True when the file carries Maths only, so its AQL code must be blank.</summary>
+    private bool IsMathsOnlyFile()
+    {
+      return _mydatFile != null && (_mydatFile.TestCode == "0106" || _mydatFile.TestCode == "0116");
     }
 
     public QADatRecord()
