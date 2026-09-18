@@ -62,8 +62,21 @@ namespace CETAP_LOB.ViewModel.processing
         private IntakeYearsBDO _intake_year;
         private QADatRecord _myQARecord;
         private ObservableCollection<QADatRecord> _myQARecords;
+        /// <summary>Guards file-level field propagation against re-entrancy.</summary>
         private bool _propagatingFileLevelFields;
+
+        /// <summary>
+        /// Barcode to the set of QA files it appears in. Collected while the QA folder
+        /// is read (see Selectfolder), so a barcode repeated across files can be spotted
+        /// without re-reading every file each time one is opened.
+        /// </summary>
         private readonly Dictionary<long, HashSet<string>> _folderBarcodes = new Dictionary<long, HashSet<string>>();
+
+        /// <summary>
+        /// True while Selectfolder is collecting the folder barcode index. The index is
+        /// incomplete during that pass, so duplicate marking is deferred until every
+        /// file has been read.
+        /// </summary>
         private bool _buildingFolderBarcodeIndex;
         private datFileAttributes _myQAFile;
         private ObservableCollection<datFileAttributes> _myQAFiles;
@@ -249,6 +262,11 @@ public IntakeYearsBDO Intake_Year
       }
     }
 
+    /// <summary>
+    /// The records of the selected QA file. Replacing the collection subscribes the
+    /// file-level propagation handler to the new records and unsubscribes it from the
+    /// previous ones, so an edit never leaks into a file that is no longer loaded.
+    /// </summary>
     public ObservableCollection<QADatRecord> QARecords
     {
       get
@@ -291,6 +309,7 @@ public IntakeYearsBDO Intake_Year
       }
     }
 
+    /// <summary>Subscribes to the property changes of the records being loaded.</summary>
     private void AttachFileLevelFieldHandlers(IEnumerable<QADatRecord> records)
     {
       if (records == null)
@@ -302,6 +321,7 @@ public IntakeYearsBDO Intake_Year
       }
     }
 
+    /// <summary>Unsubscribes the property changes of the records being replaced.</summary>
     private void DetachFileLevelFieldHandlers(IEnumerable<QADatRecord> records)
     {
       if (records == null)
@@ -764,6 +784,12 @@ public IntakeYearsBDO Intake_Year
       SelectedQARecord = _service.GetFIDbyNBT(SelectedQARecord);
     }
 
+    /// <summary>
+    /// Reads every .dat file in the QA folder in a single pass, collecting two things:
+    /// the validation error count of each file (shown in the file list) and the
+    /// folder-wide barcode index. Duplicate marking is deliberately left until the loop
+    /// has finished, because the index is not complete before then.
+    /// </summary>
     private void Selectfolder()
     {
       List<datFileAttributes> source = new List<datFileAttributes>();
@@ -800,6 +826,10 @@ public IntakeYearsBDO Intake_Year
       MarkBarcodeDuplicates(lastFile);
     }
 
+    /// <summary>
+    /// Loads the selected file's records, worst first. The service validates each
+    /// record on this call and attaches the WriterList and Composit comparisons.
+    /// </summary>
     private void GetQAData()
     {
       QARecords = new ObservableCollection<QADatRecord>(_service.GetQADataFromFile(SelectedFile).OrderByDescending(a => a.errorCount));
@@ -894,6 +924,10 @@ public IntakeYearsBDO Intake_Year
       }
     }
 
+    /// <summary>
+    /// Parses a scanned barcode for comparison. Returns null when it is empty or not
+    /// numeric, so an unreadable barcode is never treated as a duplicate.
+    /// </summary>
     private static long? ConvertBarcode(string barcode)
     {
       long value;

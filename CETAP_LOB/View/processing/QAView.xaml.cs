@@ -18,10 +18,16 @@ using CETAP_LOB.ViewModel.processing;
 namespace CETAP_LOB.View.processing
 {
     /// <summary>
-    /// Interaction logic for QAView.xaml
+    /// Interaction logic for QAView.xaml.
+    ///
+    /// The only logic here is the grid context menu: the comparison entries that depend
+    /// on the right clicked record (WriterList values, the Composit comparison and the
+    /// walk-in allocation) are built on the fly and removed again each time the menu
+    /// opens, so the static menu declared in XAML is never modified permanently.
     /// </summary>
     public partial class QAView : UserControl
     {
+        /// <summary>Entries added for the current opening, removed on the next one.</summary>
         private readonly List<object> _dynamicMenuItems = new List<object>();
         private MenuItem _writerValueMenuItem;
         private MenuItem _writerRecordMenuItem;
@@ -112,6 +118,10 @@ namespace CETAP_LOB.View.processing
             _dynamicMenuItems.AddRange(entries);
         }
 
+        /// <summary>
+        /// Creates the dynamic menu entries and their handlers once; they are reused for
+        /// every opening and removed again by RemoveDynamicMenuItems.
+        /// </summary>
         private void EnsureMenuItems()
         {
             if (_writerValueMenuItem != null)
@@ -141,6 +151,9 @@ namespace CETAP_LOB.View.processing
             return item;
         }
 
+        /// <summary>
+        /// A record block for the menu: one "Label: value" line per populated field.
+        /// </summary>
         private static TextBlock BuildRecordHeader(List<string> lines)
         {
             return new TextBlock { Text = string.Join(Environment.NewLine, lines) };
@@ -157,6 +170,7 @@ namespace CETAP_LOB.View.processing
                 && (record.NameMismatch || record.SurnameMismatch || record.SAIDMismatch || record.ForeignIDMismatch);
         }
 
+        /// <summary>Removes the entries added by the previous opening of the menu.</summary>
         private void RemoveDynamicMenuItems(DataGrid grid)
         {
             foreach (object item in _dynamicMenuItems)
@@ -220,6 +234,10 @@ namespace CETAP_LOB.View.processing
             }
         }
 
+        /// <summary>
+        /// The WriterList value for a column, used as the header of the "Use WriterList
+        /// value" entry.
+        /// </summary>
         private static string WriterValueFor(QADatRecord record, string field)
         {
             switch (field)
@@ -243,6 +261,10 @@ namespace CETAP_LOB.View.processing
             }
         }
 
+        /// <summary>
+        /// Walks up the visual (or logical) tree from the right clicked element, so the
+        /// cell - and therefore its column and record - can be identified.
+        /// </summary>
         private static T FindAncestor<T>(DependencyObject current) where T : DependencyObject
         {
             while (current != null)

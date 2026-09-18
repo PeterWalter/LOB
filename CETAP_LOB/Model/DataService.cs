@@ -3607,6 +3607,11 @@ namespace CETAP_LOB.Model
         #endregion
 
         #region NewNBTNumbers
+        /// <summary>
+        /// Returns the next unused walk-in number (the first NewNBTNumbers row whose
+        /// OriginalNBT is still empty), or null when none are left - callers must
+        /// handle null.
+        /// </summary>
         public NewNBTNumberBDO GetNewNBTNumberFromDB()
         {
             //NewNBTNumberBDO newNBT = new NewNBTNumberBDO();
@@ -7241,6 +7246,20 @@ namespace CETAP_LOB.Model
 
             return completed;
         }
+        /// <summary>
+        /// Reads one QA .dat file and returns its validated records.
+        ///
+        /// The file is fixed width and its layout depends on the CSX family recorded on
+        /// the first line, so FileHelpers reads it with the matching ASC record type and
+        /// the CSXxxxToQADatRecord helpers map each row onto a QADatRecord - whose
+        /// property setters perform the validation. Before that the "Magic Area"
+        /// resolves the batch and, from the test profile, the AQL and Maths test codes
+        /// the records are checked against.
+        ///
+        /// Two comparison passes run at the end, both guarded by DBAvailable:
+        /// AttachWriterBioInfo (candidate details against the WriterList) and
+        /// AttachCompositWalkInInfo (walk-in references against Composit).
+        /// </summary>
         public ObservableCollection<QADatRecord> GetQADataFromFile(datFileAttributes filename)
         {
 
@@ -7695,6 +7714,10 @@ namespace CETAP_LOB.Model
             return null;
         }
 
+        /// <summary>
+        /// Loads the Composit rows for the supplied SA IDs and foreign IDs. The keys are
+        /// queried in chunks so the generated SQL stays below the parameter limit.
+        /// </summary>
         private List<Composit> GetCompositsForWalkIns(List<long> saidKeys, List<string> foreignKeys)
         {
             const int chunkSize = 200;
@@ -7719,6 +7742,10 @@ namespace CETAP_LOB.Model
         }
 
 
+        /// <summary>
+        /// Parses an NBT reference or SA ID for comparison. Returns null when the value
+        /// is absent or not numeric, so an unreadable identifier is never matched.
+        /// </summary>
         private static long? TryParseBioKey(string value)
         {
             long parsed;
@@ -7831,6 +7858,11 @@ namespace CETAP_LOB.Model
             return SelectedRecord;
         }
 
+        /// <summary>
+        /// Writes the corrected records back to fixed width, moves the file into a dated
+        /// sub-folder beside it, deletes the original, and records the QA record count
+        /// and QA date on the scan tracker when the database is available.
+        /// </summary>
         public bool SaveQADatFile(datFileAttributes datfile, ref string message)
         {
             bool ret = false;
@@ -7949,6 +7981,12 @@ namespace CETAP_LOB.Model
             return ret;
         }
 
+        /// <summary>
+        /// Repairs the fields that can be determined automatically for every record that
+        /// failed validation: identifiers, names and dates are reloaded from the
+        /// database, the file-level values are taken from the batch and the file name,
+        /// and placeholder answer and faculty values are normalised.
+        /// </summary>
         public bool AutoClean()
         {
             bool ret = false;

@@ -150,6 +150,9 @@
         </Style>
 
 
+        <!-- A duplicated barcode is shown in amber: repeated inside the file, present in
+             another QA file, or already held in Composit for the current intake year.
+             Only the text is coloured, and it lightens on the blue selected row. -->
         <Style x:Key="BarcodeDuplicateTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding BarcodeDuplicate}" Value="True">
@@ -187,6 +190,10 @@
             <RowDefinition Height="25*" />
         </Grid.RowDefinitions>
 
+        <!-- Toolbar. Every button is bound to a RelayCommand on QAViewModel, from the
+             top: save the file, refresh the folder, AutoClean, the duplicate barcode
+             check, the Excel summary, the scan tracker reconciliation, and Find
+             Duplicates (present but not wired - use Duplicate Barcodes instead). -->
         <Border Grid.Column="1" BorderThickness="0,0,0,0">
             <StackPanel Margin="0,0,0,0" Orientation="Vertical">
                 <mui:ModernButton
@@ -263,6 +270,10 @@
 
             </StackPanel>
         </Border>
+        <!-- The candidate grid. The red adorners come from the per-field validation and
+             the purple/blue/amber text from the styles above; this grid only lays out
+             the columns. QAGrid is named so the code-behind can add its record-specific
+             context menu entries, which need the right clicked record and column. -->
         <DataGrid
             x:Name="QAGrid"
             ContextMenuOpening="QAGrid_ContextMenuOpening"
@@ -654,6 +665,9 @@
         </DataGrid>
 
 
+        <!-- The QA folder contents. Each entry is a .dat file, worst first, and its name is
+             tinted by the file's total error count through NumberToColorConverter, so the
+             files needing attention are obvious before any file is opened. -->
         <Border
             Grid.Row="0"
             Grid.Column="0"
@@ -702,6 +716,9 @@
             VerticalAlignment="Stretch"
             ResizeDirection="Rows" />
 
+        <!-- The answer sections of the selected record: AQL sections 1 to 7 and the MAT
+             section, one box per answer. They are editable so a misread answer can be
+             corrected here instead of editing the fixed-width file by hand. -->
         <StackPanel
             Grid.Row="2"
             Grid.ColumnSpan="3"
