@@ -2772,34 +2772,34 @@ namespace CETAP_LOB.Model
         {
             string CSX909Record = "";
 
-            string CSX = string.Format("{0,-37}", QAData.CSX_Part);
-            string Barcode = string.Format("{0,-12}", QAData.Barcode);
-            string Reference = string.Format("{0,-14}", QAData.Reference);
+            string CSX = FixedWidth(QAData.CSX_Part, 37);
+            string Barcode = FixedWidth(QAData.Barcode, 12);
+            string Reference = FixedWidth(QAData.Reference, 14);
 
             CSX909Record = QAData.CSX_Number + CSX + Reference + Barcode;
 
-            string ID = string.Format("{0,-13}", QAData.SAID);
-            string FID = string.Format("{0,-15}", QAData.ForeignID.Trim());
-            string Surname = string.Format("{0,-20}", QAData.Surname);
-            string Name = string.Format("{0,-18}", QAData.FirstName);
-            string Initials = string.Format("{0,-3}", QAData.initials);
-            string IDType = string.Format("{0,-1}", QAData.IDType);
-            string Gender = string.Format("{0,-1}", QAData.Gender);
+            string ID = FixedWidth(QAData.SAID, 13);
+            string FID = FixedWidth((QAData.ForeignID ?? "").Trim(), 15);
+            string Surname = FixedWidth(QAData.Surname, 20);
+            string Name = FixedWidth(QAData.FirstName, 18);
+            string Initials = FixedWidth(QAData.initials, 3);
+            string IDType = FixedWidth(QAData.IDType, 1);
+            string Gender = FixedWidth(QAData.Gender, 1);
 
-            string VenueCode = string.Format("{0,-5}", QAData.VenueCode);
+            string VenueCode = FixedWidth(QAData.VenueCode, 5);
             string DOT = QAData.DOT.ToString("yyyyMMdd");
             string DOB = QAData.DOB.ToString("yyyyMMdd");
-            string AQL_Lang = string.Format("{0,-1}", QAData.AQL_Language);
-            string AQL_Code = string.Format("{0,-3}", QAData.AQL_Code);
-            string Mat_Lang = string.Format("{0,-1}", QAData.Mat_Language);
-            string Mat_Code = string.Format("{0,-3}", QAData.MatCode);
-            string Faculty = string.Format("{0,-1}", QAData.Faculty1);
-            string Faculty2 = string.Format("{0,-1}", QAData.Faculty2);
-            string Faculty3 = string.Format("{0,-1}", QAData.Faculty3);
-            string Citizenship = string.Format("{0,-1}", QAData.Citizenship);
-            string HLanguage = string.Format("{0,-2}", QAData.HomeLanguage);
-            string SLanguage = string.Format("{0,-1}", QAData.SchoolLanguage);
-            string Classification = string.Format("{0,-1}", QAData.Classification);
+            string AQL_Lang = FixedWidth(QAData.AQL_Language, 1);
+            string AQL_Code = FixedWidth(QAData.AQL_Code, 3);
+            string Mat_Lang = FixedWidth(QAData.Mat_Language, 1);
+            string Mat_Code = FixedWidth(QAData.MatCode, 3);
+            string Faculty = FixedWidth(QAData.Faculty1, 1);
+            string Faculty2 = FixedWidth(QAData.Faculty2, 1);
+            string Faculty3 = FixedWidth(QAData.Faculty3, 1);
+            string Citizenship = FixedWidth(QAData.Citizenship, 1);
+            string HLanguage = FixedWidth(QAData.HomeLanguage, 2);
+            string SLanguage = FixedWidth(QAData.SchoolLanguage, 1);
+            string Classification = FixedWidth(QAData.Classification, 1);
 
             CSX909Record += ID + FID + IDType + Gender + Citizenship + Faculty + DOB + Surname + Name + Initials;
             string Section1 = HelperUtils.CollectionToString(QAData.Section1);
@@ -2861,34 +2861,34 @@ namespace CETAP_LOB.Model
         {
             string CSX886Record = "";
 
-            string CSX = string.Format("{0,-37}", QAData.CSX_Part);
-            string Barcode = string.Format("{0,-12}", QAData.Barcode);
-            string Reference = string.Format("{0,-14}", QAData.Reference);
+            string CSX = FixedWidth(QAData.CSX_Part, 37);
+            string Barcode = FixedWidth(QAData.Barcode, 12);
+            string Reference = FixedWidth(QAData.Reference, 14);
 
             CSX886Record = QAData.CSX_Number + CSX + Reference + Barcode;
 
-            string ID = string.Format("{0,-13}", QAData.SAID);
-            string FID = string.Format("{0,-15}", QAData.ForeignID.Trim());
-            string Surname = string.Format("{0,-20}", QAData.Surname);
-            string Name = string.Format("{0,-18}", QAData.FirstName);
-            string Initials = string.Format("{0,-3}", QAData.initials);
-            string IDType = string.Format("{0,-1}", QAData.IDType);
-            string Gender = string.Format("{0,-1}", QAData.Gender);
+            string ID = FixedWidth(QAData.SAID, 13);
+            string FID = FixedWidth((QAData.ForeignID ?? "").Trim(), 15);
+            string Surname = FixedWidth(QAData.Surname, 20);
+            string Name = FixedWidth(QAData.FirstName, 18);
+            string Initials = FixedWidth(QAData.initials, 3);
+            string IDType = FixedWidth(QAData.IDType, 1);
+            string Gender = FixedWidth(QAData.Gender, 1);
 
-            string VenueCode = string.Format("{0,-5}", QAData.VenueCode);
+            string VenueCode = FixedWidth(QAData.VenueCode, 5);
             string DOT = QAData.DOT.ToString("yyyyMMdd");
             string DOB = QAData.DOB.ToString("yyyyMMdd");
-            string AQL_Lang = string.Format("{0,-1}", QAData.AQL_Language);
-            string AQL_Code = string.Format("{0,-3}", QAData.AQL_Code);
-            string Mat_Lang = string.Format("{0,-1}", QAData.Mat_Language);
-            string Mat_Code = string.Format("{0,-3}", QAData.MatCode);
-            string Faculty = string.Format("{0,-1}", QAData.Faculty1);
-            string Faculty2 = string.Format("{0,-1}", QAData.Faculty2);
-            string Faculty3 = string.Format("{0,-1}", QAData.Faculty3);
-            string Citizenship = string.Format("{0,-1}", QAData.Citizenship);
-            string HLanguage = string.Format("{0,-2}", QAData.HomeLanguage);
-            string SLanguage = string.Format("{0,-1}", QAData.SchoolLanguage);
-            string Classification = string.Format("{0,-1}", QAData.Classification);
+            string AQL_Lang = FixedWidth(QAData.AQL_Language, 1);
+            string AQL_Code = FixedWidth(QAData.AQL_Code, 3);
+            string Mat_Lang = FixedWidth(QAData.Mat_Language, 1);
+            string Mat_Code = FixedWidth(QAData.MatCode, 3);
+            string Faculty = FixedWidth(QAData.Faculty1, 1);
+            string Faculty2 = FixedWidth(QAData.Faculty2, 1);
+            string Faculty3 = FixedWidth(QAData.Faculty3, 1);
+            string Citizenship = FixedWidth(QAData.Citizenship, 1);
+            string HLanguage = FixedWidth(QAData.HomeLanguage, 2);
+            string SLanguage = FixedWidth(QAData.SchoolLanguage, 1);
+            string Classification = FixedWidth(QAData.Classification, 1);
 
             CSX886Record += ID + FID + IDType + Gender + Citizenship + Faculty + DOB + Surname + Name + Initials;
             string Section1 = HelperUtils.CollectionToString(QAData.Section1);
@@ -2952,34 +2952,34 @@ namespace CETAP_LOB.Model
         {
             string CSX761Record = "";
 
-            string CSX = string.Format("{0,-37}", QAData.CSX_Part);
-            string Barcode = string.Format("{0,-12}", QAData.Barcode);
-            string Reference = string.Format("{0,-14}", QAData.Reference);
+            string CSX = FixedWidth(QAData.CSX_Part, 37);
+            string Barcode = FixedWidth(QAData.Barcode, 12);
+            string Reference = FixedWidth(QAData.Reference, 14);
 
             CSX761Record = QAData.CSX_Number + CSX + Reference + Barcode;
 
-            string ID = string.Format("{0,-13}", QAData.SAID);
-            string FID = string.Format("{0,-15}", QAData.ForeignID.Trim());
-            string Surname = string.Format("{0,-20}", QAData.Surname);
-            string Name = string.Format("{0,-18}", QAData.FirstName);
-            string Initials = string.Format("{0,-3}", QAData.initials);
-            string IDType = string.Format("{0,-1}", QAData.IDType);
-            string Gender = string.Format("{0,-1}", QAData.Gender);
+            string ID = FixedWidth(QAData.SAID, 13);
+            string FID = FixedWidth((QAData.ForeignID ?? "").Trim(), 15);
+            string Surname = FixedWidth(QAData.Surname, 20);
+            string Name = FixedWidth(QAData.FirstName, 18);
+            string Initials = FixedWidth(QAData.initials, 3);
+            string IDType = FixedWidth(QAData.IDType, 1);
+            string Gender = FixedWidth(QAData.Gender, 1);
 
-            string VenueCode = string.Format("{0,-5}", QAData.VenueCode);
+            string VenueCode = FixedWidth(QAData.VenueCode, 5);
             string DOT = QAData.DOT.ToString("yyyyMMdd");
             string DOB = QAData.DOB.ToString("yyyyMMdd");
-            string AQL_Lang = string.Format("{0,-1}", QAData.AQL_Language);
-            string AQL_Code = string.Format("{0,-3}", QAData.AQL_Code);
-            string Mat_Lang = string.Format("{0,-1}", QAData.Mat_Language);
-            string Mat_Code = string.Format("{0,-3}", QAData.MatCode);
-            string Faculty = string.Format("{0,-1}", QAData.Faculty1);
-            string Faculty2 = string.Format("{0,-1}", QAData.Faculty2);
-            string Faculty3 = string.Format("{0,-1}", QAData.Faculty3);
-            string Citizenship = string.Format("{0,-1}", QAData.Citizenship);
-            string HLanguage = string.Format("{0,-2}", QAData.HomeLanguage);
-            string SLanguage = string.Format("{0,-1}", QAData.SchoolLanguage);
-            string Classification = string.Format("{0,-1}", QAData.Classification);
+            string AQL_Lang = FixedWidth(QAData.AQL_Language, 1);
+            string AQL_Code = FixedWidth(QAData.AQL_Code, 3);
+            string Mat_Lang = FixedWidth(QAData.Mat_Language, 1);
+            string Mat_Code = FixedWidth(QAData.MatCode, 3);
+            string Faculty = FixedWidth(QAData.Faculty1, 1);
+            string Faculty2 = FixedWidth(QAData.Faculty2, 1);
+            string Faculty3 = FixedWidth(QAData.Faculty3, 1);
+            string Citizenship = FixedWidth(QAData.Citizenship, 1);
+            string HLanguage = FixedWidth(QAData.HomeLanguage, 2);
+            string SLanguage = FixedWidth(QAData.SchoolLanguage, 1);
+            string Classification = FixedWidth(QAData.Classification, 1);
 
             CSX761Record += ID + FID + IDType + Gender + Citizenship + Faculty + DOB + Surname + Name + Initials;
             string Section1 = HelperUtils.CollectionToString(QAData.Section1);
@@ -3001,33 +3001,33 @@ namespace CETAP_LOB.Model
         {
             string CSX667Record = "";
 
-            string CSX = string.Format("{0,-37}", QAData.CSX_Part);
-            string Barcode = string.Format("{0,-12}", QAData.Barcode);
-            string Reference = string.Format("{0,-14}", QAData.Reference);
+            string CSX = FixedWidth(QAData.CSX_Part, 37);
+            string Barcode = FixedWidth(QAData.Barcode, 12);
+            string Reference = FixedWidth(QAData.Reference, 14);
 
             CSX667Record = QAData.CSX_Number + CSX + Reference + Barcode;
 
-            string ID = string.Format("{0,-13}", QAData.SAID);
-            string FID = string.Format("{0,-15}", QAData.ForeignID.Trim());
-            string Surname = string.Format("{0,-20}", QAData.Surname);
-            string Name = string.Format("{0,-18}", QAData.FirstName);
-            string Initials = string.Format("{0,-3}", QAData.initials);
-            string IDType = string.Format("{0,-1}", QAData.IDType);
-            string Gender = string.Format("{0,-1}", QAData.Gender);
-            string VenueCode = string.Format("{0,-5}", QAData.VenueCode);
+            string ID = FixedWidth(QAData.SAID, 13);
+            string FID = FixedWidth((QAData.ForeignID ?? "").Trim(), 15);
+            string Surname = FixedWidth(QAData.Surname, 20);
+            string Name = FixedWidth(QAData.FirstName, 18);
+            string Initials = FixedWidth(QAData.initials, 3);
+            string IDType = FixedWidth(QAData.IDType, 1);
+            string Gender = FixedWidth(QAData.Gender, 1);
+            string VenueCode = FixedWidth(QAData.VenueCode, 5);
             string DOT = QAData.DOT.ToString("yyyyMMdd");
             string DOB = QAData.DOB.ToString("yyyyMMdd");
-            string AQL_Lang = string.Format("{0,-1}", QAData.AQL_Language);
-            string AQL_Code = string.Format("{0,-2}", QAData.AQL_Code);
-            string Mat_Lang = string.Format("{0,-1}", QAData.Mat_Language);
-            string Mat_Code = string.Format("{0,-2}", QAData.MatCode);
-            string Faculty = string.Format("{0,-1}", QAData.Faculty1);
-            string Faculty2 = string.Format("{0,-1}", QAData.Faculty2);
-            string Faculty3 = string.Format("{0,-1}", QAData.Faculty3);
-            string Citizenship = string.Format("{0,-1}", QAData.Citizenship);
-            string HLanguage = string.Format("{0,-2}", QAData.HomeLanguage);
-            string SLanguage = string.Format("{0,-1}", QAData.SchoolLanguage);
-            string Classification = string.Format("{0,-1}", QAData.Classification);
+            string AQL_Lang = FixedWidth(QAData.AQL_Language, 1);
+            string AQL_Code = FixedWidth(QAData.AQL_Code, 2);
+            string Mat_Lang = FixedWidth(QAData.Mat_Language, 1);
+            string Mat_Code = FixedWidth(QAData.MatCode, 2);
+            string Faculty = FixedWidth(QAData.Faculty1, 1);
+            string Faculty2 = FixedWidth(QAData.Faculty2, 1);
+            string Faculty3 = FixedWidth(QAData.Faculty3, 1);
+            string Citizenship = FixedWidth(QAData.Citizenship, 1);
+            string HLanguage = FixedWidth(QAData.HomeLanguage, 2);
+            string SLanguage = FixedWidth(QAData.SchoolLanguage, 1);
+            string Classification = FixedWidth(QAData.Classification, 1);
 
             CSX667Record += ID + FID + IDType + Gender + Citizenship + Faculty + DOB + Surname + Name + Initials;
             string Section1 = HelperUtils.CollectionToString(QAData.Section1);
@@ -7743,6 +7743,20 @@ namespace CETAP_LOB.Model
 
 
         /// <summary>
+        /// Formats one value into its fixed-width column: right padded with spaces, and
+        /// truncated when the value is longer than the column. The QA .dat records have a
+        /// fixed length, so a value that does not fit must never be allowed to widen the
+        /// record - that is what corrupts the file for the scoring software.
+        /// </summary>
+        private static string FixedWidth(string value, int width)
+        {
+            string text = value ?? "";
+            if (text.Length > width)
+                return text.Substring(0, width);
+            return text.PadRight(width);
+        }
+
+        /// <summary>
         /// Parses an NBT reference or SA ID for comparison. Returns null when the value
         /// is absent or not numeric, so an unreadable identifier is never matched.
         /// </summary>
@@ -8424,33 +8438,33 @@ namespace CETAP_LOB.Model
         {
             string CSX667Raw = "";
 
-            string CSX = string.Format("{0,-37}", QAData.CSX_Part);
-            string Barcode = string.Format("{0,-12}", QAData.Barcode);
-            string Reference = string.Format("{0,-14}", QAData.Reference);
+            string CSX = FixedWidth(QAData.CSX_Part, 37);
+            string Barcode = FixedWidth(QAData.Barcode, 12);
+            string Reference = FixedWidth(QAData.Reference, 14);
 
             CSX667Raw = Barcode;
 
-            string ID = string.Format("{0,-13}", QAData.SAID);
-            string FID = string.Format("{0,-15}", QAData.ForeignID);
-            string Surname = string.Format("{0,-20}", QAData.Surname);
-            string Name = string.Format("{0,-18}", QAData.FirstName);
-            string Initials = string.Format("{0,-3}", QAData.initials);
-            string IDType = string.Format("{0,-1}", QAData.IDType);
-            string Gender = string.Format("{0,-1}", QAData.Gender);
-            string VenueCode = string.Format("{0,-5}", QAData.VenueCode);
+            string ID = FixedWidth(QAData.SAID, 13);
+            string FID = FixedWidth(QAData.ForeignID, 15);
+            string Surname = FixedWidth(QAData.Surname, 20);
+            string Name = FixedWidth(QAData.FirstName, 18);
+            string Initials = FixedWidth(QAData.initials, 3);
+            string IDType = FixedWidth(QAData.IDType, 1);
+            string Gender = FixedWidth(QAData.Gender, 1);
+            string VenueCode = FixedWidth(QAData.VenueCode, 5);
             string DOT = QAData.DOT.ToString("yyyyMMdd");
             string DOB = QAData.DOB.ToString("yyyyMMdd");
-            string AQL_Lang = string.Format("{0,-1}", QAData.AQL_Language);
-            string AQL_Code = string.Format("{0,-2}", QAData.AQL_Code);
-            string Mat_Lang = string.Format("{0,-1}", QAData.Mat_Language);
-            string Mat_Code = string.Format("{0,-2}", QAData.MatCode);
-            string Faculty = string.Format("{0,-1}", QAData.Faculty1);
-            string Faculty2 = string.Format("{0,-1}", QAData.Faculty2);
-            string Faculty3 = string.Format("{0,-1}", QAData.Faculty3);
-            string Citizenship = string.Format("{0,-1}", QAData.Citizenship);
-            string HLanguage = string.Format("{0,-2}", QAData.HomeLanguage);
-            string SLanguage = string.Format("{0,-1}", QAData.SchoolLanguage);
-            string Classification = string.Format("{0,-1}", QAData.Classification);
+            string AQL_Lang = FixedWidth(QAData.AQL_Language, 1);
+            string AQL_Code = FixedWidth(QAData.AQL_Code, 2);
+            string Mat_Lang = FixedWidth(QAData.Mat_Language, 1);
+            string Mat_Code = FixedWidth(QAData.MatCode, 2);
+            string Faculty = FixedWidth(QAData.Faculty1, 1);
+            string Faculty2 = FixedWidth(QAData.Faculty2, 1);
+            string Faculty3 = FixedWidth(QAData.Faculty3, 1);
+            string Citizenship = FixedWidth(QAData.Citizenship, 1);
+            string HLanguage = FixedWidth(QAData.HomeLanguage, 2);
+            string SLanguage = FixedWidth(QAData.SchoolLanguage, 1);
+            string Classification = FixedWidth(QAData.Classification, 1);
 
             //CSX667Raw += ID + FID + IDType + Gender + Citizenship + Faculty + DOB + Surname + Name + Initials;
             string Section1 = HelperUtils.CollectionToString(QAData.Section1);
@@ -8557,7 +8571,7 @@ namespace CETAP_LOB.Model
                             Section7 mdata = new Section7();
 
                             mdata.Barcode = record.SessionID;
-                            string msize = string.Format("{0,-25}", record.AQL_Section7);
+                            string msize = FixedWidth(record.AQL_Section7, 25);
                             mdata.TrialSection = new ObservableCollection<DatAnswer>(HelperUtils.GetAnswerList(msize));
                             //  QAData.Section1 = new ObservableCollection<DatAnswer>(HelperUtils.GetAnswerList(record.AQL_Section1));
                             records.Add(mdata);
@@ -8584,7 +8598,7 @@ namespace CETAP_LOB.Model
 
                             xdata.Barcode = record1.SessionID;
 
-                            string msize = string.Format("{0,-25}", record1.AQL_Section7);
+                            string msize = FixedWidth(record1.AQL_Section7, 25);
                             xdata.TrialSection = new ObservableCollection<DatAnswer>(HelperUtils.GetAnswerList(msize));
                             records1.Add(xdata);
                         }
@@ -8604,7 +8618,7 @@ namespace CETAP_LOB.Model
 
                             xdata.Barcode = record8.SessionID;
 
-                            string msize = string.Format("{0,-25}", record8.AQL_Section7);
+                            string msize = FixedWidth(record8.AQL_Section7, 25);
                             xdata.TrialSection = new ObservableCollection<DatAnswer>(HelperUtils.GetAnswerList(msize));
                             records8.Add(xdata);
                         }
@@ -8623,7 +8637,7 @@ namespace CETAP_LOB.Model
 
                             xdata.Barcode = record9.SessionID;
 
-                            string msize = string.Format("{0,-25}", record9.AQL_Section7);
+                            string msize = FixedWidth(record9.AQL_Section7, 25);
                             xdata.TrialSection = new ObservableCollection<DatAnswer>(HelperUtils.GetAnswerList(msize));
                             records9.Add(xdata);
                         }
@@ -8644,6 +8658,79 @@ namespace CETAP_LOB.Model
             return TrialData;
         }
         #endregion
+
+        /// <summary>
+        /// Writes one accepted field from a QA record into the matching WriterList row -
+        /// the reverse of copying a WriterList value into the record. The row is found by
+        /// NBT Reference first and by SA ID as a fallback, the same precedence used when
+        /// the record was matched. The NBT Reference itself is never written back, because
+        /// it is the key the match relies on.
+        /// </summary>
+        public bool AcceptQAValueIntoWriterList(QADatRecord record, string field, ref string message)
+        {
+            message = "";
+            if (record == null || string.IsNullOrEmpty(field))
+                return false;
+
+            if (!ApplicationSettings.Default.DBAvailable)
+            {
+                message = "The database is not available.";
+                return false;
+            }
+
+            using (var context = new CETAPEntities())
+            {
+                WriterList writer = null;
+
+                long? nbt = TryParseBioKey(record.Reference);
+                if (nbt.HasValue)
+                    writer = context.WriterLists.Where(w => w.NBT == nbt.Value).FirstOrDefault();
+
+                if (writer == null)
+                {
+                    long? said = TryParseBioKey(record.SAID);
+                    if (said.HasValue)
+                        writer = context.WriterLists.Where(w => w.SAID == said.Value).FirstOrDefault();
+                }
+
+                if (writer == null)
+                {
+                    message = "No WriterList record matches this candidate.";
+                    return false;
+                }
+
+                switch (field)
+                {
+                    case "Name":
+                        writer.Name = (record.FirstName ?? "").Trim();
+                        break;
+                    case "Surname":
+                        writer.Surname = (record.Surname ?? "").Trim();
+                        break;
+                    case "SAID":
+                        writer.SAID = TryParseBioKey(record.SAID);
+                        break;
+                    case "ForeignID":
+                        writer.ForeignID = (record.ForeignID ?? "").Trim();
+                        break;
+                    case "DOB":
+                        writer.DOB = record.DOB;
+                        break;
+                    case "Gender":
+                        writer.Gender = (record.Gender ?? "").Trim();
+                        break;
+                    default:
+                        message = "The " + field + " field cannot be written to the WriterList.";
+                        return false;
+                }
+
+                writer.DateModified = DateTime.Now;
+                context.SaveChanges();
+            }
+
+            message = "WriterList updated.";
+            return true;
+        }
 
         /// <summary>
         /// Returns the supplied barcodes that already exist in the Composit table

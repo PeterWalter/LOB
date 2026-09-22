@@ -17,6 +17,8 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Windows;
 using ClosedXML.Excel;
 using System.Reflection.Emit;
@@ -80,6 +82,18 @@ namespace CETAP_LOB.ViewModel.processing
         private bool _buildingFolderBarcodeIndex;
         private datFileAttributes _myQAFile;
         private ObservableCollection<datFileAttributes> _myQAFiles;
+
+        /// <summary>
+        /// Serialises QA file reads. The service keeps per-call state while it parses,
+        /// so a background read and a read triggered by the user must never overlap.
+        /// </summary>
+        private readonly SemaphoreSlim _qaLoadGate = new SemaphoreSlim(1, 1);
+
+        /// <summary>True while the QA folder is being read; the module stays usable.</summary>
+        private bool _loading;
+
+        /// <summary>Suppresses the automatic file load while a caller reads records itself.</summary>
+        private bool _suppressAutoLoad;
         private string _myFolder;
         private string testName1, testName2;
 
@@ -344,12 +358,8 @@ public IntakeYearsBDO Intake_Year
         if (_myQAFile == value)
           return;
         _myQAFile = value;
-        if (_myQAFile != null)
-        {
-          GetQAData();
-          if (!_buildingFolderBarcodeIndex)
-            MarkBarcodeDuplicates(_myQAFile.SName);
-        }
+        if (_myQAFile != null && !_suppressAutoLoad)
+          _ = LoadSelectedFileAsync(_myQAFile);
         RaisePropertyChanged("SelectedFile");
       }
     }
@@ -391,14 +401,35 @@ public IntakeYearsBDO Intake_Year
       RegisterCommands();
     }
 
+    /// <summary>True while the QA folder is being read; the module stays usable.</summary>
+    public bool IsLoading
+    {
+      get
+      {
+        return _loading;
+      }
+      private set
+      {
+        if (_loading == value)
+          return;
+        _loading = value;
+        RaisePropertyChanged("IsLoading");
+      }
+    }
+
     private void InitializeModels()
     {
       Folder = ApplicationSettings.Default.QAFolder;
-              _intake_year = _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
-           // _intake_year = _service.GetIntakeRecord(2024);
-      _service.ReadEndofDatFile();
       _myDOT = DateTime.Now;
-      Selectfolder();
+
+      // The list is bound by the view and read by IsDataClean(), so it has to exist from
+      // the start rather than only once the background read has begun filling it in.
+      DirList = new ObservableCollection<datFileAttributes>();
+
+      // Reading the folder parses and validates every file, which is far too slow to
+      // do on the dispatcher - it made the module appear to freeze. Start it in the
+      // background and let the file list fill in as each file is read.
+      _ = LoadAsync();
     }
 
     private void RegisterCommands()
@@ -414,8 +445,10 @@ public IntakeYearsBDO Intake_Year
       UpdateTrackerCommand = new RelayCommand(new Action(updateTracker));
       AddSurnameCommand = new RelayCommand((Action) (() => AddSurname()));
       AddNameCommand = new RelayCommand((Action) (() => AddName()));
-      DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => IsDataClean());
-      ProcessSummaryCommand = new RelayCommand(() => GenerateSummary(),() => IsDataClean());
+      // Only when nothing is being read, so a folder scan and the duplicate run cannot
+      // use the service at the same time.
+      DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => !IsLoading && IsDataClean());
+      ProcessSummaryCommand = new RelayCommand(() => GenerateSummary(),() => !IsLoading && IsDataClean());
     }
 
     private void GenerateSummary()
@@ -674,23 +707,42 @@ public IntakeYearsBDO Intake_Year
 
     private void ReadQARecs()
     {
-      foreach (datFileAttributes afile in (Collection<datFileAttributes>) DirList)
+      // This caller reads the records itself, so the selection setter must not start
+      // its own background read for the same file.
+      _suppressAutoLoad = true;
+      try
       {
-        SelectedFile = afile;
-        GetQAData();
-        ReadBarcodes();
+        foreach (datFileAttributes afile in (Collection<datFileAttributes>) DirList)
+        {
+          SelectedFile = afile;
+          GetQAData();
+          ReadBarcodes();
+        }
+      }
+      finally
+      {
+        _suppressAutoLoad = false;
       }
     }
 
+    /// <summary>
+    /// True when the folder has been read and none of its files still has errors. The file
+    /// list is filled in on a background thread, so it is empty - and therefore not clean -
+    /// until the first file has been read; the command bindings query this as soon as the
+    /// module opens, which is why a null or empty list must never be treated as clean.
+    /// </summary>
     private bool IsDataClean()
     {
+      if (DirList == null || DirList.Count == 0)
+        return false;
+
       bool flag = true;
-            foreach (datFileAttributes dir in (Collection<datFileAttributes>)DirList)
-            {
-                if (dir.NoOfErrors > 0)
-                    flag = false;
-            }
-            return flag;
+      foreach (datFileAttributes dir in DirList)
+      {
+        if (dir.NoOfErrors > 0)
+          flag = false;
+      }
+      return flag;
     }
 
     private void AddSurname()
@@ -707,6 +759,84 @@ public IntakeYearsBDO Intake_Year
       if (!_service.AddNameToList(firstName))
         return;
       ModernDialog.ShowMessage(firstName + " Has been Added to Database", "Add Name", MessageBoxButton.OK);
+    }
+
+    /// <summary>
+    /// Accepts a scanned value as correct and writes it into the matching WriterList
+    /// row - the reverse of using the WriterList value. A confirmation shows both
+    /// values first, and the record's comparison is refreshed once the write succeeds.
+    /// Only the identity fields may be pushed; the NBT Reference is never written back.
+    /// </summary>
+    public void AcceptQAValueAsCorrect(QADatRecord record, string field)
+    {
+      if (record == null || !record.CanAcceptQAValueForWriter(field))
+        return;
+
+      string current = WriterValueFor(record, field);
+      string scanned = ScannedValueFor(record, field);
+
+      MessageBoxResult answer = MessageBox.Show(
+        "Write the scanned value into the WriterList?" + Environment.NewLine + Environment.NewLine +
+        field + Environment.NewLine +
+        "WriterList: " + (string.IsNullOrEmpty(current) ? "(blank)" : current) + Environment.NewLine +
+        "Scanned: " + (string.IsNullOrEmpty(scanned) ? "(blank)" : scanned),
+        "Update WriterList", MessageBoxButton.YesNo, MessageBoxImage.Question);
+      if (answer != MessageBoxResult.Yes)
+        return;
+
+      string message = "";
+      if (!_service.AcceptQAValueIntoWriterList(record, field, ref message))
+      {
+        ModernDialog.ShowMessage(message, "Update WriterList", MessageBoxButton.OK);
+        return;
+      }
+
+      record.AcceptQAValueForWriter(field);
+      ModernDialog.ShowMessage(message, "Update WriterList", MessageBoxButton.OK);
+    }
+
+    /// <summary>The scanned value of a field, for the confirmation dialog.</summary>
+    private static string ScannedValueFor(QADatRecord record, string field)
+    {
+      switch (field)
+      {
+        case "Name":
+          return record.FirstName;
+        case "Surname":
+          return record.Surname;
+        case "SAID":
+          return record.SAID;
+        case "ForeignID":
+          return record.ForeignID;
+        case "DOB":
+          return record.DOB.ToString("yyyy/MM/dd");
+        case "Gender":
+          return record.Gender;
+        default:
+          return "";
+      }
+    }
+
+    /// <summary>The WriterList value of a field, for the confirmation dialog.</summary>
+    private static string WriterValueFor(QADatRecord record, string field)
+    {
+      switch (field)
+      {
+        case "Name":
+          return record.WriterName;
+        case "Surname":
+          return record.WriterSurname;
+        case "SAID":
+          return record.WriterSAID;
+        case "ForeignID":
+          return record.WriterForeignID;
+        case "DOB":
+          return record.WriterDOB;
+        case "Gender":
+          return record.WriterGender;
+        default:
+          return "";
+      }
     }
 
     /// <summary>
@@ -744,7 +874,10 @@ public IntakeYearsBDO Intake_Year
 
     private void updateTracker()
     {
-      foreach (datFileAttributes dir in (Collection<datFileAttributes>) DirList)
+      if (DirList == null)
+        return;
+
+      foreach (datFileAttributes dir in DirList)
       {
         int Count = File.ReadAllLines(dir.FilePath).Length - 1;
         string sname = dir.SName;
@@ -773,7 +906,7 @@ public IntakeYearsBDO Intake_Year
     private void Refresh()
     {
       Folder = ApplicationSettings.Default.QAFolder;
-      Selectfolder();
+      _ = LoadAsync();
     }
 
     private void GetIDfromDB()
@@ -785,32 +918,44 @@ public IntakeYearsBDO Intake_Year
     }
 
     /// <summary>
-    /// Reads every .dat file in the QA folder in a single pass, collecting two things:
-    /// the validation error count of each file (shown in the file list) and the
-    /// folder-wide barcode index. Duplicate marking is deliberately left until the loop
-    /// has finished, because the index is not complete before then.
+    /// Reads the QA folder off the UI thread: lists the .dat files, parses and validates
+    /// each one, builds the folder-wide barcode index and fills the file list as the
+    /// results arrive. Reading a file means parsing every record plus two database
+    /// comparison passes, so doing it on the dispatcher made the module appear to freeze;
+    /// here the module appears straight away and the list fills in behind it.
     /// </summary>
-    private void Selectfolder()
+    public async Task LoadAsync()
     {
-      List<datFileAttributes> source = new List<datFileAttributes>();
-      _folderBarcodes.Clear();
+      if (IsLoading)
+        return;
+
+      IsLoading = true;
       string lastFile = null;
       try
       {
-        _buildingFolderBarcodeIndex = true;
-        foreach (FileSystemInfo file in new DirectoryInfo(Folder).GetFiles("*.dat"))
-        {
-          datFileAttributes datFileAttributes = new datFileAttributes(file.FullName);
-          SelectedFile = datFileAttributes;
-          GetQAData();
-          datFileAttributes.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>) (x => x.errorCount));
-          AddFolderBarcodes(QARecords, datFileAttributes.SName);
-          source.Add(datFileAttributes);
-          lastFile = datFileAttributes.SName;
-          SelectedFile = (datFileAttributes) null;
-        }
+        _intake_year = await Task.Run(() => _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear));
+        await Task.Run(() => _service.ReadEndofDatFile());
 
-        DirList = new ObservableCollection<datFileAttributes>(source.OrderByDescending(m => m.NoOfErrors));
+        List<string> paths = await Task.Run(() => Directory.Exists(Folder)
+          ? Directory.GetFiles(Folder, "*.dat").ToList()
+          : new List<string>());
+
+        _folderBarcodes.Clear();
+        _buildingFolderBarcodeIndex = true;
+        if (DirList == null)
+          DirList = new ObservableCollection<datFileAttributes>();
+        else
+          DirList.Clear();
+
+        foreach (string path in paths)
+        {
+          datFileAttributes file = await Task.Run(() => new datFileAttributes(path));
+          QARecords = await ReadRecordsAsync(file);
+          file.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>) (x => x.errorCount));
+          AddFolderBarcodes(QARecords, file.SName);
+          DirList.Add(file);
+          lastFile = file.SName;
+        }
       }
       catch (Exception ex)
       {
@@ -819,11 +964,59 @@ public IntakeYearsBDO Intake_Year
       finally
       {
         _buildingFolderBarcodeIndex = false;
+        IsLoading = false;
+
+        // IsDataClean() feeds the command CanExecute checks; without this the toolbar stays
+        // as it was until the next unrelated UI event makes WPF re-query it.
+        System.Windows.Input.CommandManager.InvalidateRequerySuggested();
       }
 
-      // The records still loaded belong to the last file read; mark them now
-      // that the folder wide barcode index is complete.
+      // Worst first, once every file has been read.
+      if (DirList != null)
+        DirList = new ObservableCollection<datFileAttributes>(DirList.OrderByDescending(m => m.NoOfErrors));
+
+      // The records still loaded belong to the last file read; mark them now that the
+      // folder wide barcode index is complete.
       MarkBarcodeDuplicates(lastFile);
+    }
+
+    /// <summary>
+    /// Reads and validates one file on a background thread, worst record first. Reads are
+    /// serialised through the gate because the service keeps the parsed records in
+    /// per-call state while it works.
+    /// </summary>
+    private async Task<ObservableCollection<QADatRecord>> ReadRecordsAsync(datFileAttributes file)
+    {
+      await _qaLoadGate.WaitAsync();
+      try
+      {
+        ObservableCollection<QADatRecord> records = await Task.Run(() => _service.GetQADataFromFile(file));
+        return new ObservableCollection<QADatRecord>(records.OrderByDescending(a => a.errorCount));
+      }
+      finally
+      {
+        _qaLoadGate.Release();
+      }
+    }
+
+    /// <summary>
+    /// Loads the file the user selected, without blocking the UI thread, then marks its
+    /// duplicate barcodes.
+    /// </summary>
+    private async Task LoadSelectedFileAsync(datFileAttributes file)
+    {
+      try
+      {
+        QARecords = await ReadRecordsAsync(file);
+      }
+      catch (Exception ex)
+      {
+        int num = (int) ModernDialog.ShowMessage(ex.ToString(), "Update", MessageBoxButton.OK, (Window) null);
+        return;
+      }
+
+      if (!_buildingFolderBarcodeIndex)
+        MarkBarcodeDuplicates(file.SName);
     }
 
     /// <summary>
@@ -952,6 +1145,14 @@ public IntakeYearsBDO Intake_Year
 
     private void SaveDatFile()
     {
+      // Nothing selected yet - the folder is still being read, or the last save cleared the
+      // selection - so there is no file to write.
+      if (SelectedFile == null)
+      {
+        ModernDialog.ShowMessage("Select a file in the list before saving.", "Save QA file", MessageBoxButton.OK);
+        return;
+      }
+
       string message = "";
       if (_service.SaveQADatFile(SelectedFile, ref message))
       {

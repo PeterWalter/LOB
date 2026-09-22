@@ -91,6 +91,14 @@ The file name is coloured by its total error count:
 Clicking a file loads its candidates into the grid. Loading a file reads the `.dat`
 file, parses the fixed-width records and runs the full validation set (section 7).
 
+**The folder is read in the background.** Opening QA no longer waits for the files:
+the module appears immediately and the list fills in as each file is read, with its
+error count and colour appearing when that file is done. While this is happening the
+list may be incomplete - wait for it to settle, or click **Refresh Directory** to
+start again, before running **Duplicate Barcodes** or **Write Excel Summary data**.
+Those two commands stay greyed out for the whole read, so the module cannot act on a
+half read folder.
+
 ---
 
 ## 6. The candidate grid
@@ -187,6 +195,12 @@ The seven icons down the left of the grid are, top to bottom:
 | # | Icon tooltip | What it does |
 |---|---|---|
 | 1 | **Save File** | Writes the corrected records back to fixed-width format, moves the file into a dated sub-folder (`<QAFolder>\<yyyyMMdd>\`), deletes the original `.dat`, records the QA count and QA date on the scan tracker, removes the file from the list and clears the grid. |
+
+*The record layout is fixed.* Every column is written at exactly its own width -
+short values are padded with spaces and a value that is too long for its column is
+truncated - so a saved record always has the same length as the one that was read.
+The scoring software depends on that: an extra character anywhere shifts every later
+column and corrupts the file.
 | 2 | **Refresh Directory** | Re-reads the QA folder and rebuilds the file list. |
 | 3 | **AutoClean** | Automatically repairs the fields the application can repair (see below). |
 | 4 | **Duplicate Barcodes** | Runs the full duplicate check for the whole QA folder (section 10). Only enabled when every file in the list has zero errors. |
@@ -265,11 +279,28 @@ Right-click the purple field. The grid's context menu opens with a
 `Use WriterList value: MOKOENA`. Clicking it copies the WriterList value into that
 field; the field re-validates and the purple marking clears if it now agrees.
 
-The entry is offered only for the eight comparable columns and only when the candidate
+The entry is offered only for the seven comparable columns and only when the candidate
 has a WriterList match. It is enabled for a field whenever using the WriterList value
 would actually change it - including when the scanned value is missing or unreadable
 (for example a Reference of `*`). This is how a blank or invalid **NBT Reference** is
 filled in from the WriterList. For all other columns the menu is unchanged.
+
+#### The other direction - accepting the scanned value
+
+When the scanned value is the right one and the register is wrong, the same menu offers
+**Accept scanned value (update WriterList)** directly underneath. This is the reverse:
+it keeps the value on the QA record and writes it into the WriterList row for that
+candidate.
+
+- A confirmation shows the field, the current WriterList value and the scanned value
+  before anything is written.
+- It is offered for **Name, Surname, SA ID, Foreign ID, Date of Birth and Gender** only,
+  and only when that field actually differs.
+- The **NBT Reference is never written back** - it is the identifier used to find the
+  WriterList row.
+- Once the register is updated the purple marking clears, because the two now agree.
+- If no WriterList row matches the candidate, or the database is unavailable, a message
+  is shown and nothing is changed.
 
 ---
 
@@ -429,6 +460,7 @@ top of the menu, followed by a separator and the items above:
 | Entry | Shown when | Action |
 |---|---|---|
 | **Use WriterList value: <value>** | a biography column is right-clicked and the record has a WriterList match | copies that field's WriterList value (section 9.4) |
+| **Accept scanned value (update WriterList)** | a biography column is right-clicked and that field differs from the WriterList | keeps the scanned value and writes it into the WriterList (section 9.4) |
 | **WriterList record** block | the record has a WriterList match | shows the full WriterList record for comparison |
 | **Use Composit reference: <RefNo>** | the walk-in reference exists in Composit under another reference | replaces the reference (section 9.5) |
 | **Composit record** block | as above | shows the matching Composit record |
@@ -490,7 +522,9 @@ formats are `667`, `761`, `886` and `909`.
 | **Allocate new walk-in reference** is not on the menu | It only appears for a *proper* reference (8th character not `9`) whose name, surname, SA ID or foreign ID differs from the WriterList (section 9.6). |
 | A **Barcode** is shown in amber | The barcode is a duplicate - repeated in the file, present in another QA file, or already in Composit (section 11.1). Hover it for the reason. |
 | Ambers barcodes are not shown after adding files to the QA folder | The folder barcode list is built during Refresh. Click **Refresh Directory**. |
-| **Duplicate Barcodes** / **Write Excel Summary data** are greyed out | They only enable when every file in the QA list has zero errors. |
+| The QA file list looks incomplete or empty at first | The folder is read in the background so the module opens instantly; the list fills in as each file is read. Wait for it to finish. |
+| A saved file is rejected by the scoring software | The record length must not change. Values that are too long for their column are truncated on save, so check the record for a truncated field (a name, ID or test code) and correct the source data. |
+| **Duplicate Barcodes** / **Write Excel Summary data** are greyed out | They stay disabled while the folder is still being read and while the list is empty, and only enable once every file in the list has zero errors. |
 | **SummaryForScoring.xlsx** cannot be saved | The file may be open in Excel. Close it and re-run. |
 
 ---

@@ -739,7 +739,10 @@ namespace CETAP_LOB.Model.QA
         }
         else if (expected != "")
         {
-          if (parsed.ToString("000") != expected)
+          // Compared as text: re-parsing would let a code such as "0126" pass against
+          // an expected "126", and the extra character would then widen the fixed
+          // width record when the file is saved.
+          if (str != expected)
             AddError("AQL_Code", "AQL code should be " + expected);
           else
             RemoveError("AQL_Code");
@@ -1078,7 +1081,8 @@ namespace CETAP_LOB.Model.QA
         }
         else if (expected != "")
         {
-          if (parsed.ToString("000") != expected)
+          // Compared as text, for the same reason as the AQL code above.
+          if (str != expected)
             AddError("MatCode", "MAT code should be " + expected);
           else
             RemoveError("MatCode");
@@ -1732,6 +1736,79 @@ namespace CETAP_LOB.Model.QA
           DOT = _writerRecord.DOT;
           break;
       }
+    }
+
+    /// <summary>
+    /// True when the scanned value for this field may be written into the matching
+    /// WriterList row, that is when the field differs and is one of the identity
+    /// fields. The NBT Reference is deliberately excluded: it is the key used to find
+    /// the WriterList row, so it is never pushed back.
+    /// </summary>
+    public bool CanAcceptQAValueForWriter(string field)
+    {
+      if (_writerRecord == null)
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return NameMismatch;
+        case "Surname":
+          return SurnameMismatch;
+        case "SAID":
+          return SAIDMismatch;
+        case "ForeignID":
+          return ForeignIDMismatch;
+        case "DOB":
+          return DOBMismatch;
+        case "Gender":
+          return GenderMismatch;
+        default:
+          return false;
+      }
+    }
+
+    /// <summary>
+    /// Records that the scanned value was accepted into the WriterList, so the
+    /// comparison stops reporting it. Called only after the WriterList row has been
+    /// saved, so the in-memory snapshot and the database stay in step.
+    /// </summary>
+    public void AcceptQAValueForWriter(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrEmpty(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          _writerRecord.Name = _myname;
+          RaisePropertyChanged("WriterName");
+          break;
+        case "Surname":
+          _writerRecord.Surname = _surname;
+          RaisePropertyChanged("WriterSurname");
+          break;
+        case "SAID":
+          _writerRecord.SAID = ToLong(_said);
+          RaisePropertyChanged("WriterSAID");
+          break;
+        case "ForeignID":
+          _writerRecord.ForeignID = _foreignID;
+          RaisePropertyChanged("WriterForeignID");
+          break;
+        case "DOB":
+          _writerRecord.DOB = _dob;
+          RaisePropertyChanged("WriterDOB");
+          break;
+        case "Gender":
+          _writerRecord.Gender = _gender;
+          RaisePropertyChanged("WriterGender");
+          break;
+        default:
+          return;
+      }
+
+      checkerrors();
     }
 
     /// <summary>

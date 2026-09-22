@@ -30,6 +30,7 @@ namespace CETAP_LOB.View.processing
         /// <summary>Entries added for the current opening, removed on the next one.</summary>
         private readonly List<object> _dynamicMenuItems = new List<object>();
         private MenuItem _writerValueMenuItem;
+        private MenuItem _acceptValueMenuItem;
         private MenuItem _writerRecordMenuItem;
         private MenuItem _compositValueMenuItem;
         private MenuItem _compositRecordMenuItem;
@@ -81,6 +82,17 @@ namespace CETAP_LOB.View.processing
                     _writerValueMenuItem.ToolTip = "Copy the value recorded in the WriterList for this column";
                     _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
                     entries.Add(_writerValueMenuItem);
+
+                    // The reverse direction: keep the scanned value and correct the
+                    // WriterList with it. Offered only for an identity field that
+                    // actually differs - never for the NBT Reference.
+                    if (record.CanAcceptQAValueForWriter(field))
+                    {
+                        _acceptValueMenuItem.Header = "Accept scanned value (update WriterList)";
+                        _acceptValueMenuItem.Tag = field;
+                        _acceptValueMenuItem.ToolTip = "Keep the scanned value and write it into the WriterList";
+                        entries.Add(_acceptValueMenuItem);
+                    }
                 }
 
                 _writerRecordMenuItem.Header = BuildRecordHeader(record.GetWriterRecordLines());
@@ -129,6 +141,8 @@ namespace CETAP_LOB.View.processing
 
             _writerValueMenuItem = new MenuItem();
             _writerValueMenuItem.Click += UseWriterListValue_Click;
+            _acceptValueMenuItem = new MenuItem();
+            _acceptValueMenuItem.Click += AcceptQAValue_Click;
             _writerRecordMenuItem = CreateDisplayItem();
 
             _compositValueMenuItem = new MenuItem();
@@ -189,6 +203,21 @@ namespace CETAP_LOB.View.processing
             if (item == null || _menuRecord == null)
                 return;
             _menuRecord.ApplyWriterValue(item.Tag as string);
+        }
+
+        /// <summary>
+        /// Keeps the scanned value of the field that was right clicked and writes it
+        /// into the WriterList - the reverse of UseWriterListValue_Click.
+        /// </summary>
+        private void AcceptQAValue_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = sender as MenuItem;
+            if (item == null || _menuRecord == null)
+                return;
+            QAViewModel viewModel = QAGrid == null ? null : QAGrid.DataContext as QAViewModel;
+            if (viewModel == null)
+                return;
+            viewModel.AcceptQAValueAsCorrect(_menuRecord, item.Tag as string);
         }
 
         /// <summary>Replaces the walk-in reference with the reference held in Composit.</summary>

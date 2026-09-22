@@ -192,6 +192,12 @@ namespace CETAP_LOB.Model
 
     /// <summary>Returns the supplied barcodes already held in Composit for the current intake year.</summary>
     List<long> FindCompositBarcodes(IEnumerable<long> barcodes);
+
+    /// <summary>
+    /// Writes one accepted field from a QA record into the matching WriterList row -
+    /// the reverse of copying a WriterList value into the record.
+    /// </summary>
+    bool AcceptQAValueIntoWriterList(QADatRecord record, string field, ref string message);
        
         // Remotes reports queries
         ObservableCollection<CompositBDO> GetAllRemoteScoresByIntakeYear(IntakeYearsBDO intakeYear);
