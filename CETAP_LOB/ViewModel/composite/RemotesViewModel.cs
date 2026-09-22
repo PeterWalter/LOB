@@ -1,4 +1,4 @@
-﻿
+
 using FeserWard.Controls;
 using FirstFloor.ModernUI.Windows.Controls;
 using GalaSoft.MvvmLight;
@@ -92,6 +92,23 @@ namespace CETAP_LOB.ViewModel.composite
             }
         }
         private ICollectionView _itemsView;
+        private bool _loading;
+
+        /// <summary>True while the remote scores are still being read from the database.</summary>
+        public bool IsLoading
+        {
+            get
+            {
+                return _loading;
+            }
+            private set
+            {
+                if (_loading == value)
+                    return;
+                _loading = value;
+                RaisePropertyChanged("IsLoading");
+            }
+        }
         public ICollectionView ItemsView
         {
             get
@@ -199,22 +216,43 @@ namespace CETAP_LOB.ViewModel.composite
             SyncfusionLicenseProvider.RegisterLicense("Ngo9BigBOggjHTQxAR8/V1NAaF5cWWJCf1FpRmJGdld5fUVHYVZUTXxaS00DNHVRdkdnWXxfdHVWR2FZUENwXkc=");
 
             _service = Service;
-            InitializeModels();
             RegisterCommands();
+
+            // Reading the remote scores is a round trip against a large table; doing it in the
+            // constructor held the window (menu included) while the page was opening.
+            _ = InitializeModelsAsync();
         }
 
-        private async void InitializeModels()
+        /// <summary>
+        /// Reads the remote scores for the intake year off the UI thread, then binds them.
+        /// The view is created afterwards so it is created on the UI thread.
+        /// </summary>
+        private async Task InitializeModelsAsync()
         {
-            IntakeYear = _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear);
-
-            //  TotalRec = _service.GetCompositCount(IntakeYear);
-            // ResultsProvider = (IIntelliboxResultsProvider) new CompositResultsProvider(_service);
-            //    TotalRec = _service.GetCompositCount(IntakeYear);
-            // int pp = TotalRec;
+            IsLoading = true;
             Composit1 = new ObservableCollection<CompositBDO>();
             RemotesFolder = ApplicationSettings.Default.RemotesReportsFolder;
-            Composit1 = _service.GetAllRemoteScoresByIntakeYear(IntakeYear);
-             _itemsView = CollectionViewSource.GetDefaultView(Composit1);
+
+            try
+            {
+                //  TotalRec = _service.GetCompositCount(IntakeYear);
+                // ResultsProvider = (IIntelliboxResultsProvider) new CompositResultsProvider(_service);
+                //    TotalRec = _service.GetCompositCount(IntakeYear);
+                // int pp = TotalRec;
+                IntakeYearsBDO intakeYear = await Task.Run(() => _service.GetIntakeRecord(ApplicationSettings.Default.IntakeYear));
+                IntakeYear = intakeYear;
+                Composit1 = await Task.Run(() => _service.GetAllRemoteScoresByIntakeYear(intakeYear));
+            }
+            catch (Exception ex)
+            {
+                ModernDialog.ShowMessage(ex.ToString(), "Remotes", MessageBoxButton.OK, (Window)null);
+            }
+            finally
+            {
+                IsLoading = false;
+            }
+
+            _itemsView = CollectionViewSource.GetDefaultView(Composit1);
             _itemsView.Filter = x => Filter(x as CompositBDO);
 
             //Enumerable.Range(0, Composit1.Count)

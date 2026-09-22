@@ -1,4 +1,4 @@
-﻿
+
 using FeserWard.Controls;
 using FirstFloor.ModernUI.Windows.Controls;
 using GalaSoft.MvvmLight;
@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Forms;
 
@@ -47,6 +48,23 @@ namespace CETAP_LOB.ViewModel.processing
     private bool isVenue;
     private bool isTestComb;
     private List<IntakeYearsBDO> _myPeriods;
+    private bool _loading;
+
+    /// <summary>True while the batch list is still being read from the database.</summary>
+    public bool IsLoading
+    {
+      get
+      {
+        return _loading;
+      }
+      private set
+      {
+        if (_loading == value)
+          return;
+        _loading = value;
+        RaisePropertyChanged("IsLoading");
+      }
+    }
     private IntakeYearsBDO _intakerecord;
     private List<TestBDO> _mytests;
     private TestBDO _myAQLE;
@@ -468,20 +486,44 @@ namespace CETAP_LOB.ViewModel.processing
     private void InitializeModels()
     {
       BatchProvider = (IIntelliboxResultsProvider) new BatchResultsProvider(_service);
-      List<UserBDO> userBdoList = new List<UserBDO>();
-
-      BatchMakers = _service.GetAllUsers().Where(a => a.Areas.StartsWith("1")).OrderBy(c => c.Name).Select(a => a).ToList();
-
-      _myPeriods = _service.GetAllIntakeYears();
-
-      _intakerecord = _myPeriods.Where(x => x.Year == ApplicationSettings.Default.IntakeYear).FirstOrDefault();
+      Batches = new ObservableCollection<BatchBDO>();
       TestDate = DateTime.Now;
-            SelectedBatcher = new UserBDO()
-            {
-                Name = ApplicationSettings.Default.LOBUser
-            };
-         
-      RefreshData();
+      SelectedBatcher = new UserBDO()
+      {
+        Name = ApplicationSettings.Default.LOBUser
+      };
+
+      // Reading the batches, the users and the intake years is several round trips to a
+      // remote cluster and used to hold the window (menu included) while the page opened.
+      _ = InitializeModelsAsync();
+    }
+
+    /// <summary>
+    /// Reads the batchers, intake years and batches off the UI thread, then fills the bound
+    /// properties. The page is drawn before any of this has arrived.
+    /// </summary>
+    private async Task InitializeModelsAsync()
+    {
+      IsLoading = true;
+      try
+      {
+        List<UserBDO> users = await Task.Run(() => _service.GetAllUsers());
+        List<IntakeYearsBDO> periods = await Task.Run(() => _service.GetAllIntakeYears());
+
+        BatchMakers = users.Where(a => a.Areas.StartsWith("1")).OrderBy(c => c.Name).Select(a => a).ToList();
+        _myPeriods = periods;
+        _intakerecord = _myPeriods.Where(x => x.Year == ApplicationSettings.Default.IntakeYear).FirstOrDefault();
+
+        await RefreshDataAsync();
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.ToString(), "Batching", MessageBoxButton.OK, (Window)null);
+      }
+      finally
+      {
+        IsLoading = false;
+      }
     }
 
       private void RegisterCommands()
@@ -599,7 +641,14 @@ namespace CETAP_LOB.ViewModel.processing
 
       private void RefreshData()
         {
-              Batches = new ObservableCollection<BatchBDO>(_service.GetAllbatches().Where(x => x.TestDate > _intakerecord.yearStart && x.TestDate < _intakerecord.yearEnd)
+          _ = RefreshDataAsync();
+        }
+
+      /// <summary>Reloads the batch list off the UI thread, then rebinds it.</summary>
+      private async Task RefreshDataAsync()
+        {
+              List<BatchBDO> allBatches = await Task.Run(() => _service.GetAllbatches());
+              Batches = new ObservableCollection<BatchBDO>(allBatches.Where(x => x.TestDate > _intakerecord.yearStart && x.TestDate < _intakerecord.yearEnd)
                                                                                    .OrderByDescending(b => b.BatchID).Select(x => x).ToList());
               BatchName = "";
               NoInBatch = 0;

@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.ViewModel.easypay.EasyPayViewModel
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -16,6 +16,8 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Forms;
 using System.Globalization;
+using System.Threading.Tasks;
+using FirstFloor.ModernUI.Windows.Controls;
 
 namespace CETAP_LOB.ViewModel.easypay
 {
@@ -214,7 +216,11 @@ namespace CETAP_LOB.ViewModel.easypay
       _service = Service;
       InitializeModels();
       RegisterCommands();
-      FtpDirectoryList();
+
+      // Listing the Easy Pay FTP folder takes about twenty seconds. Doing it here froze the
+      // window (the menu included) before the page could be drawn, so it runs in the
+      // background and the file list fills in when it arrives.
+      _ = FtpDirectoryListAsync();
     }
 
     private void InitializeModels()
@@ -254,14 +260,29 @@ namespace CETAP_LOB.ViewModel.easypay
       InProgress = false;
     }
 
-    private  void FtpDirectoryList()
+    /// <summary>
+    /// Reads the last uploaded file and lists the FTP folder off the UI thread.
+    /// </summary>
+    private async Task FtpDirectoryListAsync()
     {
-      
-          EPFile = _service.ReadLastFile();
-          _epFileName = EPFile.FileName;
-          _dateLoaded = DateTime.ParseExact(EPFile.DateWritten, "yyyy/MM/dd",CultureInfo.InvariantCulture);
-          //DateLoaded = Convert.ToDateTime(this.EPFile.DateWritten);
-          DirList =  _service.ListFTPFiles();
+      InProgress = true;
+      try
+      {
+        EasyPayFile lastFile = await Task.Run(() => _service.ReadLastFile());
+        EPFile = lastFile;
+        _epFileName = lastFile.FileName;
+        _dateLoaded = DateTime.ParseExact(lastFile.DateWritten, "yyyy/MM/dd", CultureInfo.InvariantCulture);
+        //DateLoaded = Convert.ToDateTime(this.EPFile.DateWritten);
+        DirList = await Task.Run(() => _service.ListFTPFiles());
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.ToString(), "Easy Pay", System.Windows.MessageBoxButton.OK);
+      }
+      finally
+      {
+        InProgress = false;
+      }
     }
 
     private async void GetFiles()

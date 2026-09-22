@@ -1,4 +1,4 @@
-﻿
+
 
 using System;
 using System.Collections;
@@ -13,6 +13,7 @@ using FirstFloor.ModernUI.Windows.Controls;
 using GalaSoft.MvvmLight;
 using GalaSoft.MvvmLight.CommandWpf;
 using Microsoft.Win32;
+using System.Threading.Tasks;
 
 namespace CETAP_LOB.ViewModel.processing
 {
@@ -25,6 +26,23 @@ namespace CETAP_LOB.ViewModel.processing
     private List<IntakeYearsBDO> _myPeriods;
     private IntakeYearsBDO _intakerecord;
     private ObservableCollection<ScanTrackerBDO> _mytrackers;
+    private bool _loading;
+
+    /// <summary>True while the tracker rows are still being read from the database.</summary>
+    public bool IsLoading
+    {
+      get
+      {
+        return _loading;
+      }
+      private set
+      {
+        if (_loading == value)
+          return;
+        _loading = value;
+        RaisePropertyChanged("IsLoading");
+      }
+    }
 
     public RelayCommand SavetoExcelCommand { get; private set; }
 
@@ -117,20 +135,47 @@ namespace CETAP_LOB.ViewModel.processing
       _service = Service;
       InitializeModels();
       RegisterCommands();
+
+      // The tracker table holds tens of thousands of rows and the venue list has to be read
+      // with it. Doing that here used to hold the window (and the menu) for a couple of
+      // seconds before the page could be drawn.
+      _ = LoadAsync();
     }
 
     private void InitializeModels()
     {
-            _selectedProcessDate = DateTime.Now;
-        List<ScanTrackerBDO> allTracks = _service.GetAllTracks();
-        _myPeriods = _service.GetAllIntakeYears();
-        _intakerecord = _myPeriods.Where(m => m.Year == ApplicationSettings.Default.IntakeYear).FirstOrDefault();
-            Trackers = new ObservableCollection<ScanTrackerBDO>(allTracks
-                       .Where(x => !x.FileName.Contains("BIO") && x.DateBatched >= _intakerecord.yearStart && x.DateBatched <= _intakerecord.yearEnd)
-                       .OrderByDescending(q => q.DateBatched));
-            var Venues1 = _service.GetAllvenues();
-            Venues = Venues1.OrderBy(x => x.VenueName).Select(x => x).ToList();
+      _selectedProcessDate = DateTime.Now;
+      Trackers = new ObservableCollection<ScanTrackerBDO>();
+    }
 
+    /// <summary>
+    /// Reads the tracker rows, intake years and venues off the UI thread, then hands them to
+    /// the bound properties.
+    /// </summary>
+    private async Task LoadAsync()
+    {
+      IsLoading = true;
+      try
+      {
+        List<ScanTrackerBDO> allTracks = await Task.Run(() => _service.GetAllTracks());
+        List<IntakeYearsBDO> periods = await Task.Run(() => _service.GetAllIntakeYears());
+        List<VenueBDO> allVenues = await Task.Run(() => _service.GetAllvenues());
+
+        _myPeriods = periods;
+        _intakerecord = _myPeriods.Where(m => m.Year == ApplicationSettings.Default.IntakeYear).FirstOrDefault();
+        Trackers = new ObservableCollection<ScanTrackerBDO>(allTracks
+          .Where(x => !x.FileName.Contains("BIO") && x.DateBatched >= _intakerecord.yearStart && x.DateBatched <= _intakerecord.yearEnd)
+          .OrderByDescending(q => q.DateBatched));
+        Venues = allVenues.OrderBy(x => x.VenueName).Select(x => x).ToList();
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.ToString(), "Scan Tracker", MessageBoxButton.OK, (Window)null);
+      }
+      finally
+      {
+        IsLoading = false;
+      }
     }
 
     private void RegisterCommands()
@@ -152,7 +197,7 @@ namespace CETAP_LOB.ViewModel.processing
 
     private void RefreshData()
         {
-            InitializeModels();
+            _ = LoadAsync();
         }
     private void SaveToExcelFile()
     {

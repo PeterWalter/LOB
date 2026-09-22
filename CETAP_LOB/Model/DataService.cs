@@ -903,6 +903,15 @@ namespace CETAP_LOB.Model
                                                             .OrderBy(x => x.TestDate)
                                                             .ThenBy(x => x.TestName).ToList();
 
+                        // Resolve the test names once. Asking the database for the name of every
+                        // allocation turned one query into one round trip per row (the table is
+                        // small, but the cluster is remote, so this took tens of seconds).
+                        Dictionary<int, string> testNames = new Dictionary<int, string>();
+                        foreach (var testName in context.TestNames.Select(x => new { x.TestID, x.TestName1 }).ToList())
+                        {
+                            testNames[testName.TestID] = testName.TestName1;
+                        }
+
 
                         //Convert each test to TestBDO
                         //Parallel.ForEach(allocations, allocation =>
@@ -917,7 +926,7 @@ namespace CETAP_LOB.Model
                         foreach (TestAllocation allocation in allocations)
                         {
                             testAllocationBDO = new TestAllocationBDO();
-                            TranslateTestAllocationDALToTestAllocationBDO(allocation, testAllocationBDO);
+                            TranslateTestAllocationDALToTestAllocationBDO(allocation, testAllocationBDO, testNames);
                             //	testBDO.AllocatedTests = GetAllocatedTestsByTestID(testBDO.TestID);
                             allAllocatedTests.Add(testAllocationBDO);
                         }
@@ -1553,7 +1562,7 @@ namespace CETAP_LOB.Model
             {
                 using (var context = new CETAPEntities())
                 {
-                    List<ScanTracker> tracks = (from a in context.ScanTrackers
+                    List<ScanTracker> tracks = (from a in context.ScanTrackers.AsNoTracking()
                                                 select a).ToList();
                     foreach (var track in tracks)
                     {
@@ -1587,7 +1596,7 @@ namespace CETAP_LOB.Model
             {
                 using (var context = new CETAPEntities())
                 {
-                    List<Batch> batches = (from a in context.Batches
+                    List<Batch> batches = (from a in context.Batches.AsNoTracking()
                                            select a
                                            ).ToList();
                     foreach (var batch in batches)
@@ -2545,7 +2554,12 @@ namespace CETAP_LOB.Model
             //testBDO.Code = test.Code;
         }
 
-        private void TranslateTestAllocationDALToTestAllocationBDO(TestAllocation allocation, TestAllocationBDO testAllocationBDO)
+        /// <summary>
+        /// Copies one allocation to its BDO. The test name is looked up from <paramref name="testNames"/>
+        /// when the caller already has the whole name list, which is the difference between one query
+        /// and one query per row.
+        /// </summary>
+        private void TranslateTestAllocationDALToTestAllocationBDO(TestAllocation allocation, TestAllocationBDO testAllocationBDO, Dictionary<int, string> testNames = null)
         {
             testAllocationBDO.Client = allocation.Client;
             testAllocationBDO.ActualUsed = allocation.ActualUsed;
@@ -2558,7 +2572,11 @@ namespace CETAP_LOB.Model
             testAllocationBDO.TestDate = allocation.TestDate;
             testAllocationBDO.TestID = allocation.TestID;
 
-            testAllocationBDO.TestName = getTestName(allocation.TestID);
+            string testName;
+            if (testNames != null && testNames.TryGetValue(allocation.TestID, out testName))
+                testAllocationBDO.TestName = testName;
+            else
+                testAllocationBDO.TestName = getTestName(allocation.TestID);
 
         }
 
@@ -8935,7 +8953,7 @@ namespace CETAP_LOB.Model
             ObservableCollection<Log> LogCollect = new ObservableCollection<Log>();
             using (var context = new CETAPEntities())
             {
-                var LC = context.Logs.OrderByDescending(x => x.Date).Select(x => x);
+                var LC = context.Logs.AsNoTracking().OrderByDescending(x => x.Date).Select(x => x);
                 foreach (Log mylog in LC) LogCollect.Add(mylog);
             }
 
