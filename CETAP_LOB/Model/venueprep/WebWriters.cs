@@ -186,10 +186,17 @@ namespace CETAP_LOB.Model.venueprep
         _said = value;
         if (!string.IsNullOrEmpty(_said))
         {
+          _said = _said.Trim();
           if (!Regex.IsMatch(_said, "^[0-9]+$"))
-            AddError("SAID", "SA Id does not have characters");
-          else if (!HelperUtils.IsValidChecksum(_said))
-            AddError("SAID", "Not a Valid South African ID number");
+            AddError("SAID", "SA Id must contain only digits");
+          else if (_said.Length != 13)
+            AddError("SAID", "SA Id must be 13 digits");
+          else if (!HelperUtils.IsValidSAIDDateOfBirth(_said))
+            AddError("SAID", "SA Id date of birth is not valid");
+          else if (!HelperUtils.IsValidSAIDCitizenshipDigit(_said))
+            AddError("SAID", "SA Id citizenship digit (11th) must be 0 or 1");
+          else if (!HelperUtils.IsValidSAIDChecksum(_said))
+            AddError("SAID", "SA Id check digit is not valid");
           else
             RemoveError("SAID");
         }
