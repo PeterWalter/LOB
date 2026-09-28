@@ -123,6 +123,82 @@ namespace LOB_Tests
 
             Assert.False(record.IsWriterValueDifferent("Name"));
             Assert.DoesNotContain(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
+            Assert.Equal("Tinyiko", record.GetCompositValue("Name"));
+        }
+
+        [Fact]
+        public void WebWriters_propagates_writer_value_to_file_and_composit()
+        {
+            string reference = BuildValidReference("310027017415");
+            string said = BuildValidSaid("800101500908");
+            DateTime dob = new DateTime(1980, 1, 1);
+
+            var writer = new WritersBDO
+            {
+                NBT = long.Parse(reference),
+                Name = "Tinyiko",
+                Surname = "Shipalana",
+                SAID = long.Parse(said),
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            var composit = new CompositBDO
+            {
+                RefNo = long.Parse(reference),
+                Name = "Tinyiko",
+                Surname = "Different",
+                SAID = long.Parse(said),
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            var record = new WebWriters
+            {
+                Reference = reference,
+                FirstName = "Tinyiko",
+                Surname = "Shipalana",
+                SAID = said,
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            record.AttachWriterRecord(writer);
+            record.AttachCompositRecord(composit);
+            record.Surname = "FileSurname";
+
+            record.ApplyWriterValue("Surname");
+
+            Assert.Equal("Shipalana", record.Surname);
+            Assert.Equal("Shipalana", record.GetCompositValue("Surname"));
+            Assert.False(record.IsCompositValueDifferent("Surname"));
+        }
+
+        [Fact]
+        public void WebWriters_replaces_walk_in_reference_with_non_walk_in_reference()
+        {
+            string walkInReference = BuildValidReference("310027017415");
+            string canonicalReference = BuildValidReference("310027017425");
+
+            var writer = new WritersBDO
+            {
+                NBT = long.Parse(canonicalReference),
+                Name = "Tinyiko",
+                Surname = "Shipalana"
+            };
+
+            var record = new WebWriters
+            {
+                Reference = walkInReference,
+                FirstName = "Tinyiko",
+                Surname = "Shipalana"
+            };
+
+            record.AttachWriterRecord(writer);
+            record.ApplyWriterValue("Name");
+
+            Assert.Equal(canonicalReference, record.Reference);
+            Assert.Equal(canonicalReference, record.GetWriterValue("Reference"));
         }
 
         private static IEnumerable<string> GetErrors(WebWriters record, string property)

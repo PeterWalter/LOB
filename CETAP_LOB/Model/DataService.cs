@@ -3190,11 +3190,17 @@ namespace CETAP_LOB.Model
 
             List<WriterList> writerLists = LoadWriterListMatches(referenceKeys, saidKeys, foreignKeys);
             List<Composit> composits = LoadCompositMatches(referenceKeys, saidKeys, foreignKeys);
+            Dictionary<long, WriterList> writerByReference = BuildWriterReferenceLookup(writerLists);
+            Dictionary<long, WriterList> writerBySaid = BuildWriterSaidLookup(writerLists);
+            Dictionary<string, WriterList> writerByForeign = BuildWriterForeignLookup(writerLists);
+            Dictionary<long, Composit> compositByReference = BuildCompositReferenceLookup(composits);
+            Dictionary<long, Composit> compositBySaid = BuildCompositSaidLookup(composits);
+            Dictionary<string, Composit> compositByForeign = BuildCompositForeignLookup(composits);
 
             foreach (WebWriters record in list)
             {
-                WritersBDO writerSnapshot = ResolveWriterSnapshot(record, writerLists);
-                CompositBDO compositSnapshot = ResolveCompositSnapshot(record, composits);
+                WritersBDO writerSnapshot = ResolveWriterSnapshot(record, writerByReference, writerBySaid, writerByForeign);
+                CompositBDO compositSnapshot = ResolveCompositSnapshot(record, compositByReference, compositBySaid, compositByForeign);
                 record.AttachWriterRecord(writerSnapshot);
                 record.AttachCompositRecord(compositSnapshot);
             }
@@ -3210,19 +3216,19 @@ namespace CETAP_LOB.Model
                 for (int i = 0; i < referenceKeys.Count; i += chunkSize)
                 {
                     List<long> chunk = referenceKeys.GetRange(i, Math.Min(chunkSize, referenceKeys.Count - i));
-                    matches.AddRange(context.WriterLists.Where(x => chunk.Contains(x.NBT)).ToList());
+                    matches.AddRange(context.WriterLists.AsNoTracking().Where(x => chunk.Contains(x.NBT)).ToList());
                 }
 
                 for (int i = 0; i < saidKeys.Count; i += chunkSize)
                 {
                     List<long> chunk = saidKeys.GetRange(i, Math.Min(chunkSize, saidKeys.Count - i));
-                    matches.AddRange(context.WriterLists.Where(x => x.SAID.HasValue && chunk.Contains(x.SAID.Value)).ToList());
+                    matches.AddRange(context.WriterLists.AsNoTracking().Where(x => x.SAID.HasValue && chunk.Contains(x.SAID.Value)).ToList());
                 }
 
                 for (int i = 0; i < foreignKeys.Count; i += chunkSize)
                 {
                     List<string> chunk = foreignKeys.GetRange(i, Math.Min(chunkSize, foreignKeys.Count - i));
-                    matches.AddRange(context.WriterLists.Where(x => x.ForeignID != null && chunk.Contains(x.ForeignID)).ToList());
+                    matches.AddRange(context.WriterLists.AsNoTracking().Where(x => x.ForeignID != null && chunk.Contains(x.ForeignID)).ToList());
                 }
             }
 
@@ -3239,34 +3245,127 @@ namespace CETAP_LOB.Model
                 for (int i = 0; i < referenceKeys.Count; i += chunkSize)
                 {
                     List<long> chunk = referenceKeys.GetRange(i, Math.Min(chunkSize, referenceKeys.Count - i));
-                    matches.AddRange(context.Composits.Where(x => chunk.Contains(x.RefNo)).ToList());
+                    matches.AddRange(context.Composits.AsNoTracking().Where(x => chunk.Contains(x.RefNo)).ToList());
                 }
 
                 for (int i = 0; i < saidKeys.Count; i += chunkSize)
                 {
                     List<long> chunk = saidKeys.GetRange(i, Math.Min(chunkSize, saidKeys.Count - i));
-                    matches.AddRange(context.Composits.Where(x => x.SAID.HasValue && chunk.Contains(x.SAID.Value)).ToList());
+                    matches.AddRange(context.Composits.AsNoTracking().Where(x => x.SAID.HasValue && chunk.Contains(x.SAID.Value)).ToList());
                 }
 
                 for (int i = 0; i < foreignKeys.Count; i += chunkSize)
                 {
                     List<string> chunk = foreignKeys.GetRange(i, Math.Min(chunkSize, foreignKeys.Count - i));
-                    matches.AddRange(context.Composits.Where(x => x.ForeignID != null && chunk.Contains(x.ForeignID)).ToList());
+                    matches.AddRange(context.Composits.AsNoTracking().Where(x => x.ForeignID != null && chunk.Contains(x.ForeignID)).ToList());
                 }
             }
 
             return matches;
         }
 
-        private WritersBDO ResolveWriterSnapshot(WebWriters record, List<WriterList> writerLists)
+        private static Dictionary<long, WriterList> BuildWriterReferenceLookup(IEnumerable<WriterList> writerLists)
         {
-            if (record == null || writerLists == null || writerLists.Count == 0)
+            Dictionary<long, WriterList> lookup = new Dictionary<long, WriterList>();
+            if (writerLists == null)
+                return lookup;
+
+            foreach (WriterList item in writerLists)
+            {
+                if (item != null && !lookup.ContainsKey(item.NBT))
+                    lookup.Add(item.NBT, item);
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<long, WriterList> BuildWriterSaidLookup(IEnumerable<WriterList> writerLists)
+        {
+            Dictionary<long, WriterList> lookup = new Dictionary<long, WriterList>();
+            if (writerLists == null)
+                return lookup;
+
+            foreach (WriterList item in writerLists)
+            {
+                if (item != null && item.SAID.HasValue && !lookup.ContainsKey(item.SAID.Value))
+                    lookup.Add(item.SAID.Value, item);
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<string, WriterList> BuildWriterForeignLookup(IEnumerable<WriterList> writerLists)
+        {
+            Dictionary<string, WriterList> lookup = new Dictionary<string, WriterList>(StringComparer.OrdinalIgnoreCase);
+            if (writerLists == null)
+                return lookup;
+
+            foreach (WriterList item in writerLists)
+            {
+                string foreign = (item?.ForeignID ?? "").Trim();
+                if (foreign.Length > 0 && !lookup.ContainsKey(foreign))
+                    lookup.Add(foreign, item);
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<long, Composit> BuildCompositReferenceLookup(IEnumerable<Composit> composits)
+        {
+            Dictionary<long, Composit> lookup = new Dictionary<long, Composit>();
+            if (composits == null)
+                return lookup;
+
+            foreach (Composit item in composits)
+            {
+                if (item != null && !lookup.ContainsKey(item.RefNo))
+                    lookup.Add(item.RefNo, item);
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<long, Composit> BuildCompositSaidLookup(IEnumerable<Composit> composits)
+        {
+            Dictionary<long, Composit> lookup = new Dictionary<long, Composit>();
+            if (composits == null)
+                return lookup;
+
+            foreach (Composit item in composits)
+            {
+                if (item != null && item.SAID.HasValue && !lookup.ContainsKey(item.SAID.Value))
+                    lookup.Add(item.SAID.Value, item);
+            }
+
+            return lookup;
+        }
+
+        private static Dictionary<string, Composit> BuildCompositForeignLookup(IEnumerable<Composit> composits)
+        {
+            Dictionary<string, Composit> lookup = new Dictionary<string, Composit>(StringComparer.OrdinalIgnoreCase);
+            if (composits == null)
+                return lookup;
+
+            foreach (Composit item in composits)
+            {
+                string foreign = (item?.ForeignID ?? "").Trim();
+                if (foreign.Length > 0 && !lookup.ContainsKey(foreign))
+                    lookup.Add(foreign, item);
+            }
+
+            return lookup;
+        }
+
+        private WritersBDO ResolveWriterSnapshot(WebWriters record, Dictionary<long, WriterList> writerByReference, Dictionary<long, WriterList> writerBySaid, Dictionary<string, WriterList> writerByForeign)
+        {
+            if (record == null)
                 return null;
 
             long? reference = TryParseBioKey(record.Reference);
-            if (reference.HasValue)
+            if (reference.HasValue && writerByReference != null)
             {
-                WriterList writer = writerLists.FirstOrDefault(x => x.NBT == reference.Value);
+                WriterList writer = null;
+                writerByReference.TryGetValue(reference.Value, out writer);
                 if (writer != null)
                 {
                     WritersBDO snapshot = new WritersBDO();
@@ -3276,9 +3375,10 @@ namespace CETAP_LOB.Model
             }
 
             long? said = TryParseBioKey(record.SAID);
-            if (said.HasValue)
+            if (said.HasValue && writerBySaid != null)
             {
-                WriterList writer = writerLists.FirstOrDefault(x => x.SAID.HasValue && x.SAID.Value == said.Value);
+                WriterList writer = null;
+                writerBySaid.TryGetValue(said.Value, out writer);
                 if (writer != null)
                 {
                     WritersBDO snapshot = new WritersBDO();
@@ -3288,9 +3388,10 @@ namespace CETAP_LOB.Model
             }
 
             string foreign = (record.ForeignID ?? "").Trim();
-            if (foreign.Length > 0)
+            if (foreign.Length > 0 && writerByForeign != null)
             {
-                WriterList writer = writerLists.FirstOrDefault(x => string.Equals((x.ForeignID ?? "").Trim(), foreign, StringComparison.OrdinalIgnoreCase));
+                WriterList writer = null;
+                writerByForeign.TryGetValue(foreign, out writer);
                 if (writer != null)
                 {
                     WritersBDO snapshot = new WritersBDO();
@@ -3302,15 +3403,16 @@ namespace CETAP_LOB.Model
             return null;
         }
 
-        private CompositBDO ResolveCompositSnapshot(WebWriters record, List<Composit> composits)
+        private CompositBDO ResolveCompositSnapshot(WebWriters record, Dictionary<long, Composit> compositByReference, Dictionary<long, Composit> compositBySaid, Dictionary<string, Composit> compositByForeign)
         {
-            if (record == null || composits == null || composits.Count == 0)
+            if (record == null)
                 return null;
 
             long? reference = TryParseBioKey(record.Reference);
-            if (reference.HasValue)
+            if (reference.HasValue && compositByReference != null)
             {
-                Composit composit = composits.FirstOrDefault(x => x.RefNo == reference.Value);
+                Composit composit = null;
+                compositByReference.TryGetValue(reference.Value, out composit);
                 if (composit != null)
                 {
                     CompositBDO snapshot = new CompositBDO();
@@ -3320,9 +3422,10 @@ namespace CETAP_LOB.Model
             }
 
             long? said = TryParseBioKey(record.SAID);
-            if (said.HasValue)
+            if (said.HasValue && compositBySaid != null)
             {
-                Composit composit = composits.FirstOrDefault(x => x.SAID.HasValue && x.SAID.Value == said.Value);
+                Composit composit = null;
+                compositBySaid.TryGetValue(said.Value, out composit);
                 if (composit != null)
                 {
                     CompositBDO snapshot = new CompositBDO();
@@ -3332,9 +3435,10 @@ namespace CETAP_LOB.Model
             }
 
             string foreign = (record.ForeignID ?? "").Trim();
-            if (foreign.Length > 0)
+            if (foreign.Length > 0 && compositByForeign != null)
             {
-                Composit composit = composits.FirstOrDefault(x => string.Equals((x.ForeignID ?? "").Trim(), foreign, StringComparison.OrdinalIgnoreCase));
+                Composit composit = null;
+                compositByForeign.TryGetValue(foreign, out composit);
                 if (composit != null)
                 {
                     CompositBDO snapshot = new CompositBDO();

@@ -502,26 +502,41 @@ namespace CETAP_LOB.Model.venueprep
       {
         case "Name":
           FirstName = _writerRecord.Name;
+          if (_compositRecord != null)
+            _compositRecord.Name = _writerRecord.Name;
           break;
         case "Surname":
           Surname = _writerRecord.Surname;
+          if (_compositRecord != null)
+            _compositRecord.Surname = _writerRecord.Surname;
           break;
         case "Reference":
-          Reference = _writerRecord.NBT.ToString();
+          SyncReferenceValue(_writerRecord.NBT.ToString());
           break;
         case "SAID":
           SAID = _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "";
+          if (_compositRecord != null)
+            _compositRecord.SAID = _writerRecord.SAID;
           break;
         case "ForeignID":
           ForeignID = _writerRecord.ForeignID;
+          if (_compositRecord != null)
+            _compositRecord.ForeignID = _writerRecord.ForeignID;
           break;
         case "DOB":
           DOB = _writerRecord.DOB;
+          if (_compositRecord != null)
+            _compositRecord.DOB = _writerRecord.DOB;
           break;
         case "Gender":
           Gender = _writerRecord.Gender;
+          if (_compositRecord != null)
+            _compositRecord.Gender = _writerRecord.Gender;
           break;
       }
+
+      SyncWalkInReferenceIfNeeded();
+      RevalidateIdentityFields();
     }
 
     public void ApplyCompositValue(string field)
@@ -533,26 +548,41 @@ namespace CETAP_LOB.Model.venueprep
       {
         case "Name":
           FirstName = _compositRecord.Name;
+          if (_writerRecord != null)
+            _writerRecord.Name = _compositRecord.Name;
           break;
         case "Surname":
           Surname = _compositRecord.Surname;
+          if (_writerRecord != null)
+            _writerRecord.Surname = _compositRecord.Surname;
           break;
         case "Reference":
-          Reference = _compositRecord.RefNo.ToString();
+          SyncReferenceValue(_compositRecord.RefNo.ToString());
           break;
         case "SAID":
           SAID = _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : "";
+          if (_writerRecord != null)
+            _writerRecord.SAID = _compositRecord.SAID;
           break;
         case "ForeignID":
           ForeignID = _compositRecord.ForeignID;
+          if (_writerRecord != null)
+            _writerRecord.ForeignID = _compositRecord.ForeignID;
           break;
         case "DOB":
           DOB = _compositRecord.DOB;
+          if (_writerRecord != null)
+            _writerRecord.DOB = _compositRecord.DOB;
           break;
         case "Gender":
           Gender = _compositRecord.Gender;
+          if (_writerRecord != null)
+            _writerRecord.Gender = _compositRecord.Gender;
           break;
       }
+
+      SyncWalkInReferenceIfNeeded();
+      RevalidateIdentityFields();
     }
 
     public bool CanApplyWriterValue(string field)
@@ -661,67 +691,81 @@ namespace CETAP_LOB.Model.venueprep
 
     public void AcceptFileValueForWriter(string field)
     {
-      if (_writerRecord == null || string.IsNullOrWhiteSpace(field))
+      if (string.IsNullOrWhiteSpace(field))
         return;
 
       switch (field)
       {
         case "Name":
-          _writerRecord.Name = _myname;
+          if (_writerRecord != null) _writerRecord.Name = _myname;
+          if (_compositRecord != null) _compositRecord.Name = _myname;
           break;
         case "Surname":
-          _writerRecord.Surname = _surname;
+          if (_writerRecord != null) _writerRecord.Surname = _surname;
+          if (_compositRecord != null) _compositRecord.Surname = _surname;
           break;
         case "Reference":
-          _writerRecord.NBT = ToLong(_NBT) ?? 0;
+          SyncReferenceValue(_NBT);
           break;
         case "SAID":
-          _writerRecord.SAID = ToLong(_said);
+          if (_writerRecord != null) _writerRecord.SAID = ToLong(_said);
+          if (_compositRecord != null) _compositRecord.SAID = ToLong(_said);
           break;
         case "ForeignID":
-          _writerRecord.ForeignID = _foreignID;
+          if (_writerRecord != null) _writerRecord.ForeignID = _foreignID;
+          if (_compositRecord != null) _compositRecord.ForeignID = _foreignID;
           break;
         case "DOB":
-          _writerRecord.DOB = _dob;
+          if (_writerRecord != null) _writerRecord.DOB = _dob;
+          if (_compositRecord != null) _compositRecord.DOB = _dob;
           break;
         case "Gender":
-          _writerRecord.Gender = _gender;
+          if (_writerRecord != null) _writerRecord.Gender = _gender;
+          if (_compositRecord != null) _compositRecord.Gender = _gender;
           break;
       }
 
+      SyncWalkInReferenceIfNeeded();
       RevalidateIdentityFields();
     }
 
     public void AcceptFileValueForComposit(string field)
     {
-      if (_compositRecord == null || string.IsNullOrWhiteSpace(field))
+      if (string.IsNullOrWhiteSpace(field))
         return;
 
       switch (field)
       {
         case "Name":
-          _compositRecord.Name = _myname;
+          if (_compositRecord != null) _compositRecord.Name = _myname;
+          if (_writerRecord != null) _writerRecord.Name = _myname;
           break;
         case "Surname":
-          _compositRecord.Surname = _surname;
+          if (_compositRecord != null) _compositRecord.Surname = _surname;
+          if (_writerRecord != null) _writerRecord.Surname = _surname;
           break;
         case "Reference":
-          _compositRecord.RefNo = ToLong(_NBT) ?? 0;
+          SyncReferenceValue(_NBT);
           break;
         case "SAID":
-          _compositRecord.SAID = ToLong(_said);
+          if (_compositRecord != null) _compositRecord.SAID = ToLong(_said);
+          if (_writerRecord != null) _writerRecord.SAID = ToLong(_said);
           break;
         case "ForeignID":
-          _compositRecord.ForeignID = _foreignID;
+          if (_compositRecord != null) _compositRecord.ForeignID = _foreignID;
+          if (_writerRecord != null) _writerRecord.ForeignID = _foreignID;
           break;
         case "DOB":
-          _compositRecord.DOB = _dob;
+          if (_compositRecord != null) _compositRecord.DOB = _dob;
+          if (_writerRecord != null) _writerRecord.DOB = _dob;
           break;
         case "Gender":
-          _compositRecord.Gender = _gender;
+          if (_compositRecord != null) _compositRecord.Gender = _gender;
+          if (_writerRecord != null) _writerRecord.Gender = _gender;
           break;
       }
 
+      SyncWalkInReferenceIfNeeded();
       RevalidateIdentityFields();
     }
 
@@ -833,6 +877,56 @@ namespace CETAP_LOB.Model.venueprep
       if (!string.IsNullOrWhiteSpace(value) && long.TryParse(value.Trim(), out parsed))
         return parsed;
       return null;
+    }
+
+    private static bool IsWalkInReference(string reference)
+    {
+      return !string.IsNullOrWhiteSpace(reference)
+             && reference.Trim().Length > 7
+             && reference.Trim()[7] == '9';
+    }
+
+    private void SyncReferenceValue(string reference)
+    {
+      string resolved = ResolveReference(reference);
+      Reference = resolved;
+      if (_writerRecord != null)
+        _writerRecord.NBT = ToLong(resolved) ?? 0;
+      if (_compositRecord != null)
+        _compositRecord.RefNo = ToLong(resolved) ?? 0;
+    }
+
+    private string ResolveReference(string preferredReference)
+    {
+      string candidate = NormaliseText(preferredReference);
+      if (candidate.Length > 0 && !IsWalkInReference(candidate))
+        return preferredReference;
+
+      string writerReference = _writerRecord == null || _writerRecord.NBT == 0 ? "" : _writerRecord.NBT.ToString();
+      if (!IsWalkInReference(writerReference) && !string.IsNullOrWhiteSpace(writerReference))
+        return writerReference;
+
+      string compositReference = _compositRecord == null || _compositRecord.RefNo == 0 ? "" : _compositRecord.RefNo.ToString();
+      if (!IsWalkInReference(compositReference) && !string.IsNullOrWhiteSpace(compositReference))
+        return compositReference;
+
+      return preferredReference;
+    }
+
+    private void SyncWalkInReferenceIfNeeded()
+    {
+      if (!IsWalkInReference(_NBT))
+        return;
+
+      string resolved = ResolveReference(_NBT);
+      if (string.IsNullOrWhiteSpace(resolved) || NormaliseText(resolved) == NormaliseText(_NBT))
+        return;
+
+      Reference = resolved;
+      if (_writerRecord != null)
+        _writerRecord.NBT = ToLong(resolved) ?? 0;
+      if (_compositRecord != null)
+        _compositRecord.RefNo = ToLong(resolved) ?? 0;
     }
 
     private void RevalidateIdentityFields()
