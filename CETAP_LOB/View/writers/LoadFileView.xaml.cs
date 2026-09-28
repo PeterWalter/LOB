@@ -175,15 +175,19 @@ namespace CETAP_LOB.View.writers
                 return;
 
             _writerValueMenuItem = new MenuItem();
+            StyleActionMenuItem(_writerValueMenuItem, Colors.LightSteelBlue, Colors.DarkBlue);
             _writerValueMenuItem.Click += UseWriterListValue_Click;
             _writerKeepFileMenuItem = new MenuItem();
+            StyleActionMenuItem(_writerKeepFileMenuItem, Colors.Honeydew, Colors.DarkGreen);
             _writerKeepFileMenuItem.Click += KeepFileValueForWriter_Click;
 
             _writerRecordMenuItem = CreateDisplayItem();
 
             _compositValueMenuItem = new MenuItem();
+            StyleActionMenuItem(_compositValueMenuItem, Colors.LightSteelBlue, Colors.DarkBlue);
             _compositValueMenuItem.Click += UseCompositValue_Click;
             _compositKeepFileMenuItem = new MenuItem();
+            StyleActionMenuItem(_compositKeepFileMenuItem, Colors.Honeydew, Colors.DarkGreen);
             _compositKeepFileMenuItem.Click += KeepFileValueForComposit_Click;
 
             _compositRecordMenuItem = CreateDisplayItem();
@@ -208,6 +212,15 @@ namespace CETAP_LOB.View.writers
             item.IsHitTestVisible = false;
             item.Focusable = false;
             return item;
+        }
+
+        private static void StyleActionMenuItem(MenuItem item, Color background, Color foreground)
+        {
+            item.FontWeight = FontWeights.SemiBold;
+            item.Padding = new Thickness(8, 4, 8, 4);
+            item.Margin = new Thickness(1, 2, 1, 2);
+            item.Background = new SolidColorBrush(background);
+            item.Foreground = new SolidColorBrush(foreground);
         }
 
         private static TextBlock BuildRecordHeader(List<string> lines)
