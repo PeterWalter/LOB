@@ -296,7 +296,12 @@ namespace CETAP_LOB.View.writers
             MenuItem item = sender as MenuItem;
             if (item == null || _menuRecord == null)
                 return;
-            _menuRecord.AcceptFileValueForComposit(item.Tag as string);
+            string field = item.Tag as string;
+            _menuRecord.AcceptFileValueForComposit(field);
+
+            string message;
+            if (!PersistCompositValue(_menuRecord, field, out message))
+                MessageBox.Show(message, "Update Composit", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private static string FieldForColumn(string header)
@@ -487,6 +492,90 @@ namespace CETAP_LOB.View.writers
                             ProvinceId = composit.ProvinceID
                         });
                     }
+                }
+            }
+
+            private static bool PersistCompositValue(WebWriters record, string field, out string message)
+            {
+                message = "";
+                if (record == null)
+                {
+                    message = "No record selected for Composit update.";
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(field))
+                {
+                    message = "No column selected for Composit update.";
+                    return false;
+                }
+
+                long parsed;
+                long? reference = long.TryParse((record.Reference ?? "").Trim(), out parsed) ? parsed : (long?)null;
+                long? said = long.TryParse((record.SAID ?? "").Trim(), out parsed) ? parsed : (long?)null;
+                string foreignId = (record.ForeignID ?? "").Trim();
+
+                using (var context = new CETAPEntities())
+                {
+                    Composit composit = null;
+                    if (reference.HasValue)
+                        composit = context.Composits.FirstOrDefault(x => x.RefNo == reference.Value);
+                    if (composit == null && said.HasValue)
+                        composit = context.Composits.FirstOrDefault(x => x.SAID.HasValue && x.SAID.Value == said.Value);
+                    if (composit == null && foreignId.Length > 0)
+                        composit = context.Composits.FirstOrDefault(x => x.ForeignID == foreignId);
+
+                    if (composit == null)
+                    {
+                        message = "No matching Composit record was found in the database.";
+                        return false;
+                    }
+
+                    switch (field)
+                    {
+                        case "Name":
+                            composit.Name = record.FirstName;
+                            break;
+                        case "Surname":
+                            composit.Surname = record.Surname;
+                            break;
+                        case "Reference":
+                            if (!long.TryParse((record.Reference ?? "").Trim(), out parsed))
+                            {
+                                message = "Reference is not a valid number for Composit update.";
+                                return false;
+                            }
+                            composit.RefNo = parsed;
+                            break;
+                        case "SAID":
+                            if (string.IsNullOrWhiteSpace(record.SAID))
+                                composit.SAID = null;
+                            else
+                            {
+                                if (!long.TryParse(record.SAID.Trim(), out parsed))
+                                {
+                                    message = "South African ID is not a valid number for Composit update.";
+                                    return false;
+                                }
+                                composit.SAID = parsed;
+                            }
+                            break;
+                        case "ForeignID":
+                            composit.ForeignID = record.ForeignID;
+                            break;
+                        case "DOB":
+                            composit.DOB = record.DOB;
+                            break;
+                        case "Gender":
+                            composit.Gender = record.Gender;
+                            break;
+                        default:
+                            message = "Unsupported Composit field: " + field + ".";
+                            return false;
+                    }
+
+                    context.SaveChanges();
+                    return true;
                 }
             }
         }
