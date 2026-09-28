@@ -175,19 +175,19 @@ namespace CETAP_LOB.View.writers
                 return;
 
             _writerValueMenuItem = new MenuItem();
-            StyleActionMenuItem(_writerValueMenuItem, Colors.LightSteelBlue, Colors.DarkBlue);
+            StyleActionMenuItem(_writerValueMenuItem, Colors.LightSteelBlue);
             _writerValueMenuItem.Click += UseWriterListValue_Click;
             _writerKeepFileMenuItem = new MenuItem();
-            StyleActionMenuItem(_writerKeepFileMenuItem, Colors.Honeydew, Colors.DarkGreen);
+            StyleActionMenuItem(_writerKeepFileMenuItem, Colors.Honeydew);
             _writerKeepFileMenuItem.Click += KeepFileValueForWriter_Click;
 
             _writerRecordMenuItem = CreateDisplayItem();
 
             _compositValueMenuItem = new MenuItem();
-            StyleActionMenuItem(_compositValueMenuItem, Colors.LightSteelBlue, Colors.DarkBlue);
+            StyleActionMenuItem(_compositValueMenuItem, Colors.LightSteelBlue);
             _compositValueMenuItem.Click += UseCompositValue_Click;
             _compositKeepFileMenuItem = new MenuItem();
-            StyleActionMenuItem(_compositKeepFileMenuItem, Colors.Honeydew, Colors.DarkGreen);
+            StyleActionMenuItem(_compositKeepFileMenuItem, Colors.Honeydew);
             _compositKeepFileMenuItem.Click += KeepFileValueForComposit_Click;
 
             _compositRecordMenuItem = CreateDisplayItem();
@@ -214,13 +214,13 @@ namespace CETAP_LOB.View.writers
             return item;
         }
 
-        private static void StyleActionMenuItem(MenuItem item, Color background, Color foreground)
+        private static void StyleActionMenuItem(MenuItem item, Color background)
         {
             item.FontWeight = FontWeights.Bold;
             item.Padding = new Thickness(8, 4, 8, 4);
             item.Margin = new Thickness(1, 2, 1, 2);
             item.Background = new SolidColorBrush(background);
-            item.Foreground = new SolidColorBrush(foreground);
+            item.Foreground = new SolidColorBrush(Colors.DodgerBlue);
         }
 
         private static TextBlock BuildRecordHeader(List<string> lines)
