@@ -88,6 +88,43 @@ namespace LOB_Tests
             Assert.Contains(GetErrors(record, "Reference"), m => m.Contains("Composit reference number differs from database"));
         }
 
+        [Fact]
+        public void WebWriters_can_accept_file_value_to_clear_selected_difference()
+        {
+            string reference = BuildValidReference("310027017415");
+            string said = BuildValidSaid("800101500908");
+            DateTime dob = new DateTime(1980, 1, 1);
+
+            var writer = new WritersBDO
+            {
+                NBT = long.Parse(reference),
+                Name = "Tinyiko",
+                Surname = "Shipalana",
+                SAID = long.Parse(said),
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            var record = new WebWriters
+            {
+                Reference = reference,
+                FirstName = "Different",
+                Surname = "Shipalana",
+                SAID = said,
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            record.AttachWriterRecord(writer);
+            Assert.True(record.IsWriterValueDifferent("Name"));
+            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
+
+            record.AcceptFileValueForWriter("Name");
+
+            Assert.False(record.IsWriterValueDifferent("Name"));
+            Assert.DoesNotContain(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
+        }
+
         private static IEnumerable<string> GetErrors(WebWriters record, string property)
         {
             return record.GetErrors(property)?.Cast<string>() ?? Enumerable.Empty<string>();

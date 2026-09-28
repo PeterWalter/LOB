@@ -607,6 +607,124 @@ namespace CETAP_LOB.Model.venueprep
       }
     }
 
+    public bool IsWriterValueDifferent(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrWhiteSpace(field))
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return AreDifferent(_myname, _writerRecord.Name);
+        case "Surname":
+          return AreDifferent(_surname, _writerRecord.Surname);
+        case "Reference":
+          return AreDifferent(_NBT, _writerRecord.NBT == 0 ? "" : _writerRecord.NBT.ToString());
+        case "SAID":
+          return AreDifferent(_said, _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "");
+        case "ForeignID":
+          return AreDifferent(_foreignID, _writerRecord.ForeignID);
+        case "DOB":
+          return AreDifferentDate(_dob, _writerRecord.DOB);
+        case "Gender":
+          return AreDifferent(_gender, _writerRecord.Gender);
+        default:
+          return false;
+      }
+    }
+
+    public bool IsCompositValueDifferent(string field)
+    {
+      if (_compositRecord == null || string.IsNullOrWhiteSpace(field))
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return AreDifferent(_myname, _compositRecord.Name);
+        case "Surname":
+          return AreDifferent(_surname, _compositRecord.Surname);
+        case "Reference":
+          return AreDifferent(_NBT, _compositRecord.RefNo == 0 ? "" : _compositRecord.RefNo.ToString());
+        case "SAID":
+          return AreDifferent(_said, _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : "");
+        case "ForeignID":
+          return AreDifferent(_foreignID, _compositRecord.ForeignID);
+        case "DOB":
+          return AreDifferentDate(_dob, _compositRecord.DOB);
+        case "Gender":
+          return AreDifferent(_gender, _compositRecord.Gender);
+        default:
+          return false;
+      }
+    }
+
+    public void AcceptFileValueForWriter(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrWhiteSpace(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          _writerRecord.Name = _myname;
+          break;
+        case "Surname":
+          _writerRecord.Surname = _surname;
+          break;
+        case "Reference":
+          _writerRecord.NBT = ToLong(_NBT) ?? 0;
+          break;
+        case "SAID":
+          _writerRecord.SAID = ToLong(_said);
+          break;
+        case "ForeignID":
+          _writerRecord.ForeignID = _foreignID;
+          break;
+        case "DOB":
+          _writerRecord.DOB = _dob;
+          break;
+        case "Gender":
+          _writerRecord.Gender = _gender;
+          break;
+      }
+
+      RevalidateIdentityFields();
+    }
+
+    public void AcceptFileValueForComposit(string field)
+    {
+      if (_compositRecord == null || string.IsNullOrWhiteSpace(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          _compositRecord.Name = _myname;
+          break;
+        case "Surname":
+          _compositRecord.Surname = _surname;
+          break;
+        case "Reference":
+          _compositRecord.RefNo = ToLong(_NBT) ?? 0;
+          break;
+        case "SAID":
+          _compositRecord.SAID = ToLong(_said);
+          break;
+        case "ForeignID":
+          _compositRecord.ForeignID = _foreignID;
+          break;
+        case "DOB":
+          _compositRecord.DOB = _dob;
+          break;
+        case "Gender":
+          _compositRecord.Gender = _gender;
+          break;
+      }
+
+      RevalidateIdentityFields();
+    }
+
     public string GetCurrentValue(string field)
     {
       switch (field)
@@ -691,6 +809,40 @@ namespace CETAP_LOB.Model.venueprep
     private static string NormaliseText(string value)
     {
       return string.IsNullOrWhiteSpace(value) ? "" : value.Trim().ToUpperInvariant();
+    }
+
+    private static bool AreDifferent(string left, string right)
+    {
+      return NormaliseText(left) != NormaliseText(right);
+    }
+
+    private static bool AreDifferentDate(DateTime left, DateTime right)
+    {
+      bool leftEmpty = left == default(DateTime);
+      bool rightEmpty = right == default(DateTime);
+      if (leftEmpty && rightEmpty)
+        return false;
+      if (leftEmpty != rightEmpty)
+        return true;
+      return left.Date != right.Date;
+    }
+
+    private static long? ToLong(string value)
+    {
+      long parsed;
+      if (!string.IsNullOrWhiteSpace(value) && long.TryParse(value.Trim(), out parsed))
+        return parsed;
+      return null;
+    }
+
+    private void RevalidateIdentityFields()
+    {
+      ValidateReference();
+      ValidateFirstName();
+      ValidateSurname();
+      ValidateSAID();
+      ValidateForeignID();
+      ValidateDOB();
     }
 
     private void ValidateReference()
