@@ -25,6 +25,7 @@ namespace CETAP_LOB.View.writers
         private MenuItem _compositKeepFileMenuItem;
         private MenuItem _compositRecordMenuItem;
         private MenuItem _columnValuesMenuItem;
+        private MenuItem _actionsSectionMenuItem;
         private Separator _dynamicMenuSeparator;
         private WebWriters _menuRecord;
 
@@ -73,8 +74,9 @@ namespace CETAP_LOB.View.writers
                 field = FieldForColumn(grid.CurrentCell.Column.Header as string);
             _menuRecord = record;
 
-            List<object> entries = new List<object>();
-            entries.Add(BuildColumnValuesMenu(record, field));
+            List<object> infoEntries = new List<object>();
+            List<object> actionEntries = new List<object>();
+            infoEntries.Add(BuildColumnValuesMenu(record, field));
 
             if (record.HasWriterRecord)
             {
@@ -87,17 +89,17 @@ namespace CETAP_LOB.View.writers
                     _writerValueMenuItem.IsEnabled = writerDiff && record.CanApplyWriterValue(field);
                     if (writerDiff)
                     {
-                        entries.Add(_writerValueMenuItem);
+                        actionEntries.Add(_writerValueMenuItem);
                         SetActionHeader(_writerKeepFileMenuItem, "Keep file value (accept as correct)");
                         _writerKeepFileMenuItem.Tag = field;
                         _writerKeepFileMenuItem.ToolTip = "Keep the current file value and remove WriterList difference highlighting for this column";
-                        entries.Add(_writerKeepFileMenuItem);
+                        actionEntries.Add(_writerKeepFileMenuItem);
                     }
                 }
 
                 _writerRecordMenuItem.Header = BuildRecordHeader(record.GetWriterRecordLines());
                 _writerRecordMenuItem.ToolTip = "The matching WriterList record";
-                entries.Add(_writerRecordMenuItem);
+                infoEntries.Add(_writerRecordMenuItem);
             }
 
             if (record.HasCompositRecord)
@@ -111,26 +113,34 @@ namespace CETAP_LOB.View.writers
                     _compositValueMenuItem.IsEnabled = compositDiff && record.CanApplyCompositValue(field);
                     if (compositDiff)
                     {
-                        entries.Add(_compositValueMenuItem);
+                        actionEntries.Add(_compositValueMenuItem);
                         SetActionHeader(_compositKeepFileMenuItem, "Keep file value (accept as correct)");
                         _compositKeepFileMenuItem.Tag = field;
                         _compositKeepFileMenuItem.ToolTip = "Keep the current file value and remove Composit difference highlighting for this column";
-                        entries.Add(_compositKeepFileMenuItem);
+                        actionEntries.Add(_compositKeepFileMenuItem);
                     }
                 }
 
                 _compositRecordMenuItem.Header = BuildRecordHeader(record.GetCompositRecordLines());
                 _compositRecordMenuItem.ToolTip = "The matching Composit record";
-                entries.Add(_compositRecordMenuItem);
+                infoEntries.Add(_compositRecordMenuItem);
             }
 
-            if (entries.Count == 0)
+            if (infoEntries.Count == 0 && actionEntries.Count == 0)
             {
                 _menuRecord = null;
                 return;
             }
 
-            entries.Add(_dynamicMenuSeparator);
+            List<object> entries = new List<object>();
+            entries.AddRange(infoEntries);
+            if (actionEntries.Count > 0)
+            {
+                entries.Add(_dynamicMenuSeparator);
+                entries.Add(EnsureActionsSection());
+                entries.AddRange(actionEntries);
+            }
+
             for (int i = entries.Count - 1; i >= 0; i--)
                 grid.ContextMenu.Items.Insert(0, entries[i]);
             _dynamicMenuItems.AddRange(entries);
@@ -193,6 +203,7 @@ namespace CETAP_LOB.View.writers
             _compositRecordMenuItem = CreateDisplayItem();
             _columnValuesMenuItem = new MenuItem();
             _columnValuesMenuItem.StaysOpenOnClick = true;
+            _actionsSectionMenuItem = CreateSectionHeaderMenuItem("Use / Keep value");
 
             _dynamicMenuSeparator = new Separator();
         }
@@ -214,6 +225,21 @@ namespace CETAP_LOB.View.writers
             return item;
         }
 
+        private static MenuItem CreateSectionHeaderMenuItem(string text)
+        {
+            MenuItem item = new MenuItem();
+            item.IsHitTestVisible = false;
+            item.Focusable = false;
+            item.Header = new TextBlock
+            {
+                Text = text,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Colors.DodgerBlue),
+                Margin = new Thickness(0, 2, 0, 0)
+            };
+            return item;
+        }
+
         private static void StyleActionMenuItem(MenuItem item, Color background)
         {
             item.FontWeight = FontWeights.Bold;
@@ -231,6 +257,11 @@ namespace CETAP_LOB.View.writers
                 FontWeight = FontWeights.Bold,
                 Foreground = new SolidColorBrush(Colors.DodgerBlue)
             };
+        }
+
+        private MenuItem EnsureActionsSection()
+        {
+            return _actionsSectionMenuItem;
         }
 
         private static TextBlock BuildRecordHeader(List<string> lines)
