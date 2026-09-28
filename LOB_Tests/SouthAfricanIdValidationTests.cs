@@ -35,7 +35,7 @@ namespace LOB_Tests
                 Name = "Tinyiko",
                 Surname = "Shipalana",
                 SAID = long.Parse(said),
-                ForeignID = "PASS123",
+                ForeignID = "PASS777",
                 DOB = dob
             };
 
@@ -243,7 +243,7 @@ namespace LOB_Tests
 
             record.AcceptFileValueForComposit("ForeignID");
 
-            Assert.Equal("PASS123", record.GetWriterValue("ForeignID"));
+            Assert.Equal("PASS777", record.GetWriterValue("ForeignID"));
             Assert.Equal("PASS123", record.GetCompositValue("ForeignID"));
         }
 
