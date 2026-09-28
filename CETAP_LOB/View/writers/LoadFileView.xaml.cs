@@ -88,12 +88,8 @@ namespace CETAP_LOB.View.writers
                     _writerValueMenuItem.IsEnabled = writerDiff && record.CanApplyWriterValue(field);
                     if (writerDiff)
                     {
-                        actionEntries.Add(CreateSectionHeaderMenuItem("WriterList actions"));
+                        actionEntries.Add(CreateSectionHeaderMenuItem("WriterList value"));
                         actionEntries.Add(_writerValueMenuItem);
-                        SetActionHeader(_writerKeepFileMenuItem, "Keep file value for WriterList");
-                        _writerKeepFileMenuItem.Tag = field;
-                        _writerKeepFileMenuItem.ToolTip = "Keep the current file value and remove WriterList difference highlighting for this column";
-                        actionEntries.Add(_writerKeepFileMenuItem);
                     }
                 }
 
@@ -113,11 +109,11 @@ namespace CETAP_LOB.View.writers
                     _compositValueMenuItem.IsEnabled = compositDiff && record.CanApplyCompositValue(field);
                     if (compositDiff)
                     {
-                        actionEntries.Add(CreateSectionHeaderMenuItem("Composit actions"));
+                        actionEntries.Add(CreateSectionHeaderMenuItem("Composit value"));
                         actionEntries.Add(_compositValueMenuItem);
-                        SetActionHeader(_compositKeepFileMenuItem, "Keep file value for Composit");
+                        SetActionHeader(_compositKeepFileMenuItem, "Keep file value (update Composit)");
                         _compositKeepFileMenuItem.Tag = field;
-                        _compositKeepFileMenuItem.ToolTip = "Keep the current file value and remove Composit difference highlighting for this column";
+                        _compositKeepFileMenuItem.ToolTip = "Keep the current file value and write it into Composit for this column";
                         actionEntries.Add(_compositKeepFileMenuItem);
                     }
                 }
