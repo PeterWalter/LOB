@@ -201,6 +201,58 @@ namespace LOB_Tests
             Assert.Equal(canonicalReference, record.GetWriterValue("Reference"));
         }
 
+        [Fact]
+        public void WebWriters_only_updates_sources_that_differ_from_the_accepted_value()
+        {
+            string reference = BuildValidReference("310027017415");
+            string said = BuildValidSaid("800101500908");
+            DateTime dob = new DateTime(1980, 1, 1);
+
+            var writer = new WritersBDO
+            {
+                NBT = long.Parse(reference),
+                Name = "Tinyiko",
+                Surname = "Shipalana",
+                SAID = long.Parse(said),
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            var composit = new CompositBDO
+            {
+                RefNo = long.Parse(reference),
+                Name = "Tinyiko",
+                Surname = "Different",
+                SAID = long.Parse(said),
+                ForeignID = "PASS999",
+                DOB = dob
+            };
+
+            var record = new WebWriters
+            {
+                Reference = reference,
+                FirstName = "Tinyiko",
+                Surname = "Shipalana",
+                SAID = said,
+                ForeignID = "PASS123",
+                DOB = dob
+            };
+
+            record.AttachWriterRecord(writer);
+            record.AttachCompositRecord(composit);
+
+            record.ApplyWriterValue("Surname");
+
+            Assert.Equal("Shipalana", record.Surname);
+            Assert.Equal("Shipalana", record.GetCompositValue("Surname"));
+            Assert.Equal("PASS999", record.GetCompositValue("ForeignID"));
+
+            record.AcceptFileValueForComposit("ForeignID");
+
+            Assert.Equal("PASS123", record.GetWriterValue("ForeignID"));
+            Assert.Equal("PASS123", record.GetCompositValue("ForeignID"));
+        }
+
         private static IEnumerable<string> GetErrors(WebWriters record, string property)
         {
             return record.GetErrors(property)?.Cast<string>() ?? Enumerable.Empty<string>();

@@ -502,12 +502,12 @@ namespace CETAP_LOB.Model.venueprep
       {
         case "Name":
           FirstName = _writerRecord.Name;
-          if (_compositRecord != null)
+          if (_compositRecord != null && AreDifferent(_compositRecord.Name, _writerRecord.Name))
             _compositRecord.Name = _writerRecord.Name;
           break;
         case "Surname":
           Surname = _writerRecord.Surname;
-          if (_compositRecord != null)
+          if (_compositRecord != null && AreDifferent(_compositRecord.Surname, _writerRecord.Surname))
             _compositRecord.Surname = _writerRecord.Surname;
           break;
         case "Reference":
@@ -515,22 +515,22 @@ namespace CETAP_LOB.Model.venueprep
           break;
         case "SAID":
           SAID = _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "";
-          if (_compositRecord != null)
+          if (_compositRecord != null && _compositRecord.SAID != _writerRecord.SAID)
             _compositRecord.SAID = _writerRecord.SAID;
           break;
         case "ForeignID":
           ForeignID = _writerRecord.ForeignID;
-          if (_compositRecord != null)
+          if (_compositRecord != null && AreDifferent(_compositRecord.ForeignID, _writerRecord.ForeignID))
             _compositRecord.ForeignID = _writerRecord.ForeignID;
           break;
         case "DOB":
           DOB = _writerRecord.DOB;
-          if (_compositRecord != null)
+          if (_compositRecord != null && _compositRecord.DOB != _writerRecord.DOB)
             _compositRecord.DOB = _writerRecord.DOB;
           break;
         case "Gender":
           Gender = _writerRecord.Gender;
-          if (_compositRecord != null)
+          if (_compositRecord != null && AreDifferent(_compositRecord.Gender, _writerRecord.Gender))
             _compositRecord.Gender = _writerRecord.Gender;
           break;
       }
@@ -548,12 +548,12 @@ namespace CETAP_LOB.Model.venueprep
       {
         case "Name":
           FirstName = _compositRecord.Name;
-          if (_writerRecord != null)
+          if (_writerRecord != null && AreDifferent(_writerRecord.Name, _compositRecord.Name))
             _writerRecord.Name = _compositRecord.Name;
           break;
         case "Surname":
           Surname = _compositRecord.Surname;
-          if (_writerRecord != null)
+          if (_writerRecord != null && AreDifferent(_writerRecord.Surname, _compositRecord.Surname))
             _writerRecord.Surname = _compositRecord.Surname;
           break;
         case "Reference":
@@ -561,22 +561,22 @@ namespace CETAP_LOB.Model.venueprep
           break;
         case "SAID":
           SAID = _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : "";
-          if (_writerRecord != null)
+          if (_writerRecord != null && _writerRecord.SAID != _compositRecord.SAID)
             _writerRecord.SAID = _compositRecord.SAID;
           break;
         case "ForeignID":
           ForeignID = _compositRecord.ForeignID;
-          if (_writerRecord != null)
+          if (_writerRecord != null && AreDifferent(_writerRecord.ForeignID, _compositRecord.ForeignID))
             _writerRecord.ForeignID = _compositRecord.ForeignID;
           break;
         case "DOB":
           DOB = _compositRecord.DOB;
-          if (_writerRecord != null)
+          if (_writerRecord != null && _writerRecord.DOB != _compositRecord.DOB)
             _writerRecord.DOB = _compositRecord.DOB;
           break;
         case "Gender":
           Gender = _compositRecord.Gender;
-          if (_writerRecord != null)
+          if (_writerRecord != null && AreDifferent(_writerRecord.Gender, _compositRecord.Gender))
             _writerRecord.Gender = _compositRecord.Gender;
           break;
       }
@@ -697,31 +697,32 @@ namespace CETAP_LOB.Model.venueprep
       switch (field)
       {
         case "Name":
-          if (_writerRecord != null) _writerRecord.Name = _myname;
-          if (_compositRecord != null) _compositRecord.Name = _myname;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Name, _myname)) _writerRecord.Name = _myname;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Name, _myname)) _compositRecord.Name = _myname;
           break;
         case "Surname":
-          if (_writerRecord != null) _writerRecord.Surname = _surname;
-          if (_compositRecord != null) _compositRecord.Surname = _surname;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Surname, _surname)) _writerRecord.Surname = _surname;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Surname, _surname)) _compositRecord.Surname = _surname;
           break;
         case "Reference":
           SyncReferenceValue(_NBT);
           break;
         case "SAID":
-          if (_writerRecord != null) _writerRecord.SAID = ToLong(_said);
-          if (_compositRecord != null) _compositRecord.SAID = ToLong(_said);
+          long? saidValue = ToLong(_said);
+          if (_writerRecord != null && _writerRecord.SAID != saidValue) _writerRecord.SAID = saidValue;
+          if (_compositRecord != null && _compositRecord.SAID != saidValue) _compositRecord.SAID = saidValue;
           break;
         case "ForeignID":
-          if (_writerRecord != null) _writerRecord.ForeignID = _foreignID;
-          if (_compositRecord != null) _compositRecord.ForeignID = _foreignID;
+          if (_writerRecord != null && AreDifferent(_writerRecord.ForeignID, _foreignID)) _writerRecord.ForeignID = _foreignID;
+          if (_compositRecord != null && AreDifferent(_compositRecord.ForeignID, _foreignID)) _compositRecord.ForeignID = _foreignID;
           break;
         case "DOB":
-          if (_writerRecord != null) _writerRecord.DOB = _dob;
-          if (_compositRecord != null) _compositRecord.DOB = _dob;
+          if (_writerRecord != null && _writerRecord.DOB != _dob) _writerRecord.DOB = _dob;
+          if (_compositRecord != null && _compositRecord.DOB != _dob) _compositRecord.DOB = _dob;
           break;
         case "Gender":
-          if (_writerRecord != null) _writerRecord.Gender = _gender;
-          if (_compositRecord != null) _compositRecord.Gender = _gender;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Gender, _gender)) _writerRecord.Gender = _gender;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Gender, _gender)) _compositRecord.Gender = _gender;
           break;
       }
 
@@ -737,31 +738,32 @@ namespace CETAP_LOB.Model.venueprep
       switch (field)
       {
         case "Name":
-          if (_compositRecord != null) _compositRecord.Name = _myname;
-          if (_writerRecord != null) _writerRecord.Name = _myname;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Name, _myname)) _compositRecord.Name = _myname;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Name, _myname)) _writerRecord.Name = _myname;
           break;
         case "Surname":
-          if (_compositRecord != null) _compositRecord.Surname = _surname;
-          if (_writerRecord != null) _writerRecord.Surname = _surname;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Surname, _surname)) _compositRecord.Surname = _surname;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Surname, _surname)) _writerRecord.Surname = _surname;
           break;
         case "Reference":
           SyncReferenceValue(_NBT);
           break;
         case "SAID":
-          if (_compositRecord != null) _compositRecord.SAID = ToLong(_said);
-          if (_writerRecord != null) _writerRecord.SAID = ToLong(_said);
+          long? saidValue = ToLong(_said);
+          if (_compositRecord != null && _compositRecord.SAID != saidValue) _compositRecord.SAID = saidValue;
+          if (_writerRecord != null && _writerRecord.SAID != saidValue) _writerRecord.SAID = saidValue;
           break;
         case "ForeignID":
-          if (_compositRecord != null) _compositRecord.ForeignID = _foreignID;
-          if (_writerRecord != null) _writerRecord.ForeignID = _foreignID;
+          if (_compositRecord != null && AreDifferent(_compositRecord.ForeignID, _foreignID)) _compositRecord.ForeignID = _foreignID;
+          if (_writerRecord != null && AreDifferent(_writerRecord.ForeignID, _foreignID)) _writerRecord.ForeignID = _foreignID;
           break;
         case "DOB":
-          if (_compositRecord != null) _compositRecord.DOB = _dob;
-          if (_writerRecord != null) _writerRecord.DOB = _dob;
+          if (_compositRecord != null && _compositRecord.DOB != _dob) _compositRecord.DOB = _dob;
+          if (_writerRecord != null && _writerRecord.DOB != _dob) _writerRecord.DOB = _dob;
           break;
         case "Gender":
-          if (_compositRecord != null) _compositRecord.Gender = _gender;
-          if (_writerRecord != null) _writerRecord.Gender = _gender;
+          if (_compositRecord != null && AreDifferent(_compositRecord.Gender, _gender)) _compositRecord.Gender = _gender;
+          if (_writerRecord != null && AreDifferent(_writerRecord.Gender, _gender)) _writerRecord.Gender = _gender;
           break;
       }
 
@@ -890,10 +892,11 @@ namespace CETAP_LOB.Model.venueprep
     {
       string resolved = ResolveReference(reference);
       Reference = resolved;
-      if (_writerRecord != null)
-        _writerRecord.NBT = ToLong(resolved) ?? 0;
-      if (_compositRecord != null)
-        _compositRecord.RefNo = ToLong(resolved) ?? 0;
+      long? resolvedValue = ToLong(resolved);
+      if (_writerRecord != null && _writerRecord.NBT != (resolvedValue ?? 0))
+        _writerRecord.NBT = resolvedValue ?? 0;
+      if (_compositRecord != null && _compositRecord.RefNo != (resolvedValue ?? 0))
+        _compositRecord.RefNo = resolvedValue ?? 0;
     }
 
     private string ResolveReference(string preferredReference)
