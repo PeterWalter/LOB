@@ -79,14 +79,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="6116864">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="6138368">
       <assemblyIdentity name="CETAP_LOB" version="1.1.0.1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>YJDGy7HD4EPGFeLuNxN5u9F4y2k9B3YEFCbzJaVOPzY=</dsig:DigestValue>
+        <dsig:DigestValue>HFHIAGUaDsZwstmT7MQ92nRGj3QkBzMI/4XQdnPN8TQ=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -720,22 +720,22 @@
       <dsig:DigestValue>qTzM2eG38OGrHYuIbvrBz0PB9tkcNUQRXNPEM80wejc=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Database\Model1.Context.tt" size="22290">
+  <file name="Database\Model1.Context.tt" size="22925">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>ex7XdKTMaHCyECIhsFKOba9GYyHQkuCkD9KmBQG46aI=</dsig:DigestValue>
+      <dsig:DigestValue>gFE5caIHbZg+5Moo/eghvlxRV96JEJ6kw7jqZhZiKNY=</dsig:DigestValue>
     </hash>
   </file>
-  <file name="Database\Model1.tt" size="24508">
+  <file name="Database\Model1.tt" size="25240">
     <hash>
       <dsig:Transforms>
         <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>dT7Tfg30ox8kHxvp/9na/6xNVYKgdmTvQ0Rel6+4yW0=</dsig:DigestValue>
+      <dsig:DigestValue>KEyK4NN3fRr+77Fd1E5rMirCeEFYUVJj/jcPjR2/hmU=</dsig:DigestValue>
     </hash>
   </file>
   <file name="x64\SqlServerSpatial160.dll" size="681904">
