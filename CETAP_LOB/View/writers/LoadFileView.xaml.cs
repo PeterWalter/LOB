@@ -216,7 +216,7 @@ namespace CETAP_LOB.View.writers
 
         private static void StyleActionMenuItem(MenuItem item, Color background, Color foreground)
         {
-            item.FontWeight = FontWeights.SemiBold;
+            item.FontWeight = FontWeights.Bold;
             item.Padding = new Thickness(8, 4, 8, 4);
             item.Margin = new Thickness(1, 2, 1, 2);
             item.Background = new SolidColorBrush(background);
