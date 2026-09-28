@@ -21,6 +21,8 @@ namespace CETAP_LOB.View.writers
         private MenuItem _writerValueMenuItem;
         private MenuItem _writerRecordMenuItem;
         private MenuItem _compositValueMenuItem;
+        private MenuItem _writerKeepFileMenuItem;
+        private MenuItem _compositKeepFileMenuItem;
         private MenuItem _compositRecordMenuItem;
         private MenuItem _columnValuesMenuItem;
         private Separator _dynamicMenuSeparator;
@@ -81,8 +83,16 @@ namespace CETAP_LOB.View.writers
                     _writerValueMenuItem.Header = "Use WriterList value: " + DisplayValue(record.GetWriterValue(field));
                     _writerValueMenuItem.Tag = field;
                     _writerValueMenuItem.ToolTip = "Copy the value recorded in WriterList for this column";
-                    _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
-                    entries.Add(_writerValueMenuItem);
+                    bool writerDiff = record.IsWriterValueDifferent(field);
+                    _writerValueMenuItem.IsEnabled = writerDiff && record.CanApplyWriterValue(field);
+                    if (writerDiff)
+                    {
+                        entries.Add(_writerValueMenuItem);
+                        _writerKeepFileMenuItem.Header = "Keep file value (accept as correct)";
+                        _writerKeepFileMenuItem.Tag = field;
+                        _writerKeepFileMenuItem.ToolTip = "Keep the current file value and remove WriterList difference highlighting for this column";
+                        entries.Add(_writerKeepFileMenuItem);
+                    }
                 }
 
                 _writerRecordMenuItem.Header = BuildRecordHeader(record.GetWriterRecordLines());
@@ -97,8 +107,16 @@ namespace CETAP_LOB.View.writers
                     _compositValueMenuItem.Header = "Use Composit value: " + DisplayValue(record.GetCompositValue(field));
                     _compositValueMenuItem.Tag = field;
                     _compositValueMenuItem.ToolTip = "Copy the value recorded in Composit for this column";
-                    _compositValueMenuItem.IsEnabled = record.CanApplyCompositValue(field);
-                    entries.Add(_compositValueMenuItem);
+                    bool compositDiff = record.IsCompositValueDifferent(field);
+                    _compositValueMenuItem.IsEnabled = compositDiff && record.CanApplyCompositValue(field);
+                    if (compositDiff)
+                    {
+                        entries.Add(_compositValueMenuItem);
+                        _compositKeepFileMenuItem.Header = "Keep file value (accept as correct)";
+                        _compositKeepFileMenuItem.Tag = field;
+                        _compositKeepFileMenuItem.ToolTip = "Keep the current file value and remove Composit difference highlighting for this column";
+                        entries.Add(_compositKeepFileMenuItem);
+                    }
                 }
 
                 _compositRecordMenuItem.Header = BuildRecordHeader(record.GetCompositRecordLines());
@@ -133,9 +151,19 @@ namespace CETAP_LOB.View.writers
             }
             else
             {
-                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem("File: " + DisplayValue(record.GetCurrentValue(field))));
-                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem("WriterList: " + DisplayValue(record.GetWriterValue(field))));
-                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem("Composit: " + DisplayValue(record.GetCompositValue(field))));
+                string fileValue = DisplayValue(record.GetCurrentValue(field));
+                bool writerDiff = record.IsWriterValueDifferent(field);
+                bool compositDiff = record.IsCompositValueDifferent(field);
+                string writerLabel = writerDiff
+                    ? "WriterList (DIFFERENT): " + DisplayValue(record.GetWriterValue(field))
+                    : "WriterList: same as file";
+                string compositLabel = compositDiff
+                    ? "Composit (DIFFERENT): " + DisplayValue(record.GetCompositValue(field))
+                    : "Composit: same as file";
+
+                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem("File: " + fileValue));
+                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem(writerLabel));
+                _columnValuesMenuItem.Items.Add(CreateInfoMenuItem(compositLabel));
             }
 
             return _columnValuesMenuItem;
@@ -148,11 +176,15 @@ namespace CETAP_LOB.View.writers
 
             _writerValueMenuItem = new MenuItem();
             _writerValueMenuItem.Click += UseWriterListValue_Click;
+            _writerKeepFileMenuItem = new MenuItem();
+            _writerKeepFileMenuItem.Click += KeepFileValueForWriter_Click;
 
             _writerRecordMenuItem = CreateDisplayItem();
 
             _compositValueMenuItem = new MenuItem();
             _compositValueMenuItem.Click += UseCompositValue_Click;
+            _compositKeepFileMenuItem = new MenuItem();
+            _compositKeepFileMenuItem.Click += KeepFileValueForComposit_Click;
 
             _compositRecordMenuItem = CreateDisplayItem();
             _columnValuesMenuItem = new MenuItem();
@@ -205,6 +237,22 @@ namespace CETAP_LOB.View.writers
             if (item == null || _menuRecord == null)
                 return;
             _menuRecord.ApplyCompositValue(item.Tag as string);
+        }
+
+        private void KeepFileValueForWriter_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = sender as MenuItem;
+            if (item == null || _menuRecord == null)
+                return;
+            _menuRecord.AcceptFileValueForWriter(item.Tag as string);
+        }
+
+        private void KeepFileValueForComposit_Click(object sender, RoutedEventArgs e)
+        {
+            MenuItem item = sender as MenuItem;
+            if (item == null || _menuRecord == null)
+                return;
+            _menuRecord.AcceptFileValueForComposit(item.Tag as string);
         }
 
         private static string FieldForColumn(string header)
