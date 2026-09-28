@@ -80,7 +80,7 @@ namespace CETAP_LOB.View.writers
             {
                 if (field != null)
                 {
-                    _writerValueMenuItem.Header = "Use WriterList value: " + DisplayValue(record.GetWriterValue(field));
+                    SetActionHeader(_writerValueMenuItem, "Use WriterList value: " + DisplayValue(record.GetWriterValue(field)));
                     _writerValueMenuItem.Tag = field;
                     _writerValueMenuItem.ToolTip = "Copy the value recorded in WriterList for this column";
                     bool writerDiff = record.IsWriterValueDifferent(field);
@@ -88,7 +88,7 @@ namespace CETAP_LOB.View.writers
                     if (writerDiff)
                     {
                         entries.Add(_writerValueMenuItem);
-                        _writerKeepFileMenuItem.Header = "Keep file value (accept as correct)";
+                        SetActionHeader(_writerKeepFileMenuItem, "Keep file value (accept as correct)");
                         _writerKeepFileMenuItem.Tag = field;
                         _writerKeepFileMenuItem.ToolTip = "Keep the current file value and remove WriterList difference highlighting for this column";
                         entries.Add(_writerKeepFileMenuItem);
@@ -104,7 +104,7 @@ namespace CETAP_LOB.View.writers
             {
                 if (field != null)
                 {
-                    _compositValueMenuItem.Header = "Use Composit value: " + DisplayValue(record.GetCompositValue(field));
+                    SetActionHeader(_compositValueMenuItem, "Use Composit value: " + DisplayValue(record.GetCompositValue(field)));
                     _compositValueMenuItem.Tag = field;
                     _compositValueMenuItem.ToolTip = "Copy the value recorded in Composit for this column";
                     bool compositDiff = record.IsCompositValueDifferent(field);
@@ -112,7 +112,7 @@ namespace CETAP_LOB.View.writers
                     if (compositDiff)
                     {
                         entries.Add(_compositValueMenuItem);
-                        _compositKeepFileMenuItem.Header = "Keep file value (accept as correct)";
+                        SetActionHeader(_compositKeepFileMenuItem, "Keep file value (accept as correct)");
                         _compositKeepFileMenuItem.Tag = field;
                         _compositKeepFileMenuItem.ToolTip = "Keep the current file value and remove Composit difference highlighting for this column";
                         entries.Add(_compositKeepFileMenuItem);
@@ -221,6 +221,16 @@ namespace CETAP_LOB.View.writers
             item.Margin = new Thickness(1, 2, 1, 2);
             item.Background = new SolidColorBrush(background);
             item.Foreground = new SolidColorBrush(Colors.DodgerBlue);
+        }
+
+        private static void SetActionHeader(MenuItem item, string text)
+        {
+            item.Header = new TextBlock
+            {
+                Text = text,
+                FontWeight = FontWeights.Bold,
+                Foreground = new SolidColorBrush(Colors.DodgerBlue)
+            };
         }
 
         private static TextBlock BuildRecordHeader(List<string> lines)
