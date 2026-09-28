@@ -985,10 +985,8 @@ namespace CETAP_LOB.Model.venueprep
         else if (firstName.Contains("é"))
           errors.Add("cannot have funny characters");
 
-        if (_writerRecord != null && !MatchesText(firstName, _writerRecord.Name))
-          errors.Add("WriterList name differs from database");
-        if (_compositRecord != null && !MatchesText(firstName, _compositRecord.Name))
-          errors.Add("Composit name differs from database");
+        if (HasAttachedTextMismatch(firstName, _writerRecord == null ? null : _writerRecord.Name, _compositRecord == null ? null : _compositRecord.Name))
+          errors.Add("Name differs from database");
       }
 
       ApplyErrors("FirstName", errors);
@@ -1013,10 +1011,8 @@ namespace CETAP_LOB.Model.venueprep
         else if (surname.Contains("é"))
           errors.Add("cannot have funny characters");
 
-        if (_writerRecord != null && !MatchesText(surname, _writerRecord.Surname))
-          errors.Add("WriterList surname differs from database");
-        if (_compositRecord != null && !MatchesText(surname, _compositRecord.Surname))
-          errors.Add("Composit surname differs from database");
+        if (HasAttachedTextMismatch(surname, _writerRecord == null ? null : _writerRecord.Surname, _compositRecord == null ? null : _compositRecord.Surname))
+          errors.Add("Surname differs from database");
       }
 
       ApplyErrors("Surname", errors);
@@ -1039,10 +1035,10 @@ namespace CETAP_LOB.Model.venueprep
         else if (!HelperUtils.IsValidSAIDChecksum(said))
           errors.Add("SA Id check digit is not valid");
 
-        if (_writerRecord != null && _writerRecord.SAID.HasValue && !MatchesText(said, _writerRecord.SAID.Value.ToString("D13")))
-          errors.Add("WriterList SA ID differs from database");
-        if (_compositRecord != null && _compositRecord.SAID.HasValue && !MatchesText(said, _compositRecord.SAID.Value.ToString("D13")))
-          errors.Add("Composit SA ID differs from database");
+        string writerSaid = _writerRecord != null && _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : null;
+        string compositSaid = _compositRecord != null && _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : null;
+        if (HasAttachedTextMismatch(said, writerSaid, compositSaid))
+          errors.Add("SA ID differs from database");
       }
 
       ApplyErrors("SAID", errors);
@@ -1057,10 +1053,8 @@ namespace CETAP_LOB.Model.venueprep
         if (foreignId.Length > 15)
           errors.Add("ForeignID has too many characters");
 
-        if (_writerRecord != null && !MatchesText(foreignId, _writerRecord.ForeignID))
-          errors.Add("WriterList foreign ID differs from database");
-        if (_compositRecord != null && !MatchesText(foreignId, _compositRecord.ForeignID))
-          errors.Add("Composit foreign ID differs from database");
+        if (HasAttachedTextMismatch(foreignId, _writerRecord == null ? null : _writerRecord.ForeignID, _compositRecord == null ? null : _compositRecord.ForeignID))
+          errors.Add("Foreign ID differs from database");
       }
 
       ApplyErrors("ForeignID", errors);
@@ -1073,10 +1067,8 @@ namespace CETAP_LOB.Model.venueprep
       if (_dob != default(DateTime) && (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 29100.0))
         errors.Add("Wrong age for Matric");
 
-      if (_writerRecord != null && _writerRecord.DOB != default(DateTime) && !MatchesDate(_dob, _writerRecord.DOB))
-        errors.Add("WriterList date of birth differs from database");
-      if (_compositRecord != null && _compositRecord.DOB != default(DateTime) && !MatchesDate(_dob, _compositRecord.DOB))
-        errors.Add("Composit date of birth differs from database");
+      if (HasAttachedDateMismatch(_dob, _writerRecord == null ? (DateTime?)null : _writerRecord.DOB, _compositRecord == null ? (DateTime?)null : _compositRecord.DOB))
+        errors.Add("Date of birth differs from database");
 
       ApplyErrors("DOB", errors);
     }
@@ -1105,6 +1097,20 @@ namespace CETAP_LOB.Model.venueprep
       if (left == default(DateTime) || right == default(DateTime))
         return true;
       return left.Date == right.Date;
+    }
+
+    private static bool HasAttachedTextMismatch(string value, string writerValue, string compositValue)
+    {
+      bool writerMatches = string.IsNullOrWhiteSpace(writerValue) || MatchesText(value, writerValue);
+      bool compositMatches = string.IsNullOrWhiteSpace(compositValue) || MatchesText(value, compositValue);
+      return !writerMatches && !compositMatches;
+    }
+
+    private static bool HasAttachedDateMismatch(DateTime value, DateTime? writerValue, DateTime? compositValue)
+    {
+      bool writerMatches = !writerValue.HasValue || MatchesDate(value, writerValue.Value);
+      bool compositMatches = !compositValue.HasValue || MatchesDate(value, compositValue.Value);
+      return !writerMatches && !compositMatches;
     }
 
     private void checkerrors()

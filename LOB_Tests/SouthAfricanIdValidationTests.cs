@@ -64,28 +64,22 @@ namespace LOB_Tests
             Assert.False(record.HasErrors);
 
             record.FirstName = "Different";
-            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
-            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("Composit name differs from database"));
+            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("Name differs from database"));
 
             record.Surname = "Different";
-            Assert.Contains(GetErrors(record, "Surname"), m => m.Contains("WriterList surname differs from database"));
-            Assert.Contains(GetErrors(record, "Surname"), m => m.Contains("Composit surname differs from database"));
+            Assert.Contains(GetErrors(record, "Surname"), m => m.Contains("Surname differs from database"));
 
             record.SAID = BuildValidSaid("800101500918");
-            Assert.Contains(GetErrors(record, "SAID"), m => m.Contains("WriterList SA ID differs from database"));
-            Assert.Contains(GetErrors(record, "SAID"), m => m.Contains("Composit SA ID differs from database"));
+            Assert.Contains(GetErrors(record, "SAID"), m => m.Contains("SA ID differs from database"));
 
             record.ForeignID = "FOREIGN-2";
-            Assert.Contains(GetErrors(record, "ForeignID"), m => m.Contains("WriterList foreign ID differs from database"));
-            Assert.Contains(GetErrors(record, "ForeignID"), m => m.Contains("Composit foreign ID differs from database"));
+            Assert.Contains(GetErrors(record, "ForeignID"), m => m.Contains("Foreign ID differs from database"));
 
             record.DOB = new DateTime(1981, 2, 2);
-            Assert.Contains(GetErrors(record, "DOB"), m => m.Contains("WriterList date of birth differs from database"));
-            Assert.Contains(GetErrors(record, "DOB"), m => m.Contains("Composit date of birth differs from database"));
+            Assert.Contains(GetErrors(record, "DOB"), m => m.Contains("Date of birth differs from database"));
 
             record.Reference = BuildValidReference("310027017425");
-            Assert.Contains(GetErrors(record, "Reference"), m => m.Contains("WriterList reference number differs from database"));
-            Assert.Contains(GetErrors(record, "Reference"), m => m.Contains("Composit reference number differs from database"));
+            Assert.Contains(GetErrors(record, "Reference"), m => m.Contains("Reference differs from database"));
         }
 
         [Fact]
@@ -117,12 +111,12 @@ namespace LOB_Tests
 
             record.AttachWriterRecord(writer);
             Assert.True(record.IsWriterValueDifferent("Name"));
-            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
+            Assert.Contains(GetErrors(record, "FirstName"), m => m.Contains("Name differs from database"));
 
             record.AcceptFileValueForWriter("Name");
 
             Assert.False(record.IsWriterValueDifferent("Name"));
-            Assert.DoesNotContain(GetErrors(record, "FirstName"), m => m.Contains("WriterList name differs from database"));
+            Assert.DoesNotContain(GetErrors(record, "FirstName"), m => m.Contains("Name differs from database"));
             Assert.Equal("Tinyiko", record.GetCompositValue("Name"));
         }
 
@@ -251,6 +245,26 @@ namespace LOB_Tests
 
             Assert.Equal("PASS123", record.GetWriterValue("ForeignID"));
             Assert.Equal("PASS123", record.GetCompositValue("ForeignID"));
+        }
+
+        [Fact]
+        public void WebWriters_does_not_flag_values_that_match_either_database_source()
+        {
+            string reference = BuildValidReference("310027017415");
+            var writer = new WritersBDO { NBT = long.Parse(reference), Name = "Tinyiko" };
+            var composit = new CompositBDO { RefNo = long.Parse(reference), Name = "Different" };
+
+            var record = new WebWriters
+            {
+                Reference = reference,
+                FirstName = "Tinyiko"
+            };
+
+            record.AttachWriterRecord(writer);
+            record.AttachCompositRecord(composit);
+
+            Assert.False(record.HasErrors);
+            Assert.Empty(GetErrors(record, "FirstName"));
         }
 
         private static IEnumerable<string> GetErrors(WebWriters record, string property)
