@@ -76,6 +76,48 @@ namespace CETAP_LOB.Helper
       return HelperUtils.ComputeChecksum(value) == 0;
     }
 
+    public static bool IsValidSAID(string said)
+    {
+      return !string.IsNullOrWhiteSpace(said)
+             && said.Length == 13
+             && HelperUtils.IsNumeric(said)
+             && HelperUtils.IsValidSAIDDateOfBirth(said)
+             && HelperUtils.IsValidSAIDCitizenshipDigit(said)
+             && HelperUtils.IsValidSAIDChecksum(said);
+    }
+
+    public static bool IsValidSAIDDateOfBirth(string said)
+    {
+      if (string.IsNullOrWhiteSpace(said) || said.Length < 6 || !HelperUtils.IsNumeric(said))
+        return false;
+      DateTime result;
+      return DateTime.TryParseExact(said.Substring(0, 6), "yyMMdd", (IFormatProvider) CultureInfo.InvariantCulture, DateTimeStyles.None, out result);
+    }
+
+    public static bool IsValidSAIDCitizenshipDigit(string said)
+    {
+      if (string.IsNullOrWhiteSpace(said) || said.Length < 11)
+        return false;
+      char ch = said[10];
+      return ch == '0' || ch == '1';
+    }
+
+    public static bool IsValidSAIDChecksum(string said)
+    {
+      if (string.IsNullOrWhiteSpace(said) || said.Length != 13 || !HelperUtils.IsNumeric(said))
+        return false;
+      int num1 = 0;
+      for (int index = 0; index < 12; index += 2)
+        num1 += (int) said[index] - 48;
+      string str = "";
+      for (int index = 1; index < 12; index += 2)
+        str += said[index].ToString();
+      int num2 = 0;
+      foreach (char ch in (Convert.ToInt64(str) * 2L).ToString().ToCharArray())
+        num2 += (int) ch - 48;
+      return (10 - (num1 + num2) % 10) % 10 == (int) said[12] - 48;
+    }
+
     public static bool GenerateWriterList(ProcessList list)
     {
       try

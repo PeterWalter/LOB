@@ -1,7 +1,10 @@
 ﻿
 
+using CETAP_LOB.BDO;
 using CETAP_LOB.Helper;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CETAP_LOB.Model.venueprep
@@ -13,6 +16,8 @@ namespace CETAP_LOB.Model.venueprep
     private string _initials = "";
     private string _said = "";
     private string _foreignID = "";
+    private WritersBDO _writerRecord;
+    private CompositBDO _compositRecord;
     public const string errorCountPropertyName = "errorCount";
     public const string ReferencePropertyName = "Reference";
     public const string SurnamePropertyName = "Surname";
@@ -77,18 +82,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_NBT == value)
           return;
         _NBT = value;
-        if (!string.IsNullOrEmpty(_NBT))
-        {
-          if (_NBT.Length != 14)
-            AddError("Reference", "Not proper length for NBT number");
-          else if (!HelperUtils.IsValidChecksum(_NBT.Substring(1, 13)))
-            AddError("Reference", "Not a Valid NBT number");
-          else
-            RemoveError("Reference");
-        }
-        else
-          AddError("Reference", "NBT number cannot be empty");
-        checkerrors();
+        ValidateReference();
         RaisePropertyChanged("Reference");
       }
     }
@@ -104,23 +98,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_surname == value)
           return;
         _surname = value;
-        if (string.IsNullOrEmpty(_surname))
-          AddError("Surname", "Surname cannot be empty");
-        else
-          RemoveError("Surname");
-        if (!string.IsNullOrEmpty(_surname))
-        {
-          if (Regex.IsMatch(_surname, "\\d"))
-            AddError("Surname", "Surname cannot have digits");
-          else if (!Regex.IsMatch(_surname, "^[^\\s=!@#](?:[^!@#;'`èëéáàãíìïòôöúüç©]*[^\\s!@#])?$"))
-            AddError("Surname", "cannot start/end with space or have funny characters");
-          else if (_surname.Length > 30)
-            AddError("Surname", "Too many characters for Surname");
-          else if (_surname.Contains("é")) AddError("Surname", "cannot have funny characters");
-          else
-            RemoveError("Surname");
-        }
-        checkerrors();
+        ValidateSurname();
         RaisePropertyChanged("Surname");
       }
     }
@@ -136,24 +114,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_myname == value)
           return;
         _myname = value;
-        if (string.IsNullOrEmpty(_myname))
-          AddError("FirstName", "FirstName cannot be empty");
-        else
-          RemoveError("FirstName");
-        if (!string.IsNullOrWhiteSpace(_myname))
-        {
-          if (Regex.IsMatch(_myname, "\\d"))
-            AddError("FirstName", "First name cannot have digits");
-                    else if (!Regex.IsMatch(_myname, "^[^\\s=!@#](?:[^!@#;'`èëéáàãíìïòôöúüç©]*[^\\s!@#])?$")) //!Regex.IsMatch(_myname, @"^[^=!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘]*(?:[^!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘]*[^=!@#;èëöóïéa'àáàa¨ã©ëíìïöôüç‘])?$"))
-
-                        AddError("FirstName", "cannot start/end with space or have funny characters");
-          else if (_myname.Length > 18)
-            AddError("FirstName", "To many characters for Name (max is 18)");
-          else if(_myname.Contains("é")) AddError("FirstName", "cannot have funny characters");
-          else
-            RemoveError("FirstName");
-        }
-        checkerrors();
+        ValidateFirstName();
         RaisePropertyChanged("FirstName");
       }
     }
@@ -184,18 +145,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_said == value)
           return;
         _said = value;
-        if (!string.IsNullOrEmpty(_said))
-        {
-          if (!Regex.IsMatch(_said, "^[0-9]+$"))
-            AddError("SAID", "SA Id does not have characters");
-          else if (!HelperUtils.IsValidChecksum(_said))
-            AddError("SAID", "Not a Valid South African ID number");
-          else
-            RemoveError("SAID");
-        }
-        else
-          RemoveError("SAID");
-        checkerrors();
+        ValidateSAID();
         RaisePropertyChanged("SAID");
       }
     }
@@ -211,14 +161,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_foreignID == value)
           return;
         _foreignID = value;
-        if (!string.IsNullOrEmpty(_foreignID))
-        {
-          if (_foreignID.Length > 15)
-            AddError("ForeignID", "ForeignID has too many characters");
-          else
-            RemoveError("ForeignID");
-        }
-        checkerrors();
+        ValidateForeignID();
         RaisePropertyChanged("ForeignID");
       }
     }
@@ -234,12 +177,7 @@ namespace CETAP_LOB.Model.venueprep
         if (_dob == value)
           return;
         _dob = value;
-        TimeSpan timeSpan = DateTime.Now - _dob;
-        if (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 29100.0)
-          AddError("DOB", "Wrong age for Matric");
-        else
-          RemoveError("DOB");
-        checkerrors();
+        ValidateDOB();
         RaisePropertyChanged("DOB");
       }
     }
@@ -465,6 +403,459 @@ namespace CETAP_LOB.Model.venueprep
         _isSelected = value;
         RaisePropertyChanged("IsSelected");
       }
+    }
+
+    public void AttachWriterRecord(WritersBDO writer)
+    {
+      _writerRecord = writer;
+      ValidateReference();
+      ValidateFirstName();
+      ValidateSurname();
+      ValidateSAID();
+      ValidateForeignID();
+      ValidateDOB();
+    }
+
+    public void AttachCompositRecord(CompositBDO composit)
+    {
+      _compositRecord = composit;
+      ValidateReference();
+      ValidateFirstName();
+      ValidateSurname();
+      ValidateSAID();
+      ValidateForeignID();
+      ValidateDOB();
+    }
+
+    public bool HasWriterRecord
+    {
+      get { return _writerRecord != null; }
+    }
+
+    public bool HasCompositRecord
+    {
+      get { return _compositRecord != null; }
+    }
+
+    public List<string> GetWriterRecordLines()
+    {
+      List<string> lines = new List<string>();
+      if (_writerRecord == null)
+        return lines;
+
+      lines.Add("WriterList record");
+      AddLine(lines, "Name", _writerRecord.Name);
+      AddLine(lines, "Surname", _writerRecord.Surname);
+      AddLine(lines, "Initials", _writerRecord.Initials);
+      if (_writerRecord.NBT != 0)
+        lines.Add("Reference: " + _writerRecord.NBT);
+      if (_writerRecord.SAID.HasValue)
+        lines.Add("South African ID: " + _writerRecord.SAID.Value.ToString("D13"));
+      AddLine(lines, "Foreign ID", _writerRecord.ForeignID);
+      if (_writerRecord.DOB != default(DateTime))
+        lines.Add("Date of Birth: " + _writerRecord.DOB.ToString("yyyy/MM/dd"));
+      AddLine(lines, "Gender", _writerRecord.Gender);
+      if (_writerRecord.DOT != default(DateTime))
+        lines.Add("Date of Test: " + _writerRecord.DOT.ToString("yyyy/MM/dd"));
+      AddLine(lines, "Classification", _writerRecord.Classification);
+      AddLine(lines, "Test Language", _writerRecord.TestLanguage);
+      AddLine(lines, "Test Type", _writerRecord.TestType);
+      if (_writerRecord.VenueID != 0)
+        lines.Add("Venue ID: " + _writerRecord.VenueID);
+      AddLine(lines, "Mobile", _writerRecord.Mobile);
+      AddLine(lines, "Home Telephone", _writerRecord.HomeTelephone);
+      AddLine(lines, "Email", _writerRecord.EMail);
+      return lines;
+    }
+
+    public List<string> GetCompositRecordLines()
+    {
+      List<string> lines = new List<string>();
+      if (_compositRecord == null)
+        return lines;
+
+      lines.Add("Composit record");
+      if (_compositRecord.RefNo != 0)
+        lines.Add("Reference: " + _compositRecord.RefNo);
+      AddLine(lines, "Name", _compositRecord.Name);
+      AddLine(lines, "Surname", _compositRecord.Surname);
+      AddLine(lines, "Initials", _compositRecord.Initials);
+      if (_compositRecord.SAID.HasValue)
+        lines.Add("South African ID: " + _compositRecord.SAID.Value.ToString("D13"));
+      AddLine(lines, "Foreign ID", _compositRecord.ForeignID);
+      if (_compositRecord.DOB != default(DateTime))
+        lines.Add("Date of Birth: " + _compositRecord.DOB.ToString("yyyy/MM/dd"));
+      AddLine(lines, "Gender", _compositRecord.Gender);
+      AddLine(lines, "Classification", _compositRecord.Classification);
+      AddLine(lines, "Venue", _compositRecord.VenueName);
+      if (_compositRecord.DOT != default(DateTime))
+        lines.Add("Date of Test: " + _compositRecord.DOT.ToString("yyyy/MM/dd"));
+      return lines;
+    }
+
+    public void ApplyWriterValue(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrWhiteSpace(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          FirstName = _writerRecord.Name;
+          break;
+        case "Surname":
+          Surname = _writerRecord.Surname;
+          break;
+        case "Reference":
+          Reference = _writerRecord.NBT.ToString();
+          break;
+        case "SAID":
+          SAID = _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "";
+          break;
+        case "ForeignID":
+          ForeignID = _writerRecord.ForeignID;
+          break;
+        case "DOB":
+          DOB = _writerRecord.DOB;
+          break;
+        case "Gender":
+          Gender = _writerRecord.Gender;
+          break;
+      }
+    }
+
+    public void ApplyCompositValue(string field)
+    {
+      if (_compositRecord == null || string.IsNullOrWhiteSpace(field))
+        return;
+
+      switch (field)
+      {
+        case "Name":
+          FirstName = _compositRecord.Name;
+          break;
+        case "Surname":
+          Surname = _compositRecord.Surname;
+          break;
+        case "Reference":
+          Reference = _compositRecord.RefNo.ToString();
+          break;
+        case "SAID":
+          SAID = _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : "";
+          break;
+        case "ForeignID":
+          ForeignID = _compositRecord.ForeignID;
+          break;
+        case "DOB":
+          DOB = _compositRecord.DOB;
+          break;
+        case "Gender":
+          Gender = _compositRecord.Gender;
+          break;
+      }
+    }
+
+    public bool CanApplyWriterValue(string field)
+    {
+      if (_writerRecord == null || string.IsNullOrWhiteSpace(field))
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return !string.IsNullOrWhiteSpace(_writerRecord.Name) && NormaliseText(_myname) != NormaliseText(_writerRecord.Name);
+        case "Surname":
+          return !string.IsNullOrWhiteSpace(_writerRecord.Surname) && NormaliseText(_surname) != NormaliseText(_writerRecord.Surname);
+        case "Reference":
+          return _writerRecord.NBT != 0 && NormaliseText(_NBT) != NormaliseText(_writerRecord.NBT.ToString());
+        case "SAID":
+          return _writerRecord.SAID.HasValue && NormaliseText(_said) != NormaliseText(_writerRecord.SAID.Value.ToString("D13"));
+        case "ForeignID":
+          return !string.IsNullOrWhiteSpace(_writerRecord.ForeignID) && NormaliseText(_foreignID) != NormaliseText(_writerRecord.ForeignID);
+        case "DOB":
+          return _writerRecord.DOB != default(DateTime) && _dob.Date != _writerRecord.DOB.Date;
+        case "Gender":
+          return !string.IsNullOrWhiteSpace(_writerRecord.Gender) && NormaliseText(_gender) != NormaliseText(_writerRecord.Gender);
+        default:
+          return false;
+      }
+    }
+
+    public bool CanApplyCompositValue(string field)
+    {
+      if (_compositRecord == null || string.IsNullOrWhiteSpace(field))
+        return false;
+
+      switch (field)
+      {
+        case "Name":
+          return !string.IsNullOrWhiteSpace(_compositRecord.Name) && NormaliseText(_myname) != NormaliseText(_compositRecord.Name);
+        case "Surname":
+          return !string.IsNullOrWhiteSpace(_compositRecord.Surname) && NormaliseText(_surname) != NormaliseText(_compositRecord.Surname);
+        case "Reference":
+          return _compositRecord.RefNo != 0 && NormaliseText(_NBT) != NormaliseText(_compositRecord.RefNo.ToString());
+        case "SAID":
+          return _compositRecord.SAID.HasValue && NormaliseText(_said) != NormaliseText(_compositRecord.SAID.Value.ToString("D13"));
+        case "ForeignID":
+          return !string.IsNullOrWhiteSpace(_compositRecord.ForeignID) && NormaliseText(_foreignID) != NormaliseText(_compositRecord.ForeignID);
+        case "DOB":
+          return _compositRecord.DOB != default(DateTime) && _dob.Date != _compositRecord.DOB.Date;
+        case "Gender":
+          return !string.IsNullOrWhiteSpace(_compositRecord.Gender) && NormaliseText(_gender) != NormaliseText(_compositRecord.Gender);
+        default:
+          return false;
+      }
+    }
+
+    public string GetCurrentValue(string field)
+    {
+      switch (field)
+      {
+        case "Name":
+          return _myname;
+        case "Surname":
+          return _surname;
+        case "Reference":
+          return _NBT;
+        case "SAID":
+          return _said;
+        case "ForeignID":
+          return _foreignID;
+        case "DOB":
+          return _dob == default(DateTime) ? "" : _dob.ToString("yyyy/MM/dd");
+        case "Gender":
+          return _gender;
+        default:
+          return "";
+      }
+    }
+
+    public string GetWriterValue(string field)
+    {
+      if (_writerRecord == null)
+        return "";
+
+      switch (field)
+      {
+        case "Name":
+          return _writerRecord.Name;
+        case "Surname":
+          return _writerRecord.Surname;
+        case "Reference":
+          return _writerRecord.NBT == 0 ? "" : _writerRecord.NBT.ToString();
+        case "SAID":
+          return _writerRecord.SAID.HasValue ? _writerRecord.SAID.Value.ToString("D13") : "";
+        case "ForeignID":
+          return _writerRecord.ForeignID;
+        case "DOB":
+          return _writerRecord.DOB == default(DateTime) ? "" : _writerRecord.DOB.ToString("yyyy/MM/dd");
+        case "Gender":
+          return _writerRecord.Gender;
+        default:
+          return "";
+      }
+    }
+
+    public string GetCompositValue(string field)
+    {
+      if (_compositRecord == null)
+        return "";
+
+      switch (field)
+      {
+        case "Name":
+          return _compositRecord.Name;
+        case "Surname":
+          return _compositRecord.Surname;
+        case "Reference":
+          return _compositRecord.RefNo == 0 ? "" : _compositRecord.RefNo.ToString();
+        case "SAID":
+          return _compositRecord.SAID.HasValue ? _compositRecord.SAID.Value.ToString("D13") : "";
+        case "ForeignID":
+          return _compositRecord.ForeignID;
+        case "DOB":
+          return _compositRecord.DOB == default(DateTime) ? "" : _compositRecord.DOB.ToString("yyyy/MM/dd");
+        case "Gender":
+          return _compositRecord.Gender;
+        default:
+          return "";
+      }
+    }
+
+    private static void AddLine(List<string> lines, string label, string value)
+    {
+      if (!string.IsNullOrWhiteSpace(value))
+        lines.Add(label + ": " + value.Trim());
+    }
+
+    private static string NormaliseText(string value)
+    {
+      return string.IsNullOrWhiteSpace(value) ? "" : value.Trim().ToUpperInvariant();
+    }
+
+    private void ValidateReference()
+    {
+      List<string> errors = new List<string>();
+      string reference = (_NBT ?? "").Trim();
+      if (string.IsNullOrWhiteSpace(reference))
+      {
+        errors.Add("NBT number cannot be empty");
+      }
+      else
+      {
+        if (reference.Length != 14)
+          errors.Add("Not proper length for NBT number");
+        else if (!HelperUtils.IsValidChecksum(reference.Substring(1, 13)))
+          errors.Add("Not a Valid NBT number");
+
+        if (_writerRecord != null && !MatchesText(reference, _writerRecord.NBT.ToString()))
+          errors.Add("WriterList reference number differs from database");
+        if (_compositRecord != null && !MatchesText(reference, _compositRecord.RefNo.ToString()))
+          errors.Add("Composit reference number differs from database");
+      }
+
+      ApplyErrors("Reference", errors);
+    }
+
+    private void ValidateFirstName()
+    {
+      List<string> errors = new List<string>();
+      string firstName = (_myname ?? "").Trim();
+      if (string.IsNullOrEmpty(firstName))
+      {
+        errors.Add("FirstName cannot be empty");
+      }
+      else
+      {
+        if (Regex.IsMatch(firstName, "\\d"))
+          errors.Add("First name cannot have digits");
+        else if (!Regex.IsMatch(firstName, "^[^\\s=!@#](?:[^!@#;'`èëéáàãíìïòôöúüç©]*[^\\s!@#])?$"))
+          errors.Add("cannot start/end with space or have funny characters");
+        else if (firstName.Length > 18)
+          errors.Add("To many characters for Name (max is 18)");
+        else if (firstName.Contains("é"))
+          errors.Add("cannot have funny characters");
+
+        if (_writerRecord != null && !MatchesText(firstName, _writerRecord.Name))
+          errors.Add("WriterList name differs from database");
+        if (_compositRecord != null && !MatchesText(firstName, _compositRecord.Name))
+          errors.Add("Composit name differs from database");
+      }
+
+      ApplyErrors("FirstName", errors);
+    }
+
+    private void ValidateSurname()
+    {
+      List<string> errors = new List<string>();
+      string surname = (_surname ?? "").Trim();
+      if (string.IsNullOrEmpty(surname))
+      {
+        errors.Add("Surname cannot be empty");
+      }
+      else
+      {
+        if (Regex.IsMatch(surname, "\\d"))
+          errors.Add("Surname cannot have digits");
+        else if (!Regex.IsMatch(surname, "^[^\\s=!@#](?:[^!@#;'`èëéáàãíìïòôöúüç©]*[^\\s!@#])?$"))
+          errors.Add("cannot start/end with space or have funny characters");
+        else if (surname.Length > 30)
+          errors.Add("Too many characters for Surname");
+        else if (surname.Contains("é"))
+          errors.Add("cannot have funny characters");
+
+        if (_writerRecord != null && !MatchesText(surname, _writerRecord.Surname))
+          errors.Add("WriterList surname differs from database");
+        if (_compositRecord != null && !MatchesText(surname, _compositRecord.Surname))
+          errors.Add("Composit surname differs from database");
+      }
+
+      ApplyErrors("Surname", errors);
+    }
+
+    private void ValidateSAID()
+    {
+      List<string> errors = new List<string>();
+      string said = (_said ?? "").Trim();
+      if (!string.IsNullOrWhiteSpace(said))
+      {
+        if (!Regex.IsMatch(said, "^[0-9]+$"))
+          errors.Add("SA Id must contain only digits");
+        else if (said.Length != 13)
+          errors.Add("SA Id must be 13 digits");
+        else if (!HelperUtils.IsValidSAIDDateOfBirth(said))
+          errors.Add("SA Id date of birth is not valid");
+        else if (!HelperUtils.IsValidSAIDCitizenshipDigit(said))
+          errors.Add("SA Id citizenship digit (11th) must be 0 or 1");
+        else if (!HelperUtils.IsValidSAIDChecksum(said))
+          errors.Add("SA Id check digit is not valid");
+
+        if (_writerRecord != null && _writerRecord.SAID.HasValue && !MatchesText(said, _writerRecord.SAID.Value.ToString("D13")))
+          errors.Add("WriterList SA ID differs from database");
+        if (_compositRecord != null && _compositRecord.SAID.HasValue && !MatchesText(said, _compositRecord.SAID.Value.ToString("D13")))
+          errors.Add("Composit SA ID differs from database");
+      }
+
+      ApplyErrors("SAID", errors);
+    }
+
+    private void ValidateForeignID()
+    {
+      List<string> errors = new List<string>();
+      string foreignId = (_foreignID ?? "").Trim();
+      if (!string.IsNullOrWhiteSpace(foreignId))
+      {
+        if (foreignId.Length > 15)
+          errors.Add("ForeignID has too many characters");
+
+        if (_writerRecord != null && !MatchesText(foreignId, _writerRecord.ForeignID))
+          errors.Add("WriterList foreign ID differs from database");
+        if (_compositRecord != null && !MatchesText(foreignId, _compositRecord.ForeignID))
+          errors.Add("Composit foreign ID differs from database");
+      }
+
+      ApplyErrors("ForeignID", errors);
+    }
+
+    private void ValidateDOB()
+    {
+      List<string> errors = new List<string>();
+      TimeSpan timeSpan = DateTime.Now - _dob;
+      if (_dob != default(DateTime) && (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 29100.0))
+        errors.Add("Wrong age for Matric");
+
+      if (_writerRecord != null && _writerRecord.DOB != default(DateTime) && !MatchesDate(_dob, _writerRecord.DOB))
+        errors.Add("WriterList date of birth differs from database");
+      if (_compositRecord != null && _compositRecord.DOB != default(DateTime) && !MatchesDate(_dob, _compositRecord.DOB))
+        errors.Add("Composit date of birth differs from database");
+
+      ApplyErrors("DOB", errors);
+    }
+
+    private void ApplyErrors(string propertyName, IEnumerable<string> errors)
+    {
+      List<string> list = errors == null ? new List<string>() : errors.Where((string value) => !string.IsNullOrWhiteSpace(value)).ToList();
+      if (list.Count > 0)
+        AddError(propertyName, string.Join("; ", list));
+      else
+        RemoveError(propertyName);
+      checkerrors();
+    }
+
+    private static bool MatchesText(string left, string right)
+    {
+      string a = string.IsNullOrWhiteSpace(left) ? "" : left.Trim().ToUpperInvariant();
+      string b = string.IsNullOrWhiteSpace(right) ? "" : right.Trim().ToUpperInvariant();
+      if (a.Length == 0 || b.Length == 0)
+        return true;
+      return a == b;
+    }
+
+    private static bool MatchesDate(DateTime left, DateTime right)
+    {
+      if (left == default(DateTime) || right == default(DateTime))
+        return true;
+      return left.Date == right.Date;
     }
 
     private void checkerrors()

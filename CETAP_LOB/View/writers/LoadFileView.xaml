@@ -17,6 +17,7 @@
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="true">
                     <Setter Property="FrameworkElement.ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource self}}" />
+                    <Setter Property="Foreground" Value="#FFD32F2F" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -107,7 +108,9 @@
                 CanUserSortColumns="true"
                 EnableColumnVirtualization="true"
                 ItemsSource="{Binding writers}"
-                SelectedItem="{Binding SelectedWriter}">
+                SelectedItem="{Binding SelectedWriter}"
+                PreviewMouseRightButtonDown="LoadGrid_PreviewMouseRightButtonDown"
+                ContextMenuOpening="LoadGrid_ContextMenuOpening">
                 <Control.BorderBrush>
                     <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
                 </Control.BorderBrush>
@@ -350,6 +353,8 @@
                 </DataGrid.Columns>
                 <FrameworkElement.ContextMenu>
                     <ContextMenu>
+                        <MenuItem Header="DB comparison values should appear above this line" IsEnabled="False" />
+                        <Separator />
                         <MenuItem Command="{Binding LoadWriters.DeleteRowCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Delete Row">
                             <MenuItem.Icon>
                                 <Image

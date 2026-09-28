@@ -530,9 +530,7 @@ namespace CETAP_LOB.ViewModel.writers
 
     private void CheckHasErrors()
     {
-      if (writers.Where<WebWriters>((Func<WebWriters, bool>) (x => x.HasErrors)).Select<WebWriters, WebWriters>((Func<WebWriters, WebWriters>) (m => m)).ToList<WebWriters>() != null)
-        return;
-      _mydata = true;
+      CleanData = !writers.Any<WebWriters>((Func<WebWriters, bool>) (x => x.HasErrors));
     }
 
     private void HandleChangeSortDirection(object obj)
