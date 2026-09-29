@@ -3078,63 +3078,64 @@ namespace CETAP_LOB.Model
                 {
 
                     hasrecords = false;
-                    StreamReader textreader = new StreamReader(filename);
-                    var csv = new CsvReader(textreader);
-                    csv.Configuration.Encoding = Encoding.Unicode;
-                    csv.Configuration.Delimiter = ",";
-                    csv.Configuration.CultureInfo = CultureInfo.CurrentCulture;
-                    csv.Configuration.HasHeaderRecord = true;
-                    //csv.Configuration.SkipEmptyRecords = true;
-                    csv.Configuration.WillThrowOnMissingField = false;
-                    csv.Configuration.Quote = '"';
-                    // csv.Configuration.RegisterClassMap<WebWriterMap>();
-
-                    WritersList1 = new ObservableCollection<WebWriters>();
-
-                    while (csv.Read())
+                    List<WebWriters> loadedRecords = new List<WebWriters>(4000);
+                    using (StreamReader textreader = new StreamReader(filename))
+                    using (var csv = new CsvReader(textreader))
                     {
-                        //count++;
-                        WebWriters record = new WebWriters();
-                        record.Reference = csv.GetField<string>(0);
-                        string sn = csv.GetField<string>(1);
-                        record.Surname = sn.Trim();
-                        string fn = csv.GetField<string>(2);
-                        record.FirstName = fn.Trim();
-                        record.initials = csv.GetField<string>(3);
-                        record.SAID = csv.GetField<string>(4);
-                        record.ForeignID = csv.GetField<string>(5);
+                        csv.Configuration.Encoding = Encoding.Unicode;
+                        csv.Configuration.Delimiter = ",";
+                        csv.Configuration.CultureInfo = CultureInfo.CurrentCulture;
+                        csv.Configuration.HasHeaderRecord = true;
+                        //csv.Configuration.SkipEmptyRecords = true;
+                        csv.Configuration.WillThrowOnMissingField = false;
+                        csv.Configuration.Quote = '"';
+                        // csv.Configuration.RegisterClassMap<WebWriterMap>();
 
-                        string m = csv.GetField<string>(6);
-                        record.DOB = HelperUtils.WebDate(m);
-                        record.Gender = csv.GetField<string>(7);
-                        record.Classification = csv.GetField<string>(8);
-                        record.Tests = csv.GetField<string>(9);
-                        record.Language = csv.GetField<string>(10);
-                        record.Venue = csv.GetField<string>(11);
-
-                        string dot = csv.GetField<string>(12);
-                        record.DOT = HelperUtils.WebDate(dot);
-                        record.Mobile = csv.GetField<string>(13);
-                        record.HTelephone = csv.GetField<string>(14);
-                        record.Email = csv.GetField<string>(15);
-
-                        string dor = csv.GetField<string>(16);
-                        record.RegDate = HelperUtils.weblistDateTime(dor);
-
-                        string payed = csv.GetField<string>(17);
-                        if (string.IsNullOrWhiteSpace(payed))
+                        while (csv.Read())
                         {
-                            record.Paid = 0.0;
+                            WebWriters record = new WebWriters();
+                            record.Reference = csv.GetField<string>(0);
+                            string sn = csv.GetField<string>(1);
+                            record.Surname = (sn ?? "").Trim();
+                            string fn = csv.GetField<string>(2);
+                            record.FirstName = (fn ?? "").Trim();
+                            record.initials = csv.GetField<string>(3);
+                            record.SAID = csv.GetField<string>(4);
+                            record.ForeignID = csv.GetField<string>(5);
+
+                            string m = csv.GetField<string>(6);
+                            record.DOB = HelperUtils.WebDate(m);
+                            record.Gender = csv.GetField<string>(7);
+                            record.Classification = csv.GetField<string>(8);
+                            record.Tests = csv.GetField<string>(9);
+                            record.Language = csv.GetField<string>(10);
+                            record.Venue = csv.GetField<string>(11);
+
+                            string dot = csv.GetField<string>(12);
+                            record.DOT = HelperUtils.WebDate(dot);
+                            record.Mobile = csv.GetField<string>(13);
+                            record.HTelephone = csv.GetField<string>(14);
+                            record.Email = csv.GetField<string>(15);
+
+                            string dor = csv.GetField<string>(16);
+                            record.RegDate = HelperUtils.weblistDateTime(dor);
+
+                            string payed = csv.GetField<string>(17);
+                            if (string.IsNullOrWhiteSpace(payed))
+                            {
+                                record.Paid = 0.0;
+                            }
+                            else
+                            {
+                                record.Paid = csv.GetField<double>(17);
+                            }
+                            string doc = csv.GetField<string>(18);
+                            record.CreationDate = HelperUtils.weblistDateTime(doc);
+                            loadedRecords.Add(record);
                         }
-                        else
-                        {
-                            record.Paid = csv.GetField<double>(17);
-                        }
-                        string doc = csv.GetField<string>(18);
-                        record.CreationDate = HelperUtils.weblistDateTime(doc);
-                        // check dates up here
-                        WritersList1.Add(record);
                     }
+
+                    WritersList1 = new ObservableCollection<WebWriters>(loadedRecords);
 
                     AttachDatabaseValidation(WritersList1);
                     hasrecords = true;
@@ -3145,8 +3146,7 @@ namespace CETAP_LOB.Model
                 {
                     //int a = count;
                     log.Error("File has corrupt columns", ex);
-                    System.Windows.MessageBox.Show(ex.ToString());
-                    throw ex;
+                    throw;
                 }
             }
             else
@@ -3202,7 +3202,7 @@ namespace CETAP_LOB.Model
 
         private List<WriterList> LoadWriterListMatches(List<long> referenceKeys, List<long> saidKeys, List<string> foreignKeys)
         {
-            const int chunkSize = 200;
+            const int chunkSize = 1000;
             List<WriterList> matches = new List<WriterList>();
 
             using (var context = new CETAPEntities())
@@ -3231,7 +3231,7 @@ namespace CETAP_LOB.Model
 
         private List<Composit> LoadCompositMatches(List<long> referenceKeys, List<long> saidKeys, List<string> foreignKeys)
         {
-            const int chunkSize = 200;
+            const int chunkSize = 1000;
             List<Composit> matches = new List<Composit>();
 
             using (var context = new CETAPEntities())
@@ -3534,21 +3534,22 @@ namespace CETAP_LOB.Model
                             }
                             break;
                         case "DOB": // Cleaning of DateTime of Birth
-                            if (!string.IsNullOrWhiteSpace(a.SAID))
+                            // The date of birth is only taken from the identity number when that
+                            // number passed its own checks - otherwise the digits are meaningless (and
+                            // the parse used to throw). When there is nothing to read it from, the date
+                            // is left as it was loaded, so the row stays marked for a person to
+                            // correct rather than being given a made up date of birth.
+                            if (!string.IsNullOrWhiteSpace(a.SAID) && !a._errors.ContainsKey("SAID"))
                             {
+                                DateTime fromId;
                                 string myDOB = HelperUtils.DOBfromSAID(a.SAID);
-                                a.DOB = DateTime.ParseExact(myDOB, "dd/MM/yyyy", null);
-
-                            }
-                            else
-                            {
-                                string myDOB = "1960/01/01";
-                                a.DOB = DateTime.ParseExact(myDOB, "yyyy/MM/dd", null);
+                                if (DateTime.TryParseExact(myDOB, "dd/MM/yyyy", CultureInfo.InvariantCulture, DateTimeStyles.None, out fromId))
+                                    a.DOB = fromId;
                             }
                             break;
                         case "HTelephone":
-                            if (a.HTelephone.Length > 15) a.HTelephone = a.Mobile;
-
+                            // Left alone: replacing it with the mobile number threw away the number
+                            // the writer gave. The field stays marked so it can be corrected by hand.
                             break;
 
                     }
@@ -3786,11 +3787,15 @@ namespace CETAP_LOB.Model
 
                     if (updatedApplicants.Count > 0)
                     {
+                        // inDbWriters holds copies taken out of the context, so writing to those
+                        // changed nothing and the differences were silently lost. The writers the
+                        // context is tracking - currentWriters, read through this context - are the
+                        // ones to update.
                         foreach (var updatedApplicant in updatedApplicants)
                         {
-                            var writer = inDbWriters.FirstOrDefault(y =>
+                            var writer = currentWriters.FirstOrDefault(y =>
                                 y.NBT == updatedApplicant.NBT &&
-                                y.DOT == updatedApplicant.DOT);
+                                y.DOT.Date == updatedApplicant.DOT.Date);
 
                             if (writer != null)
                             {
@@ -3800,10 +3805,13 @@ namespace CETAP_LOB.Model
                             }
                         }
 
-                        // Save changes if using EF Core or EF6
                         await context.SaveChangesAsync();
                     }
                 }
+
+                // The writers that were missing have been added and the ones that differed have
+                // had their test details refreshed.
+                taskCompleted = true;
             }
             catch (Exception ex)
             {

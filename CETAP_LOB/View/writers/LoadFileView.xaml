@@ -1,4 +1,4 @@
-﻿<UserControl
+<UserControl
     x:Class="CETAP_LOB.View.writers.LoadFileView"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -353,7 +353,7 @@
                 </DataGrid.Columns>
                 <FrameworkElement.ContextMenu>
                     <ContextMenu>
-                        <MenuItem Header="DB comparison values should appear above this line" IsEnabled="False" />
+                        <MenuItem Header="Database comparison" IsEnabled="False" />
                         <Separator />
                         <MenuItem Command="{Binding LoadWriters.DeleteRowCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Delete Row">
                             <MenuItem.Icon>
@@ -596,22 +596,6 @@
                     IconHeight="30"
                     IconWidth="30"
                     ToolTip="Refresh data in Table" />
-                <mui:ModernButton
-                    Margin="40,0,10,0"
-                    Command="{Binding LoadWriters.GetDBDuplicatesCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                    EllipseDiameter="50"
-                    IconData=""
-                    IconHeight="30"
-                    IconWidth="30"
-                    ToolTip="Check DB Duplicates" />
-                <mui:ModernButton
-                    Margin="40,0,10,0"
-                    Command="{Binding LoadWriters.GetDBDuplicatesCommand, Mode=OneWay, Source={StaticResource Locator}}"
-                    EllipseDiameter="50"
-                    IconData=""
-                    IconHeight="30"
-                    IconWidth="30"
-                    ToolTip="Check DB Duplicates" />
                 <mui:ModernButton
                     Margin="40,0,10,0"
                     Command="{Binding LoadWriters.GetDBDuplicatesCommand, Mode=OneWay, Source={StaticResource Locator}}"

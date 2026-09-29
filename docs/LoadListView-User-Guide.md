@@ -172,8 +172,8 @@ the record it found when the file was read.
 
 ### 7.2 The menu
 
-Right-click inside a data cell (the row and cell under the pointer are selected for you) and
-the menu opens with:
+Right-click inside a data cell (the row and cell under the pointer are selected for you). The
+menu opens with the heading **Database comparison**, and under it:
 
 1. **Column values for <column>** - a submenu showing, for the column you right-clicked:
    - `File: <the value in the grid>`
@@ -225,7 +225,7 @@ explains why and nothing is changed.
 | **Select file** | Opens the file browser and reads the chosen writer list file | Always |
 | **Clean File** / **Clean Names** | Repairs only the rows that have validation errors (see section 9.1 - it changes real data, so review it) | A file is loaded |
 | **Save a new csv file** | Writes the rows you are looking at, with your corrections, to a CSV file you choose | A file is loaded |
-| **Save to Database** | Adds the writers that are not in WriterList for the intake year yet, matched on NBT Reference and Date of Test. Writers that are already there are left as they are; a message reports when it finishes | The file has no duplicated NBT references in it, and the list has been marked as changed |
+| **Save to Database** | Adds the writers that are not in WriterList for the intake year yet (matched on NBT Reference and Date of Test), and refreshes the **test language, test type and e-mail** of the writers that are already there when those differ. A message reports whether it was saved | The file has no duplicated NBT references in it, and the list has been marked as changed |
 | **Delete Selected record** | Removes the selected row from the loaded list. The database is not touched | A file is loaded |
 | **Refresh data in Table** | Re-reads the loaded rows, re-runs validation and the duplicate checks | A file is loaded |
 | **Check DB Duplicates** | Looks every NBT Reference in the file up in WriterList for the intake year and fills the **DB Duplicates** list | The file has no duplicated NBT references in it, and the list has been marked as changed |
@@ -262,13 +262,14 @@ validation errors and repairs them:
 | Surname | Removes `;`, `!`, `@`, `'` and the `&#039;` sequence, and replaces accented characters (`é`, `è`, `ë`, `í`, `ì`, `ï`, `ò`, `ô`, `ö`, `á`, `à`, `ã`, `ú`, `ü`, `ç`, `©`) with plain letters |
 | First Name | The same replacements, and when the name is longer than 18 characters the last word is dropped |
 | South African ID | When the Foreign ID is empty the SA ID is **moved into the Foreign ID field** and the SA ID cleared; when a Foreign ID is already there the SA ID is **cleared**. (The ID that failed validation is treated as a passport number) |
-| Date of Birth | Taken from the South African ID when there still is one; otherwise set to **01/01/1960** |
-| Home Telephone | When it is longer than 15 characters it is replaced by the mobile number |
+| Date of Birth | Taken from the South African ID, but **only when that ID passed its own checks**. Otherwise the date of birth is left exactly as it was loaded, so the row stays marked for someone to correct |
+| Home Telephone | **Left alone** - the number is not changed, and a number that is too long keeps its error so it can be corrected by hand |
 
-> **Clean File changes data, not just formatting.** It can clear a South African ID, move it to
-> the foreign ID column, overwrite a date of birth, or overwrite a telephone number. The rows it
-> touched are exactly the rows that were red, so check them - and use **Save a new csv file** to
-> keep a copy if you are unsure.
+> **Clean File changes data, not just formatting.** It can move a South African ID into the
+> foreign ID column, and clear one that is already covered by a foreign ID. It never invents a
+> date of birth or a telephone number - anything it cannot repair stays marked. The rows it
+> touches are exactly the rows that were red, so check them, and use **Save a new csv file** if
+> you want to keep a copy.
 
 ---
 
@@ -334,7 +335,8 @@ read comes through as an empty date and is reported by the Date of Birth rule if
 | Every row shows *differs from database* | The database is not available, or the file belongs to a different intake. Check that the database is up and that the NBT numbers are for the current intake year |
 | A name is red for *funny characters* | Use **Clean File**, or correct the name by hand. Names may not contain digits or punctuation |
 | **Save to Database** stays greyed out | The list still has validation errors, or it has not been changed since it was loaded. Fix the red fields and try again |
-| Saving reports success but the difference is still there | **Save to Database** only adds missing writers; it does not change the details of writers already in WriterList. Correct the field with the right-click **Keep file value (update WriterList)** entry |
+| Saving reports success but the difference is still there | **Save to Database** only writes the test language, test type and e-mail of writers already in WriterList. A differing name, South African ID, foreign ID, date of birth or gender is not written - correct it with the right-click **Keep file value (update WriterList)** entry |
+| **Save to Database** says nothing was saved | The **DB Duplicates** list still has records in it, so the save was refused, or the database is unavailable. Settle the duplicates and try again; if it still fails, read the log file |
 | A South African ID disappeared after **Clean File** | That is what Clean File does with an ID that fails validation: it moves it to the Foreign ID column when that is empty, otherwise it clears it. Type the correct ID back in |
 | **Keep file value** reports "No matching WriterList record was found" | The row has no WriterList match, so there is nothing to update. Check the NBT Reference, or add the writer with **Save to Database** first |
 | The DB Duplicates list keeps coming back | The NBT number really is in use by another writer. Correct the number in the grid, or use **New NBT Number**, then check again |

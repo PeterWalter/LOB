@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.ViewModel.writers.LoadWritersViewModel
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -458,24 +458,36 @@ namespace CETAP_LOB.ViewModel.writers
     {
       _isDirty = false;
       IsStarted = true;
-      await LoadDBAsync();
+      bool saved = await LoadDBAsync();
       IsStarted = false;
       _isDirty = true;
       string title = "Writer List: ";
-      int num = (int) ModernDialog.ShowMessage("Writer list loaded to DB", title, MessageBoxButton.OK, (Window) null);
-    }
-
-    private async Task LoadDBAsync()
-    {
-      if (DBDuplicates.Count<WebWriters>() < 1)
-      {
-        int num = await _service.addwriterToDBAsync() ? 1 : 0;
-      }
+      if (saved)
+        ModernDialog.ShowMessage("Writer list loaded to DB", title, MessageBoxButton.OK, (Window) null);
       else
-        LoadWritersViewModel.log.Warn((object) ("There are uncleaned errors in " + FileName));
+        ModernDialog.ShowMessage(
+          DBDuplicates.Count > 0
+            ? "Nothing was saved: settle the records in the DB Duplicates list first."
+            : "Writer list was NOT loaded to DB. See the log file for the reason.",
+          title, MessageBoxButton.OK, (Window) null);
     }
 
-    private void OpenCSVFile()
+    /// <summary>
+    /// Saves the loaded list to the database and reports whether it was written. The save
+    /// is refused while the DB Duplicates list still holds records.
+    /// </summary>
+    private async Task<bool> LoadDBAsync()
+    {
+      if (DBDuplicates.Count<WebWriters>() > 0)
+      {
+        LoadWritersViewModel.log.Warn((object) ("There are records in the DB Duplicates list for " + FileName + " - nothing was saved to the database"));
+        return false;
+      }
+
+      return await _service.addwriterToDBAsync();
+    }
+
+    private async void OpenCSVFile()
     {
       OpenFileDialog openFileDialog = new OpenFileDialog();
       openFileDialog.DefaultExt = ".csv";
@@ -484,7 +496,7 @@ namespace CETAP_LOB.ViewModel.writers
       if ((!nullable.GetValueOrDefault() ? 0 : (nullable.HasValue ? 1 : 0)) == 0)
         return;
       FileName = openFileDialog.FileName;
-      LoadData(FileName);
+      await LoadDataAsync(FileName);
     }
 
     private void createCsvFile()
@@ -507,24 +519,38 @@ namespace CETAP_LOB.ViewModel.writers
       GetDuplicates();
     }
 
-    private void LoadData(string filename)
+    private async Task LoadDataAsync(string filename)
     {
-      ObservableCollection<WebWriters> data = _service.GetData(filename);
-      if (data != null)
+      IsStarted = true;
+      try
       {
-        Count = data.Count;
-        Venues = data.GroupBy<WebWriters, string>((Func<WebWriters, string>) (a => a.Venue)).Select<IGrouping<string, WebWriters>, string>((Func<IGrouping<string, WebWriters>, string>) (venueGroup => venueGroup.Key)).Count<string>();
-        Female = data.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Gender == "Female")).Count<WebWriters>();
-        Male = data.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Gender == "Male")).Count<WebWriters>();
-        English = data.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Language == "English")).Count<WebWriters>();
-        Afrikaans = data.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Language == "Afrikaans")).Count<WebWriters>();
-        writers = new ObservableCollection<WebWriters>(data.OrderByDescending<WebWriters, int>((Func<WebWriters, int>) (s => s.errorCount)).ToList<WebWriters>());
-        _isLoaded = true;
-        CheckHasErrors();
+        ObservableCollection<WebWriters> data = await Task.Run((Func<ObservableCollection<WebWriters>>) (() => _service.GetData(filename)));
+        if (data != null)
+        {
+          List<WebWriters> ordered = data.OrderByDescending<WebWriters, int>((Func<WebWriters, int>) (s => s.errorCount)).ToList<WebWriters>();
+          Count = ordered.Count;
+          Venues = ordered.GroupBy<WebWriters, string>((Func<WebWriters, string>) (a => a.Venue)).Select<IGrouping<string, WebWriters>, string>((Func<IGrouping<string, WebWriters>, string>) (venueGroup => venueGroup.Key)).Count<string>();
+          Female = ordered.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Gender == "Female")).Count<WebWriters>();
+          Male = ordered.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Gender == "Male")).Count<WebWriters>();
+          English = ordered.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Language == "English")).Count<WebWriters>();
+          Afrikaans = ordered.Where<WebWriters>((Func<WebWriters, bool>) (a => a.Language == "Afrikaans")).Count<WebWriters>();
+          writers = new ObservableCollection<WebWriters>(ordered);
+          isLoaded = true;
+          CheckHasErrors();
+        }
+        else
+        {
+          int num = (int) ModernDialog.ShowMessage("File is opened by another process or \n file does not exist", "Writer List", MessageBoxButton.OK, (Window) null);
+        }
       }
-      else
+      catch (Exception ex)
       {
-        int num = (int) ModernDialog.ShowMessage("File is opened by another process or \n file does not exist", "Writer List", MessageBoxButton.OK, (Window) null);
+        LoadWritersViewModel.log.Error((object) "Failed to load writer file", ex);
+        int num = (int) ModernDialog.ShowMessage("File could not be loaded.\n" + ex.Message, "Writer List", MessageBoxButton.OK, (Window) null);
+      }
+      finally
+      {
+        IsStarted = false;
       }
     }
 
