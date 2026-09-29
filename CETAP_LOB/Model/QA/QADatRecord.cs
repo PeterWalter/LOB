@@ -1600,8 +1600,32 @@ namespace CETAP_LOB.Model.QA
     /// </summary>
     public void MarkBarcodeDuplicate(string reason)
     {
+      BarcodeDuplicateReason = AppendBarcodeReason(reason);
+      BarcodeDuplicate = true;
+      AddError("BarcodeDuplicate", "Duplicate barcode: " + BarcodeDuplicateReason + ".");
+      checkerrors();
+    }
+
+    /// <summary>
+    /// Marks this record's barcode as one the database holds no Composit row for. It is
+    /// shown like a duplicate barcode, with the reason in the tooltip.
+    /// </summary>
+    public void MarkBarcodeUnknown()
+    {
+      BarcodeDuplicateReason = AppendBarcodeReason("not found in the database");
+      BarcodeDuplicate = true;
+      AddError("BarcodeUnknown", "Barcode is not in the database.");
+      checkerrors();
+    }
+
+    /// <summary>
+    /// Adds one reason to the barcode reason list, keeping the ones already there so a
+    /// barcode that is both repeated and missing from the database reports both.
+    /// </summary>
+    private string AppendBarcodeReason(string reason)
+    {
       if (string.IsNullOrWhiteSpace(reason))
-        return;
+        return BarcodeDuplicateReason;
 
       List<string> reasons = new List<string>();
       if (!string.IsNullOrEmpty(_barcodeDuplicateReason))
@@ -1609,10 +1633,7 @@ namespace CETAP_LOB.Model.QA
       if (!reasons.Contains(reason))
         reasons.Add(reason);
 
-      BarcodeDuplicateReason = string.Join("; ", reasons.ToArray());
-      BarcodeDuplicate = true;
-      AddError("BarcodeDuplicate", "Duplicate barcode: " + BarcodeDuplicateReason + ".");
-      checkerrors();
+      return string.Join("; ", reasons.ToArray());
     }
 
     /// <summary>Clears the duplicate barcode marking.</summary>
@@ -1624,6 +1645,8 @@ namespace CETAP_LOB.Model.QA
         BarcodeDuplicateReason = "";
       if (_errors.ContainsKey("BarcodeDuplicate"))
         RemoveError("BarcodeDuplicate");
+      if (_errors.ContainsKey("BarcodeUnknown"))
+        RemoveError("BarcodeUnknown");
       checkerrors();
     }
 

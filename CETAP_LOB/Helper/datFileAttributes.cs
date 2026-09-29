@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.Helper.datFileAttributes
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -181,6 +181,19 @@ namespace CETAP_LOB.Helper
       set
       {
         _client = value;
+      }
+    }
+
+    /// <summary>
+    /// True for the Re-score category, whose files are filed under Remark. The client
+    /// type character at position 18 of the file name is X for these; their barcodes are
+    /// not expected to be in the database, so QA does not check them.
+    /// </summary>
+    public bool IsReScore
+    {
+      get
+      {
+        return string.Equals(_clientType, "X", StringComparison.OrdinalIgnoreCase);
       }
     }
 

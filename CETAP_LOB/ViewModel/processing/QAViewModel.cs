@@ -1034,6 +1034,11 @@ public IntakeYearsBDO Intake_Year
       if (records == null || string.IsNullOrEmpty(fileName))
         return;
 
+      // Re-score (Remark) files are not checked at all, so their barcodes must not make a
+      // record in another QA file look duplicated.
+      if (records.Any(record => record != null && record.DatFile != null && record.DatFile.IsReScore))
+        return;
+
       foreach (QADatRecord record in records)
       {
         long? barcode = ConvertBarcode(record == null ? null : record.Barcode);
@@ -1051,8 +1056,13 @@ public IntakeYearsBDO Intake_Year
     }
 
     /// <summary>
-    /// Marks the loaded records whose barcode is repeated within the file, appears
-    /// in another file of the QA folder, or already exists in the Composit table.
+    /// Marks the loaded records whose barcode is repeated within the file, appears in
+    /// another file of the QA folder, or is not held in the database.
+    /// <para>
+    /// Re-score files are not checked at all: they are filed under Remark and their
+    /// barcodes are not expected to be in the database. Every other file has to hold
+    /// only barcodes the database already knows.
+    /// </para>
     /// </summary>
     private void MarkBarcodeDuplicates(string currentFile)
     {
@@ -1063,6 +1073,10 @@ public IntakeYearsBDO Intake_Year
       foreach (QADatRecord record in records)
         record.ClearBarcodeDuplicate();
       if (records.Count == 0)
+        return;
+
+      // The Re-score (Remark) category: no barcode error applies to these files.
+      if (records.Any(record => record.DatFile != null && record.DatFile.IsReScore))
         return;
 
       // Repeated within this file.
@@ -1094,7 +1108,9 @@ public IntakeYearsBDO Intake_Year
           record.MarkBarcodeDuplicate("also in " + string.Join(", ", others.ToArray()));
       }
 
-      // Already held in the Composit table.
+      // The barcode has to be one the database already holds. FindCompositBarcodes
+      // returns the ones it has for the current intake year, so anything missing from
+      // that list is a barcode the database does not know.
       List<long> barcodes = records
         .Select(record => ConvertBarcode(record.Barcode))
         .Where(value => value.HasValue)
@@ -1104,16 +1120,13 @@ public IntakeYearsBDO Intake_Year
       if (barcodes.Count == 0)
         return;
 
-      List<long> inComposit = _service.FindCompositBarcodes(barcodes);
-      if (inComposit == null || inComposit.Count == 0)
-        return;
-
-      HashSet<long> compositBarcodes = new HashSet<long>(inComposit);
+      List<long> inDatabase = _service.FindCompositBarcodes(barcodes);
+      HashSet<long> knownBarcodes = new HashSet<long>(inDatabase ?? new List<long>());
       foreach (QADatRecord record in records)
       {
         long? barcode = ConvertBarcode(record.Barcode);
-        if (barcode.HasValue && compositBarcodes.Contains(barcode.Value))
-          record.MarkBarcodeDuplicate("already exists in Composit");
+        if (barcode.HasValue && !knownBarcodes.Contains(barcode.Value))
+          record.MarkBarcodeUnknown();
       }
     }
 
