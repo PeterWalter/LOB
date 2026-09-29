@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Validation;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -588,7 +589,8 @@ namespace CETAP_LOB.View.writers
                             return false;
                     }
 
-                    context.SaveChanges();
+                    if (!TrySaveChanges(context, out message))
+                        return false;
                     return true;
                 }
             }
@@ -672,8 +674,33 @@ namespace CETAP_LOB.View.writers
                             return false;
                     }
 
+                    if (!TrySaveChanges(context, out message))
+                        return false;
+                    return true;
+                }
+            }
+
+        private static bool TrySaveChanges(CETAPEntities context, out string message)
+        {
+                message = "";
+                try
+                {
                     context.SaveChanges();
                     return true;
+                }
+                catch (DbEntityValidationException ex)
+                {
+                    List<string> errors = new List<string>();
+                    foreach (var entityErrors in ex.EntityValidationErrors)
+                    {
+                        foreach (var validationError in entityErrors.ValidationErrors)
+                            errors.Add(validationError.PropertyName + ": " + validationError.ErrorMessage);
+                    }
+
+                    message = errors.Count > 0
+                        ? "Database validation failed - " + string.Join("; ", errors)
+                        : "Database validation failed.";
+                    return false;
                 }
             }
         }
