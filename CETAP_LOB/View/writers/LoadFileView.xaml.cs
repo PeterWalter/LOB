@@ -90,6 +90,10 @@ namespace CETAP_LOB.View.writers
                     {
                         actionEntries.Add(CreateSectionHeaderMenuItem("WriterList value"));
                         actionEntries.Add(_writerValueMenuItem);
+                        SetActionHeader(_writerKeepFileMenuItem, "Keep file value (update WriterList)");
+                        _writerKeepFileMenuItem.Tag = field;
+                        _writerKeepFileMenuItem.ToolTip = "Keep the current file value and write it into WriterList for this column";
+                        actionEntries.Add(_writerKeepFileMenuItem);
                     }
                 }
 
@@ -288,7 +292,12 @@ namespace CETAP_LOB.View.writers
             MenuItem item = sender as MenuItem;
             if (item == null || _menuRecord == null)
                 return;
-            _menuRecord.AcceptFileValueForWriter(item.Tag as string);
+            string field = item.Tag as string;
+            _menuRecord.AcceptFileValueForWriter(field);
+
+            string message;
+            if (!PersistWriterValue(_menuRecord, field, out message))
+                MessageBox.Show(message, "Update WriterList", MessageBoxButton.OK, MessageBoxImage.Warning);
         }
 
         private void KeepFileValueForComposit_Click(object sender, RoutedEventArgs e)
@@ -313,10 +322,13 @@ namespace CETAP_LOB.View.writers
                 case "Surname":
                     return "Surname";
                 case "First Name":
+                case "Name":
                     return "Name";
                 case "South African ID":
+                case "SAID":
                     return "SAID";
                 case "Foreign ID":
+                case "ForeignID":
                     return "ForeignID";
                 case "Date of Birth":
                     return "DOB";
@@ -571,6 +583,90 @@ namespace CETAP_LOB.View.writers
                             break;
                         default:
                             message = "Unsupported Composit field: " + field + ".";
+                            return false;
+                    }
+
+                    context.SaveChanges();
+                    return true;
+                }
+            }
+
+        private static bool PersistWriterValue(WebWriters record, string field, out string message)
+        {
+                message = "";
+                if (record == null)
+                {
+                    message = "No record selected for WriterList update.";
+                    return false;
+                }
+
+                if (string.IsNullOrWhiteSpace(field))
+                {
+                    message = "No column selected for WriterList update.";
+                    return false;
+                }
+
+                long parsed;
+                long? reference = long.TryParse((record.Reference ?? "").Trim(), out parsed) ? parsed : (long?)null;
+                long? said = long.TryParse((record.SAID ?? "").Trim(), out parsed) ? parsed : (long?)null;
+                string foreignId = (record.ForeignID ?? "").Trim();
+
+                using (var context = new CETAPEntities())
+                {
+                    WriterList writer = null;
+                    if (reference.HasValue)
+                        writer = context.WriterLists.FirstOrDefault(x => x.NBT == reference.Value);
+                    if (writer == null && said.HasValue)
+                        writer = context.WriterLists.FirstOrDefault(x => x.SAID.HasValue && x.SAID.Value == said.Value);
+                    if (writer == null && foreignId.Length > 0)
+                        writer = context.WriterLists.FirstOrDefault(x => x.ForeignID == foreignId);
+
+                    if (writer == null)
+                    {
+                        message = "No matching WriterList record was found in the database.";
+                        return false;
+                    }
+
+                    switch (field)
+                    {
+                        case "Name":
+                            writer.Name = record.FirstName;
+                            break;
+                        case "Surname":
+                            writer.Surname = record.Surname;
+                            break;
+                        case "Reference":
+                            if (!long.TryParse((record.Reference ?? "").Trim(), out parsed))
+                            {
+                                message = "Reference is not a valid number for WriterList update.";
+                                return false;
+                            }
+                            writer.NBT = parsed;
+                            break;
+                        case "SAID":
+                            if (string.IsNullOrWhiteSpace(record.SAID))
+                                writer.SAID = null;
+                            else
+                            {
+                                if (!long.TryParse(record.SAID.Trim(), out parsed))
+                                {
+                                    message = "South African ID is not a valid number for WriterList update.";
+                                    return false;
+                                }
+                                writer.SAID = parsed;
+                            }
+                            break;
+                        case "ForeignID":
+                            writer.ForeignID = record.ForeignID;
+                            break;
+                        case "DOB":
+                            writer.DOB = record.DOB;
+                            break;
+                        case "Gender":
+                            writer.Gender = record.Gender;
+                            break;
+                        default:
+                            message = "Unsupported WriterList field: " + field + ".";
                             return false;
                     }
 
