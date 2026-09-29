@@ -331,6 +331,8 @@ namespace CETAP_LOB.View.writers
                 case "ForeignID":
                     return "ForeignID";
                 case "Date of Birth":
+                case "Date Of Birth":
+                case "DOB":
                     return "DOB";
                 case "Gender":
                     return "Gender";
