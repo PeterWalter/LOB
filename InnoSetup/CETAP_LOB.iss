@@ -13,7 +13,7 @@
 ; ---------------------------------------------------------------------------
 
 #define MyAppName      "CETAP LOB"
-#define MyAppVersion   "1.5"
+#define MyAppVersion   "1.5.1"
 #define MyAppPublisher "CETAP"
 #define MyAppExeName   "CETAP_LOB.exe"
 #define MyAppId        "{{8E2C4C93-3B3D-4A16-9C2B-7E5A1D4F6B21}"
@@ -34,7 +34,7 @@ AppName={#MyAppName}
 AppVersion={#MyAppVersion}
 AppVerName={#MyAppName} {#MyAppVersion}
 AppPublisher={#MyAppPublisher}
-VersionInfoVersion=1.5.0.0
+VersionInfoVersion=1.5.1.0
 DefaultDirName={autopf}\CETAP LOB
 DefaultGroupName={#MyAppName}
 DisableProgramGroupPage=yes

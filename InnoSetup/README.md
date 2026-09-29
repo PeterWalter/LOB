@@ -29,7 +29,7 @@ cd InnoSetup
 ```
 
 This builds `CETAP_LOB.sln` in **Release** and then compiles the script. The finished
-installer is written to `InnoSetup\Output\CETAP_LOB_Setup_1.5.exe`.
+installer is written to `InnoSetup\Output\CETAP_LOB_Setup_1.5.1.exe`.
 
 Useful switches:
 
