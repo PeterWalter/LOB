@@ -493,10 +493,10 @@ namespace CETAP_LOB.View.writers
                         });
                     }
                 }
-        }
+            }
 
         private static bool PersistCompositValue(WebWriters record, string field, out string message)
-            {
+        {
                 message = "";
                 if (record == null)
                 {
@@ -579,5 +579,4 @@ namespace CETAP_LOB.View.writers
                 }
             }
         }
-    }
 }
