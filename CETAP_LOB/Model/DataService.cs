@@ -3078,63 +3078,64 @@ namespace CETAP_LOB.Model
                 {
 
                     hasrecords = false;
-                    StreamReader textreader = new StreamReader(filename);
-                    var csv = new CsvReader(textreader);
-                    csv.Configuration.Encoding = Encoding.Unicode;
-                    csv.Configuration.Delimiter = ",";
-                    csv.Configuration.CultureInfo = CultureInfo.CurrentCulture;
-                    csv.Configuration.HasHeaderRecord = true;
-                    //csv.Configuration.SkipEmptyRecords = true;
-                    csv.Configuration.WillThrowOnMissingField = false;
-                    csv.Configuration.Quote = '"';
-                    // csv.Configuration.RegisterClassMap<WebWriterMap>();
-
-                    WritersList1 = new ObservableCollection<WebWriters>();
-
-                    while (csv.Read())
+                    List<WebWriters> loadedRecords = new List<WebWriters>(4000);
+                    using (StreamReader textreader = new StreamReader(filename))
+                    using (var csv = new CsvReader(textreader))
                     {
-                        //count++;
-                        WebWriters record = new WebWriters();
-                        record.Reference = csv.GetField<string>(0);
-                        string sn = csv.GetField<string>(1);
-                        record.Surname = sn.Trim();
-                        string fn = csv.GetField<string>(2);
-                        record.FirstName = fn.Trim();
-                        record.initials = csv.GetField<string>(3);
-                        record.SAID = csv.GetField<string>(4);
-                        record.ForeignID = csv.GetField<string>(5);
+                        csv.Configuration.Encoding = Encoding.Unicode;
+                        csv.Configuration.Delimiter = ",";
+                        csv.Configuration.CultureInfo = CultureInfo.CurrentCulture;
+                        csv.Configuration.HasHeaderRecord = true;
+                        //csv.Configuration.SkipEmptyRecords = true;
+                        csv.Configuration.WillThrowOnMissingField = false;
+                        csv.Configuration.Quote = '"';
+                        // csv.Configuration.RegisterClassMap<WebWriterMap>();
 
-                        string m = csv.GetField<string>(6);
-                        record.DOB = HelperUtils.WebDate(m);
-                        record.Gender = csv.GetField<string>(7);
-                        record.Classification = csv.GetField<string>(8);
-                        record.Tests = csv.GetField<string>(9);
-                        record.Language = csv.GetField<string>(10);
-                        record.Venue = csv.GetField<string>(11);
-
-                        string dot = csv.GetField<string>(12);
-                        record.DOT = HelperUtils.WebDate(dot);
-                        record.Mobile = csv.GetField<string>(13);
-                        record.HTelephone = csv.GetField<string>(14);
-                        record.Email = csv.GetField<string>(15);
-
-                        string dor = csv.GetField<string>(16);
-                        record.RegDate = HelperUtils.weblistDateTime(dor);
-
-                        string payed = csv.GetField<string>(17);
-                        if (string.IsNullOrWhiteSpace(payed))
+                        while (csv.Read())
                         {
-                            record.Paid = 0.0;
+                            WebWriters record = new WebWriters();
+                            record.Reference = csv.GetField<string>(0);
+                            string sn = csv.GetField<string>(1);
+                            record.Surname = (sn ?? "").Trim();
+                            string fn = csv.GetField<string>(2);
+                            record.FirstName = (fn ?? "").Trim();
+                            record.initials = csv.GetField<string>(3);
+                            record.SAID = csv.GetField<string>(4);
+                            record.ForeignID = csv.GetField<string>(5);
+
+                            string m = csv.GetField<string>(6);
+                            record.DOB = HelperUtils.WebDate(m);
+                            record.Gender = csv.GetField<string>(7);
+                            record.Classification = csv.GetField<string>(8);
+                            record.Tests = csv.GetField<string>(9);
+                            record.Language = csv.GetField<string>(10);
+                            record.Venue = csv.GetField<string>(11);
+
+                            string dot = csv.GetField<string>(12);
+                            record.DOT = HelperUtils.WebDate(dot);
+                            record.Mobile = csv.GetField<string>(13);
+                            record.HTelephone = csv.GetField<string>(14);
+                            record.Email = csv.GetField<string>(15);
+
+                            string dor = csv.GetField<string>(16);
+                            record.RegDate = HelperUtils.weblistDateTime(dor);
+
+                            string payed = csv.GetField<string>(17);
+                            if (string.IsNullOrWhiteSpace(payed))
+                            {
+                                record.Paid = 0.0;
+                            }
+                            else
+                            {
+                                record.Paid = csv.GetField<double>(17);
+                            }
+                            string doc = csv.GetField<string>(18);
+                            record.CreationDate = HelperUtils.weblistDateTime(doc);
+                            loadedRecords.Add(record);
                         }
-                        else
-                        {
-                            record.Paid = csv.GetField<double>(17);
-                        }
-                        string doc = csv.GetField<string>(18);
-                        record.CreationDate = HelperUtils.weblistDateTime(doc);
-                        // check dates up here
-                        WritersList1.Add(record);
                     }
+
+                    WritersList1 = new ObservableCollection<WebWriters>(loadedRecords);
 
                     AttachDatabaseValidation(WritersList1);
                     hasrecords = true;
@@ -3145,8 +3146,7 @@ namespace CETAP_LOB.Model
                 {
                     //int a = count;
                     log.Error("File has corrupt columns", ex);
-                    System.Windows.MessageBox.Show(ex.ToString());
-                    throw ex;
+                    throw;
                 }
             }
             else
@@ -3208,7 +3208,7 @@ namespace CETAP_LOB.Model
 
         private List<WriterList> LoadWriterListMatches(List<long> referenceKeys, List<long> saidKeys, List<string> foreignKeys)
         {
-            const int chunkSize = 200;
+            const int chunkSize = 1000;
             List<WriterList> matches = new List<WriterList>();
 
             using (var context = new CETAPEntities())
@@ -3237,7 +3237,7 @@ namespace CETAP_LOB.Model
 
         private List<Composit> LoadCompositMatches(List<long> referenceKeys, List<long> saidKeys, List<string> foreignKeys)
         {
-            const int chunkSize = 200;
+            const int chunkSize = 1000;
             List<Composit> matches = new List<Composit>();
 
             using (var context = new CETAPEntities())
