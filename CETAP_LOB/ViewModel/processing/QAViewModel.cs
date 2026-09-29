@@ -1034,9 +1034,9 @@ public IntakeYearsBDO Intake_Year
       if (records == null || string.IsNullOrEmpty(fileName))
         return;
 
-      // Re-score (Remark) files are not checked at all, so their barcodes must not make a
-      // record in another QA file look duplicated.
-      if (records.Any(record => record != null && record.DatFile != null && record.DatFile.IsReScore))
+      // Barcodes are not checked for the Re-score (Remark) and Moderated files, so theirs
+      // must not make a record in another QA file look duplicated.
+      if (records.Any(record => record != null && record.DatFile != null && record.DatFile.SkipsBarcodeCheck))
         return;
 
       foreach (QADatRecord record in records)
@@ -1059,9 +1059,9 @@ public IntakeYearsBDO Intake_Year
     /// Marks the loaded records whose barcode is repeated within the file, appears in
     /// another file of the QA folder, or is not held in the database.
     /// <para>
-    /// Re-score files are not checked at all: they are filed under Remark and their
-    /// barcodes are not expected to be in the database. Every other file has to hold
-    /// only barcodes the database already knows.
+    /// Re-score files (filed under Remark) and Moderated files are not checked at all:
+    /// their barcodes are not expected to be in the database. Every other file has to
+    /// hold only barcodes the database already knows.
     /// </para>
     /// </summary>
     private void MarkBarcodeDuplicates(string currentFile)
@@ -1075,8 +1075,8 @@ public IntakeYearsBDO Intake_Year
       if (records.Count == 0)
         return;
 
-      // The Re-score (Remark) category: no barcode error applies to these files.
-      if (records.Any(record => record.DatFile != null && record.DatFile.IsReScore))
+      // Re-score (Remark) and Moderated files: no barcode error applies to these files.
+      if (records.Any(record => record.DatFile != null && record.DatFile.SkipsBarcodeCheck))
         return;
 
       // Repeated within this file.

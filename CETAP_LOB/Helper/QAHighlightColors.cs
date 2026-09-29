@@ -67,12 +67,44 @@ namespace CETAP_LOB.Helper
     }
 
     /// <summary>
+    /// Colour of a QA file-list entry, which is tinted by the file's total error count so
+    /// the worst files stand out. The shades that read on white are too dark on the dark
+    /// theme - black most of all - so each band has a shade for each theme.
+    /// </summary>
+    public static Brush FileListBrush(int errorCount)
+    {
+      return FileListBrush(errorCount, IsDarkTheme());
+    }
+
+    /// <summary>
+    /// The file-list shade for one theme. Kept separate so the choice can be checked
+    /// without applying a theme.
+    /// </summary>
+    private static Brush FileListBrush(int errorCount, bool dark)
+    {
+      if (errorCount <= 0)
+        return Brush(dark ? "#FFF0F0F0" : "#FF000000");
+      if (errorCount <= 5)
+        return Brush(dark ? "#FFF4A460" : "#FFD2691E");
+      if (errorCount <= 10)
+        return Brush("#FFEE82EE");
+      if (errorCount <= 20)
+        return Brush("#FFFFA500");
+      if (errorCount <= 30)
+        return Brush(dark ? "#FFFF7043" : "#FFFF4500");
+      return Brush(dark ? "#FFFF6B6B" : "#FFFF0000");
+    }
+
+    /// <summary>
     /// True when the window background of the applied theme is dark. Every theme
     /// dictionary defines the window background colour - the custom themes merge either
     /// the light or the dark one - so this follows the theme without listing it.
     /// </summary>
-    private static bool IsDarkTheme()
+    public static bool IsDarkTheme()
     {
+      if (Application.Current == null)
+        return false;
+
       object value = Application.Current.TryFindResource(WindowBackgroundColorKey);
       Color background;
       if (value is Color)
@@ -99,7 +131,12 @@ namespace CETAP_LOB.Helper
 
     private static void Publish(string key, string color)
     {
-      Application.Current.Resources[key] = new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
+      Application.Current.Resources[key] = Brush(color);
+    }
+
+    private static SolidColorBrush Brush(string color)
+    {
+      return new SolidColorBrush((Color)ColorConverter.ConvertFromString(color));
     }
   }
 }

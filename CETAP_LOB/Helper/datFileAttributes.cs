@@ -185,15 +185,20 @@ namespace CETAP_LOB.Helper
     }
 
     /// <summary>
-    /// True for the Re-score category, whose files are filed under Remark. The client
-    /// type character at position 18 of the file name is X for these; their barcodes are
-    /// not expected to be in the database, so QA does not check them.
+    /// True for the two categories whose barcodes QA does not check, because their
+    /// barcodes are not expected to be in the database:
+    /// <list type="bullet">
+    /// <item>Re-score, the client type character at position 18 of the file name is X.
+    /// These are the files filed under Remark.</item>
+    /// <item>Moderated, the character is M.</item>
+    /// </list>
     /// </summary>
-    public bool IsReScore
+    public bool SkipsBarcodeCheck
     {
       get
       {
-        return string.Equals(_clientType, "X", StringComparison.OrdinalIgnoreCase);
+        return string.Equals(_clientType, "X", StringComparison.OrdinalIgnoreCase)
+            || string.Equals(_clientType, "M", StringComparison.OrdinalIgnoreCase);
       }
     }
 

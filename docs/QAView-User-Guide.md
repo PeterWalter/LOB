@@ -88,6 +88,12 @@ The file name is coloured by its total error count:
 | 21 – 30 | Orange Red |
 | above 30 | Red |
 
+On the **dark theme** those shades cannot be read on the dark background, black most of
+all, so lighter shades of the same progression are used there: a file with no errors is
+near-white, the 1 – 5 band is a lighter chocolate, and the two worst bands are a lighter
+orange red and a lighter red. Violet and orange already read on both themes and are
+unchanged. The light theme keeps the shades above.
+
 Clicking a file loads its candidates into the grid. Loading a file reads the `.dat`
 file, parses the fixed-width records and runs the full validation set (section 7).
 
@@ -401,13 +407,13 @@ instead of waiting for the report. A record whose barcode is wrong is shown in
 More than one reason is listed together, separated by a semicolon. Each barcode
 problem also counts towards the record's **Errors** column.
 
-**Re-score (Remark) files are not checked.** A file whose client type is `X`
-(client **Re-score** - the files filed under **Remark** in the QA folder) may hold
-barcodes the database does not know, so none of the barcode rules above apply to it.
-Its barcodes are also left out of the folder-wide list, so a Re-score file cannot make
-a record in another file look duplicated. Every other file must hold only barcodes the
-database already knows: a barcode that is missing from the Composit table for the
-intake year is marked.
+**Re-score (Remark) and Moderated files are not checked.** A file whose client type is
+`X` (**Re-score** - the files filed under **Remark** in the QA folder) or `M`
+(**Moderated**) may hold barcodes the database does not know, so none of the barcode
+rules above apply to it. Their barcodes are also left out of the folder-wide list, so
+such a file cannot make a record in another file look duplicated. Every other file must
+hold only barcodes the database already knows: a barcode that is missing from the
+Composit table for the intake year is marked.
 
 The folder-wide list of barcodes is collected during **Refresh**, when every file in
 the QA folder is read anyway, so opening a file marks it immediately. Choose
@@ -535,7 +541,7 @@ formats are `667`, `761`, `886` and `909`.
 | An **NBT Reference** is shown in blue | The walk-in reference already exists in Composit under a different reference (section 9.5). Right-click it to compare the two records and, if the Composit reference is the right one, click **Use Composit reference**. |
 | **Allocate new walk-in reference** reports that no numbers are available | Every row in `NewNBTNumbers` has been used (`OriginalNBT` filled). A new batch of walk-in numbers has to be loaded into that table before more can be issued. |
 | **Allocate new walk-in reference** is not on the menu | It only appears for a *proper* reference (8th character not `9`) whose name, surname, SA ID or foreign ID differs from the WriterList (section 9.6). |
-| A **Barcode** is shown in amber | The barcode is a duplicate (repeated in the file or in another QA file) or the database does not hold it (section 11.1). Hover it for the reason. Nothing is marked in a Re-score (**Remark**) file. |
+| A **Barcode** is shown in amber | The barcode is a duplicate (repeated in the file or in another QA file) or the database does not hold it (section 11.1). Hover it for the reason. Nothing is marked in a Re-score (**Remark**) or **Moderated** file. |
 | Ambers barcodes are not shown after adding files to the QA folder | The folder barcode list is built during Refresh. Click **Refresh Directory**. |
 | The QA file list looks incomplete or empty at first | The folder is read in the background so the module opens instantly; the list fills in as each file is read. Wait for it to finish. |
 | A saved file is rejected by the scoring software | The record length must not change. Values that are too long for their column are truncated on save, so check the record for a truncated field (a name, ID or test code) and correct the source data. |
