@@ -1,7 +1,8 @@
-﻿
+
 
 using FirstFloor.ModernUI.Presentation;
 using GalaSoft.MvvmLight;
+using CETAP_LOB.Helper;
 using System;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -309,6 +310,11 @@ namespace CETAP_LOB.ViewModel
 
     private void SyncThemeAndColor()
     {
+      // The QA grid highlight colours are picked for the theme (the purple that marks a
+      // WriterList difference is too dark to read on the dark theme), so they are
+      // republished here - at start up and again whenever the theme changes.
+      QAHighlightColors.Apply();
+
       SelectedTheme = themes.FirstOrDefault<Link>((Func<Link, bool>) (l => l.Source.Equals((object) AppearanceManager.Current.ThemeSource)));
       SelectedAccentColor = AppearanceManager.Current.AccentColor;
       if (!_colorLoadedYet)

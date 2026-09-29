@@ -186,6 +186,12 @@ field adds an error; the **Errors** column is the number of failing fields.
 - Correcting a field clears its marking immediately: a field is only coloured while its
   value still fails validation, still differs from the matching WriterList record, or is
   still a conflicting walk-in reference.
+- The purple, blue and amber shades are chosen for the **theme** that is applied. They are
+  dark enough to read on the light theme, so on the dark theme (including the custom
+  themes that build on it) lighter, more saturated shades are used instead. Switching
+  theme repaints the grid immediately; nothing has to be reopened. The lighter shade of
+  each colour is kept for the row holding the selection highlight, which is filled with
+  the accent colour in both themes.
 
 ---
 

@@ -30,12 +30,15 @@
              from the matching WriterList record are coloured, and they use purple
              so they are never confused with the red used for validation errors.
              A walk-in reference that already exists in Composit under another
-             reference is blue instead. The lighter shades keep both readable on
-             the blue selected row. -->
+             reference is blue instead and a barcode problem is amber. The lighter
+             shades keep these readable on the selected row, and the shades that
+             read on the light theme are too dark for the dark one, so the brushes
+             are published per theme by QAHighlightColors.Apply() (see
+             Helper\QAHighlightColors.cs) and looked up here with DynamicResource. -->
         <Style x:Key="NameMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding NameMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -43,14 +46,14 @@
                         <Condition Binding="{Binding NameMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="SurnameMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SurnameMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -58,14 +61,14 @@
                         <Condition Binding="{Binding SurnameMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="ReferenceMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ReferenceMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -73,10 +76,10 @@
                         <Condition Binding="{Binding ReferenceMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
                 <DataTrigger Binding="{Binding WalkInReferenceMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF1565C0" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAWalkInBrush}" />
                     <Setter Property="ToolTip" Value="This walk-in reference already exists in Composit under a different reference" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -84,14 +87,14 @@
                         <Condition Binding="{Binding WalkInReferenceMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFBBDEFB" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAWalkInSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="SAIDMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding SAIDMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -99,14 +102,14 @@
                         <Condition Binding="{Binding SAIDMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="ForeignIDMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding ForeignIDMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -114,14 +117,14 @@
                         <Condition Binding="{Binding ForeignIDMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="DOBMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding DOBMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -129,14 +132,14 @@
                         <Condition Binding="{Binding DOBMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
         <Style x:Key="GenderMismatchTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding GenderMismatch}" Value="True">
-                    <Setter Property="Foreground" Value="#FF7B1FA2" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BioInfoMismatchDetail}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -144,7 +147,7 @@
                         <Condition Binding="{Binding GenderMismatch}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFE1BEE7" />
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
@@ -156,7 +159,7 @@
         <Style x:Key="BarcodeDuplicateTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
             <Style.Triggers>
                 <DataTrigger Binding="{Binding BarcodeDuplicate}" Value="True">
-                    <Setter Property="Foreground" Value="#FFA15C00" />
+                    <Setter Property="Foreground" Value="{DynamicResource QABarcodeBrush}" />
                     <Setter Property="ToolTip" Value="{Binding BarcodeDuplicateReason}" />
                 </DataTrigger>
                 <MultiDataTrigger>
@@ -164,7 +167,7 @@
                         <Condition Binding="{Binding BarcodeDuplicate}" Value="True" />
                         <Condition Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType={x:Type DataGridRow}}}" Value="True" />
                     </MultiDataTrigger.Conditions>
-                    <Setter Property="Foreground" Value="#FFFFE082" />
+                    <Setter Property="Foreground" Value="{DynamicResource QABarcodeSelectedBrush}" />
                 </MultiDataTrigger>
             </Style.Triggers>
         </Style>
