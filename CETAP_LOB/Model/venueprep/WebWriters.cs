@@ -950,10 +950,8 @@ namespace CETAP_LOB.Model.venueprep
         else if (!HelperUtils.IsValidChecksum(reference.Substring(1, 13)))
           errors.Add("Not a Valid NBT number");
 
-        if (_writerRecord != null && !MatchesText(reference, _writerRecord.NBT.ToString()))
-          errors.Add("WriterList reference number differs from database");
-        if (_compositRecord != null && !MatchesText(reference, _compositRecord.RefNo.ToString()))
-          errors.Add("Composit reference number differs from database");
+        if (HasAttachedTextMismatch(reference, _writerRecord == null ? null : _writerRecord.NBT.ToString(), _compositRecord == null ? null : _compositRecord.RefNo.ToString()))
+          errors.Add("Reference differs from database");
       }
 
       ApplyErrors("Reference", errors);
