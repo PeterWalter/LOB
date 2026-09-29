@@ -267,6 +267,17 @@ namespace LOB_Tests
             Assert.Empty(GetErrors(record, "FirstName"));
         }
 
+        [Fact]
+        public void WebWriters_accepts_dob_up_to_99_years()
+        {
+            var record = new WebWriters();
+            record.DOB = DateTime.Today.AddYears(-99);
+            Assert.DoesNotContain(GetErrors(record, "DOB"), m => m.Contains("Wrong age for Matric"));
+
+            record.DOB = DateTime.Today.AddYears(-100);
+            Assert.Contains(GetErrors(record, "DOB"), m => m.Contains("Wrong age for Matric"));
+        }
+
         private static IEnumerable<string> GetErrors(WebWriters record, string property)
         {
             return record.GetErrors(property)?.Cast<string>() ?? Enumerable.Empty<string>();

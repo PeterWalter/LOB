@@ -1056,8 +1056,8 @@ namespace CETAP_LOB.Model.venueprep
     private void ValidateDOB()
     {
       List<string> errors = new List<string>();
-      TimeSpan timeSpan = DateTime.Now - _dob;
-      if (_dob != default(DateTime) && (timeSpan.TotalDays < 3650.0 || timeSpan.TotalDays > 29100.0))
+      DateTime today = DateTime.Today;
+      if (_dob != default(DateTime) && (_dob.Date > today.AddYears(-10) || _dob.Date < today.AddYears(-99)))
         errors.Add("Wrong age for Matric");
 
       if (HasAttachedDateMismatch(_dob, _writerRecord == null ? (DateTime?)null : _writerRecord.DOB, _compositRecord == null ? (DateTime?)null : _compositRecord.DOB))
