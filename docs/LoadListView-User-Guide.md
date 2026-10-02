@@ -216,6 +216,12 @@ corrected list on disk. If the write fails - no matching database record, a valu
 a number for NBT Reference or South African ID, or a database validation rule - a message
 explains why and nothing is changed.
 
+**Save to Database** (section 8) makes the same choice for the whole list at once: it writes the
+fields the file carries - First Name, Surname, South African ID, Foreign ID, Date of Birth,
+Gender, test language, test type and e-mail - into WriterList for every writer already there,
+and adds the ones that are missing. Use the per-field entries above when only one field should
+move, or to clear a field deliberately.
+
 ---
 
 ## 8. Toolbar and menu commands
@@ -225,7 +231,7 @@ explains why and nothing is changed.
 | **Select file** | Opens the file browser and reads the chosen writer list file | Always |
 | **Clean File** / **Clean Names** | Repairs only the rows that have validation errors (see section 9.1 - it changes real data, so review it) | A file is loaded |
 | **Save a new csv file** | Writes the rows you are looking at, with your corrections, to a CSV file you choose | A file is loaded |
-| **Save to Database** | Adds the writers that are not in WriterList for the intake year yet (matched on NBT Reference and Date of Test), and refreshes the **test language, test type and e-mail** of the writers that are already there when those differ. A message reports whether it was saved | The file has no duplicated NBT references in it, and the list has been marked as changed |
+| **Save to Database** | Adds the writers that are not in WriterList for the intake year yet (matched on NBT Reference and Date of Test), and brings the writers that are already there up to date with the file: **First Name, Surname, South African ID, Foreign ID, Date of Birth, Gender, test language, test type and e-mail**. A field that is blank in the file is left as the database has it - a stored value is never wiped. A message reports whether it was saved | The file has no duplicated NBT references in it, and the list has been marked as changed |
 | **Delete Selected record** | Removes the selected row from the loaded list. The database is not touched | A file is loaded |
 | **Refresh data in Table** | Re-reads the loaded rows, re-runs validation and the duplicate checks | A file is loaded |
 | **Check DB Duplicates** | Looks every NBT Reference in the file up in WriterList for the intake year and fills the **DB Duplicates** list | The file has no duplicated NBT references in it, and the list has been marked as changed |
@@ -335,8 +341,9 @@ read comes through as an empty date and is reported by the Date of Birth rule if
 | Every row shows *differs from database* | The database is not available, or the file belongs to a different intake. Check that the database is up and that the NBT numbers are for the current intake year |
 | A name is red for *funny characters* | Use **Clean File**, or correct the name by hand. Names may not contain digits or punctuation |
 | **Save to Database** stays greyed out | The list still has validation errors, or it has not been changed since it was loaded. Fix the red fields and try again |
-| Saving reports success but the difference is still there | **Save to Database** only writes the test language, test type and e-mail of writers already in WriterList. A differing name, South African ID, foreign ID, date of birth or gender is not written - correct it with the right-click **Keep file value (update WriterList)** entry |
+| Saving reports success but the difference is still there | The field is probably blank in the file - blank values are never written - or the writer's NBT Reference and Date of Test do not match the stored record, so the row was added as a new writer. Check the right-click **Column values** entry for the field |
 | **Save to Database** says nothing was saved | The **DB Duplicates** list still has records in it, so the save was refused, or the database is unavailable. Settle the duplicates and try again; if it still fails, read the log file |
+| A field I cleared in the file is still filled in the database | **Save to Database** only writes values the file carries; it never wipes what is stored. Use the right-click **Keep file value (update WriterList)** entry on that field to clear it |
 | A South African ID disappeared after **Clean File** | That is what Clean File does with an ID that fails validation: it moves it to the Foreign ID column when that is empty, otherwise it clears it. Type the correct ID back in |
 | **Keep file value** reports "No matching WriterList record was found" | The row has no WriterList match, so there is nothing to update. Check the NBT Reference, or add the writer with **Save to Database** first |
 | The DB Duplicates list keeps coming back | The NBT number really is in use by another writer. Correct the number in the grid, or use **New NBT Number**, then check again |

@@ -2687,6 +2687,20 @@ namespace CETAP_LOB.Model
 
         }
 
+        /// <summary>
+        /// True when a value loaded from a writer list file differs from the one the database
+        /// holds. A value the file does not carry is not a difference: Save to Database leaves
+        /// blank file fields alone rather than wiping what is stored.
+        /// </summary>
+        private static bool DiffersFromDatabase(string fileValue, string databaseValue)
+        {
+            string file = (fileValue ?? "").Trim();
+            if (file.Length == 0)
+                return false;
+
+            return !string.Equals(file, (databaseValue ?? "").Trim(), StringComparison.OrdinalIgnoreCase);
+        }
+
         static void NewNBTDALToNewNBTBDO(NewNBTNumberBDO nbtBDO, NewNBTNumber nbtNumber)
         {
             nbtBDO.NewNBT = nbtNumber.NewNBT;
@@ -3739,20 +3753,27 @@ namespace CETAP_LOB.Model
                                                 y.DOT == x.DOT
                                             ))
                                             .ToList();
+                    // Writers already in WriterList whose details have moved on in the file. Only
+                    // the fields the file actually carries are compared, because only those are
+                    // written back.
                     var updatedApplicants = ApplicantsBDO
                         .Where(x =>
                         {
                             var match = inDbWriters.FirstOrDefault(y =>
                                 y.NBT == x.NBT && y.DOT.Date == x.DOT.Date);
 
-                            return match != null &&
-                                   (!string.Equals(x.Surname.Trim(),match.Surname.Trim()) ||
-                                    !string.Equals(x.SAID, match.SAID) ||
-                                    !string.Equals(x.ForeignID?.Trim(), match.ForeignID?.Trim(), StringComparison.OrdinalIgnoreCase) ||
-                                    x.DOB != match.DOB 
-                                   || !string.Equals(x.TestLanguage?.Trim(), match.TestLanguage?.Trim(), StringComparison.OrdinalIgnoreCase) ||
-                                    !string.Equals(x.TestType?.Trim(), match.TestType?.Trim(), StringComparison.OrdinalIgnoreCase) ||
-                                    !string.Equals(x.EMail?.Trim(), match.EMail?.Trim(), StringComparison.OrdinalIgnoreCase));
+                            if (match == null)
+                                return false;
+
+                            return DiffersFromDatabase(x.Name, match.Name)
+                                || DiffersFromDatabase(x.Surname, match.Surname)
+                                || (x.SAID.HasValue && x.SAID.Value != (match.SAID ?? 0))
+                                || DiffersFromDatabase(x.ForeignID, match.ForeignID)
+                                || (x.DOB != default(DateTime) && x.DOB.Date != match.DOB.Date)
+                                || DiffersFromDatabase(x.Gender, match.Gender)
+                                || DiffersFromDatabase(x.TestLanguage, match.TestLanguage)
+                                || DiffersFromDatabase(x.TestType, match.TestType)
+                                || DiffersFromDatabase(x.EMail, match.EMail);
                         })
                         .ToList();
 
@@ -3797,20 +3818,41 @@ namespace CETAP_LOB.Model
                                 y.NBT == updatedApplicant.NBT &&
                                 y.DOT.Date == updatedApplicant.DOT.Date);
 
-                            if (writer != null)
-                            {
-                                writer.TestLanguage = updatedApplicant.TestLanguage;
-                                writer.TestType = updatedApplicant.TestType;
-                                writer.EMail = updatedApplicant.EMail;
-                            }
+                            if (writer == null)
+                                continue;
+
+                            // The loaded file is the source of truth for the biography, so a value
+                            // it carries replaces the stored one. A field that is blank in the file
+                            // is left as the database has it - use the right-click "Keep file value"
+                            // entry to clear a field on purpose.
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.Name))
+                                writer.Name = updatedApplicant.Name.Trim();
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.Surname))
+                                writer.Surname = updatedApplicant.Surname.Trim();
+                            if (updatedApplicant.SAID.HasValue)
+                                writer.SAID = updatedApplicant.SAID;
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.ForeignID))
+                                writer.ForeignID = updatedApplicant.ForeignID.Trim();
+                            if (updatedApplicant.DOB != default(DateTime))
+                                writer.DOB = updatedApplicant.DOB;
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.Gender))
+                                writer.Gender = updatedApplicant.Gender.Trim();
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.TestLanguage))
+                                writer.TestLanguage = updatedApplicant.TestLanguage.Trim();
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.TestType))
+                                writer.TestType = updatedApplicant.TestType.Trim();
+                            if (!string.IsNullOrWhiteSpace(updatedApplicant.EMail))
+                                writer.EMail = updatedApplicant.EMail.Trim();
+
+                            writer.DateModified = DateTime.Now;
                         }
 
                         await context.SaveChangesAsync();
                     }
                 }
 
-                // The writers that were missing have been added and the ones that differed have
-                // had their test details refreshed.
+                // The writers that were missing have been added and the details of the ones
+                // that differed have been brought up to date with the file.
                 taskCompleted = true;
             }
             catch (Exception ex)
