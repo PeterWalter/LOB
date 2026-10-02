@@ -185,8 +185,9 @@ namespace CETAP_LOB.Helper
     }
 
     /// <summary>
-    /// True for the two categories whose barcodes QA does not check, because their
-    /// barcodes are not expected to be in the database:
+    /// True for the two categories whose barcodes QA does not check. Their scripts have been
+    /// scored before, so their barcodes being held in the database is expected rather than an
+    /// error:
     /// <list type="bullet">
     /// <item>Re-score, the client type character at position 18 of the file name is X.
     /// These are the files filed under Remark.</item>

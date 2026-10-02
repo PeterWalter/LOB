@@ -1607,20 +1607,9 @@ namespace CETAP_LOB.Model.QA
     }
 
     /// <summary>
-    /// Marks this record's barcode as one the database holds no Composit row for. It is
-    /// shown like a duplicate barcode, with the reason in the tooltip.
-    /// </summary>
-    public void MarkBarcodeUnknown()
-    {
-      BarcodeDuplicateReason = AppendBarcodeReason("not found in the database");
-      BarcodeDuplicate = true;
-      AddError("BarcodeUnknown", "Barcode is not in the database.");
-      checkerrors();
-    }
-
-    /// <summary>
     /// Adds one reason to the barcode reason list, keeping the ones already there so a
-    /// barcode that is both repeated and missing from the database reports both.
+    /// barcode that is both repeated in the file and already held in the database reports
+    /// both.
     /// </summary>
     private string AppendBarcodeReason(string reason)
     {
@@ -1645,8 +1634,6 @@ namespace CETAP_LOB.Model.QA
         BarcodeDuplicateReason = "";
       if (_errors.ContainsKey("BarcodeDuplicate"))
         RemoveError("BarcodeDuplicate");
-      if (_errors.ContainsKey("BarcodeUnknown"))
-        RemoveError("BarcodeUnknown");
       checkerrors();
     }
 

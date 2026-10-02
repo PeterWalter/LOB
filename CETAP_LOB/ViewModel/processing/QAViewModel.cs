@@ -1057,11 +1057,11 @@ public IntakeYearsBDO Intake_Year
 
     /// <summary>
     /// Marks the loaded records whose barcode is repeated within the file, appears in
-    /// another file of the QA folder, or is not held in the database.
+    /// another file of the QA folder, or is already held in the database.
     /// <para>
     /// Re-score files (filed under Remark) and Moderated files are not checked at all:
-    /// their barcodes are not expected to be in the database. Every other file has to
-    /// hold only barcodes the database already knows.
+    /// their scripts have been scored before, so their barcodes being in the database is
+    /// expected. Every other file reports a barcode the database already holds.
     /// </para>
     /// </summary>
     private void MarkBarcodeDuplicates(string currentFile)
@@ -1108,9 +1108,9 @@ public IntakeYearsBDO Intake_Year
           record.MarkBarcodeDuplicate("also in " + string.Join(", ", others.ToArray()));
       }
 
-      // The barcode has to be one the database already holds. FindCompositBarcodes
-      // returns the ones it has for the current intake year, so anything missing from
-      // that list is a barcode the database does not know.
+      // A barcode the database already holds for this intake year has been recorded before,
+      // so it is reported the same way as a duplicate. FindCompositBarcodes returns the ones
+      // it holds; a barcode it does not hold is not an error.
       List<long> barcodes = records
         .Select(record => ConvertBarcode(record.Barcode))
         .Where(value => value.HasValue)
@@ -1121,12 +1121,15 @@ public IntakeYearsBDO Intake_Year
         return;
 
       List<long> inDatabase = _service.FindCompositBarcodes(barcodes);
-      HashSet<long> knownBarcodes = new HashSet<long>(inDatabase ?? new List<long>());
+      if (inDatabase == null || inDatabase.Count == 0)
+        return;
+
+      HashSet<long> databaseBarcodes = new HashSet<long>(inDatabase);
       foreach (QADatRecord record in records)
       {
         long? barcode = ConvertBarcode(record.Barcode);
-        if (barcode.HasValue && !knownBarcodes.Contains(barcode.Value))
-          record.MarkBarcodeUnknown();
+        if (barcode.HasValue && databaseBarcodes.Contains(barcode.Value))
+          record.MarkBarcodeDuplicate("already exists in Composit");
       }
     }
 

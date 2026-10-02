@@ -187,7 +187,7 @@ field adds an error; the **Errors** column is the number of failing fields.
   affected fields (section 9), so they are never confused with validation errors.
 - A walk-in reference that already exists in Composit under a different reference is
   shown in **blue** on the **NBT Reference** field (section 9.5).
-- A barcode problem - duplicated, or not held in the database - is shown in **amber** on
+- A barcode problem - duplicated, or already held in the database - is shown in **amber** on
   the **Barcode** field (section 11.1).
 - Correcting a field clears its marking immediately: a field is only coloured while its
   value still fails validation, still differs from the matching WriterList record, or is
@@ -402,18 +402,19 @@ instead of waiting for the report. A record whose barcode is wrong is shown in
 |---|---|
 | The barcode appears more than once **in the same file** | *duplicated N times in this file* |
 | The barcode appears **in another file** in the QA folder | *also in <file names>* |
-| The barcode is **not held in the database** | *not found in the database* |
+| The barcode is **already held in the database** | *already exists in Composit* |
 
 More than one reason is listed together, separated by a semicolon. Each barcode
-problem also counts towards the record's **Errors** column.
+problem also counts towards the record's **Errors** column. A barcode the database does
+**not** hold is not a problem - only one it already holds is.
 
 **Re-score (Remark) and Moderated files are not checked.** A file whose client type is
 `X` (**Re-score** - the files filed under **Remark** in the QA folder) or `M`
-(**Moderated**) may hold barcodes the database does not know, so none of the barcode
-rules above apply to it. Their barcodes are also left out of the folder-wide list, so
-such a file cannot make a record in another file look duplicated. Every other file must
-hold only barcodes the database already knows: a barcode that is missing from the
-Composit table for the intake year is marked.
+(**Moderated**) holds scripts that have been scored before, so their barcodes being in
+the database is expected and none of the barcode rules above apply to it. Their barcodes
+are also left out of the folder-wide list, so such a file cannot make a record in another
+file look duplicated. Every other file reports a barcode the database already holds: the
+Composit table is searched for the intake year.
 
 The folder-wide list of barcodes is collected during **Refresh**, when every file in
 the QA folder is read anyway, so opening a file marks it immediately. Choose
@@ -541,7 +542,7 @@ formats are `667`, `761`, `886` and `909`.
 | An **NBT Reference** is shown in blue | The walk-in reference already exists in Composit under a different reference (section 9.5). Right-click it to compare the two records and, if the Composit reference is the right one, click **Use Composit reference**. |
 | **Allocate new walk-in reference** reports that no numbers are available | Every row in `NewNBTNumbers` has been used (`OriginalNBT` filled). A new batch of walk-in numbers has to be loaded into that table before more can be issued. |
 | **Allocate new walk-in reference** is not on the menu | It only appears for a *proper* reference (8th character not `9`) whose name, surname, SA ID or foreign ID differs from the WriterList (section 9.6). |
-| A **Barcode** is shown in amber | The barcode is a duplicate (repeated in the file or in another QA file) or the database does not hold it (section 11.1). Hover it for the reason. Nothing is marked in a Re-score (**Remark**) or **Moderated** file. |
+| A **Barcode** is shown in amber | The barcode is a duplicate (repeated in the file or in another QA file) or the database already holds it (section 11.1). Hover it for the reason. Nothing is marked in a Re-score (**Remark**) or **Moderated** file. |
 | Ambers barcodes are not shown after adding files to the QA folder | The folder barcode list is built during Refresh. Click **Refresh Directory**. |
 | The QA file list looks incomplete or empty at first | The folder is read in the background so the module opens instantly; the list fills in as each file is read. Wait for it to finish. |
 | A saved file is rejected by the scoring software | The record length must not change. Values that are too long for their column are truncated on save, so check the record for a truncated field (a name, ID or test code) and correct the source data. |
@@ -565,4 +566,4 @@ formats are `667`, `761`, `886` and `909`.
 | **Walk-in reference** | An NBT number issued on the spot. Its 8th character is `9`, and the candidate normally has no WriterList entry. |
 | **Composit** | The database table holding a candidate's composite (scored) record, keyed by `RefNo`. QAView uses it to find a walk-in who already exists under a different reference. |
 | **NewNBTNumbers** | The database table of unused walk-in numbers. `NewNBT` is the number issued; `OriginalNBT` records the reference it replaced. |
-| **Barcode problem** | A barcode that appears more than once in a file, in more than one QA file, or that the database does not hold. Shown in amber in the grid (section 11.1). Re-score (**Remark**) files are not checked. |
+| **Barcode problem** | A barcode that appears more than once in a file, in more than one QA file, or that the database already holds. Shown in amber in the grid (section 11.1). Re-score (**Remark**) and **Moderated** files are not checked. |
