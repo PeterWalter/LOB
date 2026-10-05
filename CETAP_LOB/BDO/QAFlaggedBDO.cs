@@ -30,7 +30,11 @@ namespace CETAP_LOB.BDO
 
     public DateTime DOB { get; set; }
 
-    /// <summary>The venue code of the file the record came from.</summary>
+    /// <summary>
+    /// The venue code of the file the record came from: a venue is identified by its code
+    /// throughout the database (TestVenues and Composit have no separate VenueID column), so
+    /// this holds the code itself.
+    /// </summary>
     public int VenueID { get; set; }
 
     /// <summary>Date of test - the date the flagged list is reported by.</summary>

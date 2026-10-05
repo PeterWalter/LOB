@@ -9089,6 +9089,9 @@ namespace CETAP_LOB.Model
 
             long said;
             long? southAfricanId = long.TryParse((record.SAID ?? "").Trim(), out said) ? (long?)said : null;
+            // QA_Flagged.VenueID holds the venue code itself - the database identifies a venue
+            // by its code (TestVenues and Composit have no separate VenueID column), so the code
+            // from the file is written as it stands.
             int venueId;
             int.TryParse((record.VenueCode ?? "").Trim(), out venueId);
 

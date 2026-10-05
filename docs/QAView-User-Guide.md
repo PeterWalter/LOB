@@ -367,7 +367,8 @@ application then:
 
 1. Writes the record's details to the `[Process].[QA_Flagged]` table - barcode, NBT reference,
    surname, first name, SA ID, foreign ID, date of birth, venue code, date of test, the **batch**
-   (the file name without its extension), who flagged it and when. The barcode identifies the
+   (the file name without its extension), who flagged it and when. The venue is stored as the
+   venue code, which is how the database identifies a venue. The barcode identifies the
    row, so flagging the same record twice refreshes it instead of adding another.
 2. **Takes the error markings off the record** - the red borders go away, the purple/blue/amber
    text goes away, the record's **Errors** count drops to zero and it stops counting towards the
