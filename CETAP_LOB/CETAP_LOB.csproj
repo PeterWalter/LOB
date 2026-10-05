@@ -249,6 +249,7 @@
     <Compile Include="BDO\BenchMarkLevelsBDO.cs" />
     <Compile Include="BDO\CompositBDO.cs" />
     <Compile Include="BDO\ForDuplicatesBarcodesBDO.cs" />
+    <Compile Include="BDO\QAFlaggedBDO.cs" />
     <Compile Include="BDO\FullComposite.cs" />
     <Compile Include="BDO\IntakeYearsBDO.cs" />
     <Compile Include="BDO\LogisticsComposite.cs" />

@@ -193,6 +193,18 @@ namespace CETAP_LOB.Model
     /// <summary>Returns the supplied barcodes already held in Composit for the current intake year.</summary>
     List<long> FindCompositBarcodes(IEnumerable<long> barcodes);
 
+    /// <summary>Returns the supplied barcodes that have been flagged in Process.QA_Flagged.</summary>
+    List<long> FindFlaggedBarcodes(IEnumerable<long> barcodes);
+
+    /// <summary>
+    /// Writes a QA record to Process.QA_Flagged (or refreshes the row when the barcode is
+    /// already there). The batch is the file name without its extension.
+    /// </summary>
+    bool FlagQARecord(QADatRecord record, string batch, string user, ref string message);
+
+    /// <summary>The records flagged for one date of test.</summary>
+    List<QAFlaggedBDO> GetFlaggedRecords(DateTime testDate);
+
     /// <summary>
     /// Writes one accepted field from a QA record into the matching WriterList row -
     /// the reverse of copying a WriterList value into the record.

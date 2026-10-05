@@ -1,4 +1,4 @@
-﻿// Decompiled with JetBrains decompiler
+// Decompiled with JetBrains decompiler
 // Type: LOB.Model.ModelBase
 // Assembly: LOB, Version=1.1.0.0, Culture=neutral, PublicKeyToken=null
 // MVID: 3597789E-8774-4427-AE20-07195D9380BD
@@ -41,7 +41,7 @@ namespace CETAP_LOB.Model
       return (IEnumerable) _errors[propertyName];
     }
 
-    public void AddError(string propertyName, string error)
+    public virtual void AddError(string propertyName, string error)
     {
       _errors[propertyName] = new List<string>()
       {
@@ -57,7 +57,7 @@ namespace CETAP_LOB.Model
       NotifyErrorsChanged(propertyName);
     }
 
-    private void NotifyErrorsChanged(string propertyName)
+    protected void NotifyErrorsChanged(string propertyName)
     {
       if (ErrorsChanged == null)
         return;

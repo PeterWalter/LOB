@@ -71,6 +71,15 @@ namespace CETAP_LOB.View.processing
             string field = FieldForColumn(cell == null || cell.Column == null ? null : cell.Column.Header as string);
             _menuRecord = record;
 
+            // A record that has already been flagged cannot be flagged again.
+            if (FlagRecordMenuItem != null)
+            {
+                FlagRecordMenuItem.IsEnabled = !record.Flagged;
+                FlagRecordMenuItem.Header = record.Flagged
+                    ? "Record is flagged - the administrators are tracing this writer"
+                    : "Flag record - details cannot be confirmed";
+            }
+
             List<object> entries = new List<object>();
 
             if (record.HasWriterRecord)
@@ -237,6 +246,21 @@ namespace CETAP_LOB.View.processing
             if (viewModel == null)
                 return;
             viewModel.AllocateWalkInReference(_menuRecord);
+        }
+
+        /// <summary>
+        /// Hands the right clicked record to the administrators: its details are written to
+        /// [Process].[QA_Flagged], its error markings are taken off the grid and it stops
+        /// counting towards the file.
+        /// </summary>
+        private void FlagRecord_Click(object sender, RoutedEventArgs e)
+        {
+            if (_menuRecord == null)
+                return;
+            QAViewModel viewModel = QAGrid == null ? null : QAGrid.DataContext as QAViewModel;
+            if (viewModel == null)
+                return;
+            viewModel.FlagRecord(_menuRecord);
         }
 
         /// <summary>Maps the grid column header to the field name used by ApplyWriterValue.</summary>

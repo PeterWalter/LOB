@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 
 namespace CETAP_LOB.Model.QA
@@ -104,6 +105,7 @@ namespace CETAP_LOB.Model.QA
     private CompositBDO _compositRecord;
     private bool _barcodeDuplicate;
     private string _barcodeDuplicateReason = "";
+    private bool _flagged;
         private int MathsOnly;
 
     public string CSX_Number { get; set; }
@@ -1630,6 +1632,59 @@ namespace CETAP_LOB.Model.QA
       return string.Join("; ", reasons.ToArray());
     }
 
+    /// <summary>
+    /// True when the record has been flagged in Process.QA_Flagged: its details could not be
+    /// confirmed and the administrators are tracing the writer. A flagged record is left
+    /// alone - it is never marked with errors.
+    /// </summary>
+    public bool Flagged
+    {
+      get
+      {
+        return _flagged;
+      }
+      private set
+      {
+        if (_flagged == value)
+          return;
+        _flagged = value;
+        RaisePropertyChanged("Flagged");
+      }
+    }
+
+    /// <summary>
+    /// Flags the record and takes its error markings off, so the grid shows it clean and it
+    /// stops counting towards the file's errors. Errors raised while it is flagged are
+    /// ignored, so editing the record afterwards does not colour it again.
+    /// </summary>
+    public void MarkFlagged()
+    {
+      Flagged = true;
+      ClearErrors();
+    }
+
+    /// <summary>Removes every error marking, telling the grid about each field.</summary>
+    public void ClearErrors()
+    {
+      List<string> fields = _errors.Keys.ToList();
+      _errors.Clear();
+      foreach (string field in fields)
+        NotifyErrorsChanged(field);
+      checkerrors();
+    }
+
+    /// <summary>
+    /// A flagged record is never marked with errors, so anything the validation raises while
+    /// it is flagged is dropped.
+    /// </summary>
+    public override void AddError(string propertyName, string error)
+    {
+      if (Flagged)
+        return;
+
+      base.AddError(propertyName, error);
+    }
+
     /// <summary>Clears the duplicate barcode marking.</summary>
     public void ClearBarcodeDuplicate()
     {
@@ -2090,7 +2145,9 @@ namespace CETAP_LOB.Model.QA
     {
       ValidateBioInfo();
       ValidateWalkInReference();
-      if (HasErrors)
+      if (Flagged)
+        errorCount = 0;
+      else if (HasErrors)
         errorCount = _errors.Count;
       else
         errorCount = 0;

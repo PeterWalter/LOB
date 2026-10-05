@@ -225,6 +225,7 @@ column and corrupts the file.
 | 5 | **Write Excel Summary data** | Writes `SummaryForScoring.xlsx` into the QA folder (section 11). Only enabled when every file in the list has zero errors. |
 | 6 | **Update Dat Tracker** | Reconciles each file's record count with the scan tracker. |
 | 7 | **Find Duplicates** | *Not currently available* — see section 15. |
+| 8 | **Flagged records for a test date** | Opens the flagged records panel: pick a **Date of Test**, load the records flagged for that day and export them to Excel (section 9.7). |
 
 ### 8.1 AutoClean — what it repairs
 
@@ -354,6 +355,50 @@ menu offers **Allocate new walk-in reference**. This:
 If no unused number is available a message is shown and nothing changes. The change
 applies to the record in the grid - save the file afterwards as usual.
 
+### 9.7 Flagging a record whose details cannot be confirmed
+
+Sometimes a record's **NBT Reference**, **Surname**, **First Name** and **SA ID or passport**
+are all different from what the database holds, and the writer's details have to be traced by
+the administrators before the record can be corrected. Those records are **flagged** rather
+than guessed at.
+
+Right-click the record and choose **Flag record - details cannot be confirmed**. The
+application then:
+
+1. Writes the record's details to the `[Process].[QA_Flagged]` table - barcode, NBT reference,
+   surname, first name, SA ID, foreign ID, date of birth, venue code, date of test, the **batch**
+   (the file name without its extension), who flagged it and when. The barcode identifies the
+   row, so flagging the same record twice refreshes it instead of adding another.
+2. **Takes the error markings off the record** - the red borders go away, the purple/blue/amber
+   text goes away, the record's **Errors** count drops to zero and it stops counting towards the
+   file. The record cannot be coloured again while it is flagged, so editing it afterwards does
+   not bring the errors back.
+3. Leaves the record in place: carry on with the rest of the file and save it as usual.
+
+A record is only written to the table when its barcode can be read; if it cannot, the
+application says so instead of writing a row it could not identify.
+
+**Already-flagged records.** Every time a file is opened its barcodes are looked up in
+`QA_Flagged`, and a record found there is flagged again automatically: it is never shown with
+errors, on this visit or any later one. Right-clicking such a record shows the entry reading
+*"Record is flagged - the administrators are tracing this writer"*, greyed out.
+
+**The flagged list.** The **Flagged records for a test date** button opens a panel over the
+candidate grid:
+
+| Control | What it does |
+|---|---|
+| **Date of Test** | The date whose flagged records are reported |
+| **Load** | Reads the records flagged for that date from `QA_Flagged` |
+| **Export to Excel** | Writes them to `Flagged QA records <yyyy-MM-dd>.xlsx` in the QA folder |
+| **Close** | Closes the panel and returns to the candidate grid |
+
+The list shows the barcode, NBT reference, name, surname, SA ID, foreign ID, date of birth,
+venue, date of test, batch and who flagged each record, so the administrators have what they
+need to trace the writer.
+
+---
+
 ## 10. File-level values (constants for the whole file)
 
 Six fields describe the file as a whole and must be **identical on every record**:
@@ -480,6 +525,7 @@ Right-click a candidate row (or any non-bio cell) to reach:
 | **Clear Math Area** | *Not currently available* — see section 15. |
 | **Add Surname to Database** | Adds the record's surname to the database surname list. |
 | **Add First Name to Database** | Adds the record's first name to the database first-name list. |
+| **Flag record - details cannot be confirmed** | Hands the record to the administrators: its details are written to `[Process].[QA_Flagged]` and its error markings are taken off the grid (section 9.7). The entry is greyed out for a record that has already been flagged. |
 
 QAView adds the comparison entries that apply to the record you right-clicked at the
 top of the menu, followed by a separator and the items above:
@@ -553,6 +599,10 @@ formats are `667`, `761`, `886` and `909`.
 | A saved file is rejected by the scoring software | The record length must not change. Values that are too long for their column are truncated on save, so check the record for a truncated field (a name, ID or test code) and correct the source data. |
 | **Duplicate Barcodes** / **Write Excel Summary data** are greyed out | They stay disabled while the folder is still being read and while the list is empty, and only enable once every file in the list has zero errors. |
 | **SummaryForScoring.xlsx** cannot be saved | The file may be open in Excel. Close it and re-run. |
+| A record I flagged is still shown in red | Reopen the file (or click **Refresh Directory**): a flagged record is marked clean as soon as its barcode is found in `QA_Flagged` |
+| **Flag record** is greyed out | The record has already been flagged - the entry then reads *"Record is flagged - the administrators are tracing this writer"* |
+| The flagged list is empty for a date | No record has been flagged for that date of test. Check the **Date of Test** in the panel, then **Load** again |
+| **Export to Excel** does nothing | Load a date first: the button only becomes available once there is a flagged list to write |
 
 ---
 

@@ -83,6 +83,13 @@ namespace CETAP_LOB.ViewModel.processing
         private datFileAttributes _myQAFile;
         private ObservableCollection<datFileAttributes> _myQAFiles;
 
+        // QA_Flagged: records handed to the administrators because their details could not
+        // be confirmed. They are never marked with errors.
+        private ObservableCollection<QAFlaggedBDO> _flaggedRecords = new ObservableCollection<QAFlaggedBDO>();
+        private DateTime _flaggedRecordsDate = DateTime.Today;
+        private bool _showFlaggedRecords;
+        private string _flaggedRecordsCaption = "";
+
         /// <summary>
         /// Serialises QA file reads. The service keeps per-call state while it parses,
         /// so a background read and a read triggered by the user must never overlap.
@@ -111,6 +118,15 @@ namespace CETAP_LOB.ViewModel.processing
         public RelayCommand ProcessRawScoresCommand { get; private set; }
         public RelayCommand ProcessSummaryCommand { get; private set; }
         public RelayCommand FindDuplicatesCommand {  get; private set; }
+
+    /// <summary>Shows the records flagged for a test date (section: QA_Flagged).</summary>
+    public RelayCommand FlaggedRecordsCommand { get; private set; }
+
+    /// <summary>Writes the flagged list to Excel.</summary>
+    public RelayCommand ExportFlaggedRecordsCommand { get; private set; }
+
+    /// <summary>Closes the flagged records panel.</summary>
+    public RelayCommand CloseFlaggedRecordsCommand { get; private set; }
 
         public ObservableCollection<TestBDO> TestName
         {
@@ -449,6 +465,9 @@ public IntakeYearsBDO Intake_Year
       // use the service at the same time.
       DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => !IsLoading && IsDataClean());
       ProcessSummaryCommand = new RelayCommand(() => GenerateSummary(),() => !IsLoading && IsDataClean());
+      FlaggedRecordsCommand = new RelayCommand(() => LoadFlaggedRecords());
+      ExportFlaggedRecordsCommand = new RelayCommand(() => ExportFlaggedRecords(), () => FlaggedRecords != null && FlaggedRecords.Count > 0);
+      CloseFlaggedRecordsCommand = new RelayCommand(() => CloseFlaggedRecords());
     }
 
     private void GenerateSummary()
@@ -951,6 +970,9 @@ public IntakeYearsBDO Intake_Year
         {
           datFileAttributes file = await Task.Run(() => new datFileAttributes(path));
           QARecords = await ReadRecordsAsync(file);
+          // Records already handed to the administrators are clean, so they are marked
+          // before the file's errors are counted.
+          MarkFlaggedRecords(QARecords);
           file.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>) (x => x.errorCount));
           AddFolderBarcodes(QARecords, file.SName);
           DirList.Add(file);
@@ -1008,6 +1030,7 @@ public IntakeYearsBDO Intake_Year
       try
       {
         QARecords = await ReadRecordsAsync(file);
+        MarkFlaggedRecords(QARecords);
       }
       catch (Exception ex)
       {
@@ -1026,6 +1049,7 @@ public IntakeYearsBDO Intake_Year
     private void GetQAData()
     {
       QARecords = new ObservableCollection<QADatRecord>(_service.GetQADataFromFile(SelectedFile).OrderByDescending(a => a.errorCount));
+      MarkFlaggedRecords(QARecords);
     }
 
     /// <summary>Records every barcode of a file in the folder wide barcode index.</summary>
@@ -1074,6 +1098,10 @@ public IntakeYearsBDO Intake_Year
         record.ClearBarcodeDuplicate();
       if (records.Count == 0)
         return;
+
+      // A record that has been flagged is left alone, so the barcode checks below cannot
+      // colour it again.
+      MarkFlaggedRecords(records);
 
       // Re-score (Remark) and Moderated files: no barcode error applies to these files.
       if (records.Any(record => record.DatFile != null && record.DatFile.SkipsBarcodeCheck))
@@ -1259,6 +1287,247 @@ public IntakeYearsBDO Intake_Year
 
 
         }
+
+    #region QA_Flagged - records handed to the administrators
+
+    /// <summary>The records flagged for <see cref="FlaggedRecordsDate"/>.</summary>
+    public ObservableCollection<QAFlaggedBDO> FlaggedRecords
+    {
+      get
+      {
+        return _flaggedRecords;
+      }
+      private set
+      {
+        if (_flaggedRecords == value)
+          return;
+        _flaggedRecords = value;
+        RaisePropertyChanged("FlaggedRecords");
+        ExportFlaggedRecordsCommand.RaiseCanExecuteChanged();
+      }
+    }
+
+    /// <summary>The date of test the flagged list is reported for.</summary>
+    public DateTime FlaggedRecordsDate
+    {
+      get
+      {
+        return _flaggedRecordsDate;
+      }
+      set
+      {
+        if (_flaggedRecordsDate == value)
+          return;
+        _flaggedRecordsDate = value;
+        RaisePropertyChanged("FlaggedRecordsDate");
+      }
+    }
+
+    /// <summary>True while the flagged records panel is open.</summary>
+    public bool ShowFlaggedRecords
+    {
+      get
+      {
+        return _showFlaggedRecords;
+      }
+      private set
+      {
+        if (_showFlaggedRecords == value)
+          return;
+        _showFlaggedRecords = value;
+        RaisePropertyChanged("ShowFlaggedRecords");
+      }
+    }
+
+    /// <summary>What the flagged panel says above its list.</summary>
+    public string FlaggedRecordsCaption
+    {
+      get
+      {
+        return _flaggedRecordsCaption;
+      }
+      private set
+      {
+        if (_flaggedRecordsCaption == value)
+          return;
+        _flaggedRecordsCaption = value;
+        RaisePropertyChanged("FlaggedRecordsCaption");
+      }
+    }
+
+    /// <summary>
+    /// Flags a record whose details cannot be confirmed: its details are written to
+    /// [Process].[QA_Flagged] for the administrators, its error markings are taken off the
+    /// grid and it stops counting towards the file. The batch is the name of the file the
+    /// record came from, without its extension.
+    /// </summary>
+    public bool FlagRecord(QADatRecord record)
+    {
+      if (record == null)
+        return false;
+
+      string batch = record.DatFile == null ? "" : record.DatFile.SName;
+      string message = "";
+      bool flagged;
+      try
+      {
+        flagged = _service.FlagQARecord(record, batch, ApplicationSettings.Default.LOBUser, ref message);
+      }
+      catch (Exception ex)
+      {
+        flagged = false;
+        message = ex.Message;
+      }
+
+      if (!flagged)
+      {
+        ModernDialog.ShowMessage(message, "Flag record", MessageBoxButton.OK, (Window) null);
+        return false;
+      }
+
+      record.MarkFlagged();
+      Status = message;
+      RaiseRecordCounts();
+      return true;
+    }
+
+    /// <summary>
+    /// Marks the records of a file that are already held in QA_Flagged, so a record handed
+    /// to the administrators is never shown with errors. A database problem is not allowed
+    /// to stop a file being read.
+    /// </summary>
+    private void MarkFlaggedRecords(IEnumerable<QADatRecord> records)
+    {
+      if (records == null)
+        return;
+
+      List<QADatRecord> list = records.Where(record => record != null).ToList();
+      if (list.Count == 0)
+        return;
+
+      List<long> barcodes = list
+        .Select(record => ConvertBarcode(record.Barcode))
+        .Where(value => value.HasValue)
+        .Select(value => value.Value)
+        .Distinct()
+        .ToList();
+      if (barcodes.Count == 0)
+        return;
+
+      List<long> flagged;
+      try
+      {
+        flagged = _service.FindFlaggedBarcodes(barcodes);
+      }
+      catch
+      {
+        return;
+      }
+
+      if (flagged == null || flagged.Count == 0)
+        return;
+
+      HashSet<long> known = new HashSet<long>(flagged);
+      foreach (QADatRecord record in list)
+      {
+        long? barcode = ConvertBarcode(record.Barcode);
+        if (barcode.HasValue && known.Contains(barcode.Value))
+          record.MarkFlagged();
+      }
+    }
+
+    /// <summary>Keeps the file's error count and the toolbar in step after a record was flagged.</summary>
+    private void RaiseRecordCounts()
+    {
+      if (SelectedFile != null && QARecords != null)
+        SelectedFile.NoOfErrors = QARecords.Sum<QADatRecord>((Func<QADatRecord, int>) (x => x.errorCount));
+
+      System.Windows.Input.CommandManager.InvalidateRequerySuggested();
+    }
+
+    /// <summary>Loads the records flagged for the chosen test date and opens the panel.</summary>
+    private void LoadFlaggedRecords()
+    {
+      if (FlaggedRecordsDate == DateTime.MinValue)
+        FlaggedRecordsDate = DateTime.Today;
+
+      List<QAFlaggedBDO> flagged;
+      try
+      {
+        flagged = _service.GetFlaggedRecords(FlaggedRecordsDate);
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.Message, "Flagged records", MessageBoxButton.OK, (Window) null);
+        return;
+      }
+
+      FlaggedRecords = new ObservableCollection<QAFlaggedBDO>(flagged ?? new List<QAFlaggedBDO>());
+      FlaggedRecordsCaption = FlaggedRecords.Count == 0
+        ? "No records are flagged for " + FlaggedRecordsDate.ToString("yyyy-MM-dd") + "."
+        : FlaggedRecords.Count + (FlaggedRecords.Count == 1 ? " record is" : " records are")
+          + " flagged for " + FlaggedRecordsDate.ToString("yyyy-MM-dd") + ".";
+      ShowFlaggedRecords = true;
+    }
+
+    private void CloseFlaggedRecords()
+    {
+      ShowFlaggedRecords = false;
+    }
+
+    /// <summary>Writes the flagged list for the chosen test date to an Excel file in the QA folder.</summary>
+    private void ExportFlaggedRecords()
+    {
+      if (FlaggedRecords == null || FlaggedRecords.Count == 0)
+      {
+        ModernDialog.ShowMessage("Load the flagged records for a test date first - there is nothing to export yet.", "Flagged records", MessageBoxButton.OK, (Window) null);
+        return;
+      }
+
+      string file = Path.Combine(Folder, "Flagged QA records " + FlaggedRecordsDate.ToString("yyyy-MM-dd") + ".xlsx");
+      try
+      {
+        var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("Flagged");
+        string[] headers = { "Barcode", "NBT Reference", "Surname", "First Name", "SA ID", "Foreign ID", "Date of Birth", "Venue Code", "Date of Test", "Batch", "Flagged By", "Date Flagged", "Modified By", "Date Modified" };
+        for (int i = 0; i < headers.Length; i++)
+          sheet.Cell(1, i + 1).Value = headers[i];
+        sheet.Row(1).Style.Font.Bold = true;
+
+        for (int row = 0; row < FlaggedRecords.Count; row++)
+        {
+          QAFlaggedBDO flagged = FlaggedRecords[row];
+          int line = row + 2;
+          sheet.Cell(line, 1).Value = flagged.Barcode;
+          sheet.Cell(line, 2).Value = flagged.NBT;
+          sheet.Cell(line, 3).Value = flagged.Surname;
+          sheet.Cell(line, 4).Value = flagged.Name;
+          sheet.Cell(line, 5).Value = flagged.SAID.HasValue ? flagged.SAID.Value.ToString("D13") : "";
+          sheet.Cell(line, 6).Value = flagged.ForeignID;
+          sheet.Cell(line, 7).Value = flagged.DOB.ToString("yyyy-MM-dd");
+          sheet.Cell(line, 8).Value = flagged.VenueID;
+          sheet.Cell(line, 9).Value = flagged.DOT.ToString("yyyy-MM-dd");
+          sheet.Cell(line, 10).Value = flagged.Batch;
+          sheet.Cell(line, 11).Value = flagged.CreatedBy;
+          sheet.Cell(line, 12).Value = flagged.DateCreated.ToString("yyyy-MM-dd HH:mm");
+          sheet.Cell(line, 13).Value = flagged.ModifiedBy;
+          sheet.Cell(line, 14).Value = flagged.DateModified.ToString("yyyy-MM-dd HH:mm");
+        }
+
+        sheet.Columns().AdjustToContents();
+        workbook.SaveAs(file);
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.Message, "Flagged records", MessageBoxButton.OK, (Window) null);
+        return;
+      }
+
+      Status = "Flagged records written to " + file;
+      ModernDialog.ShowMessage("Flagged records written to\n" + file, "Flagged records", MessageBoxButton.OK, (Window) null);
+    }
+
+    #endregion
 
     }
 }

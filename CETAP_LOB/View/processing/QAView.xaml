@@ -249,6 +249,16 @@
                     IconWidth="30"
                     ToolTip="Write Excel Summary data" />
                 <mui:ModernButton
+                    Height="81"
+                    Margin="5,1,3,0"
+                    BorderThickness="5,1,0,0"
+                    Command="{Binding QA.FlaggedRecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                    EllipseDiameter="50"
+                    IconData="M 20,20L 60,20L 60,28L 20,28z M 20,32L 60,32L 60,40L 20,40z M 20,44L 44,44L 44,52L 20,52z"
+                    IconHeight="30"
+                    IconWidth="30"
+                    ToolTip="Flagged records for a test date" />
+                <mui:ModernButton
                     Height="67"
                     Margin="5,20,3,0"
                     Click="ModernButton_Click"
@@ -663,9 +673,91 @@
                     <Separator />
                     <MenuItem Command="{Binding QA.AddSurnameCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Add Surname to Database" />
                     <MenuItem Command="{Binding QA.AddNameCommand, Mode=OneWay, Source={StaticResource Locator}}" Header="Add First Name to Database" />
+                    <Separator />
+                    <!-- Hands the record to the administrators: its details go to
+                         [Process].[QA_Flagged], its error markings are taken off the grid and
+                         it is left alone from then on. -->
+                    <MenuItem
+                        x:Name="FlagRecordMenuItem"
+                        Click="FlagRecord_Click"
+                        Header="Flag record - details cannot be confirmed" />
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
+
+        <!-- Records flagged in [Process].[QA_Flagged] for one test date. Shown over the
+             candidate grid so the flagged list can be read and exported without leaving the
+             module; the date of test picks which day is reported. -->
+        <Border
+            Grid.Column="2"
+            Background="{DynamicResource WindowBackground}"
+            BorderThickness="1"
+            Visibility="{Binding QA.ShowFlaggedRecords, Converter={StaticResource BooleanToVisibilityConverter}, Source={StaticResource Locator}}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <WrapPanel
+                    Grid.Row="0"
+                    Margin="6,6,6,0"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        Margin="0,0,18,0"
+                        VerticalAlignment="Center"
+                        FontSize="16"
+                        FontWeight="Bold"
+                        Text="Flagged records" />
+                    <TextBlock
+                        Margin="0,0,4,0"
+                        VerticalAlignment="Center"
+                        Text="Date of Test:" />
+                    <DatePicker
+                        Width="130"
+                        SelectedDate="{Binding QA.FlaggedRecordsDate, Mode=TwoWay, Source={StaticResource Locator}}" />
+                    <Button
+                        Margin="8,0,0,0"
+                        Padding="8,2"
+                        Command="{Binding QA.FlaggedRecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                        Content="Load" />
+                    <Button
+                        Margin="8,0,0,0"
+                        Padding="8,2"
+                        Command="{Binding QA.ExportFlaggedRecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                        Content="Export to Excel" />
+                    <Button
+                        Margin="8,0,0,0"
+                        Padding="8,2"
+                        Command="{Binding QA.CloseFlaggedRecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                        Content="Close" />
+                </WrapPanel>
+                <TextBlock
+                    Grid.Row="1"
+                    Margin="6,4,6,6"
+                    Text="{Binding QA.FlaggedRecordsCaption, Source={StaticResource Locator}}" />
+                <DataGrid
+                    Grid.Row="2"
+                    AutoGenerateColumns="False"
+                    CanUserAddRows="False"
+                    IsReadOnly="True"
+                    ItemsSource="{Binding QA.FlaggedRecords, Source={StaticResource Locator}}">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Width="110" Binding="{Binding Barcode}" Header="Barcode" />
+                        <DataGridTextColumn Width="120" Binding="{Binding NBT}" Header="NBT Reference" />
+                        <DataGridTextColumn Width="150" Binding="{Binding Surname}" Header="Surname" />
+                        <DataGridTextColumn Width="150" Binding="{Binding Name}" Header="First Name" />
+                        <DataGridTextColumn Width="130" Binding="{Binding SAID}" Header="SA ID" />
+                        <DataGridTextColumn Width="110" Binding="{Binding ForeignID}" Header="Foreign ID" />
+                        <DataGridTextColumn Width="100" Binding="{Binding DOB, StringFormat=yyyy-MM-dd}" Header="Date of Birth" />
+                        <DataGridTextColumn Width="80" Binding="{Binding VenueID}" Header="Venue" />
+                        <DataGridTextColumn Width="100" Binding="{Binding DOT, StringFormat=yyyy-MM-dd}" Header="Date of Test" />
+                        <DataGridTextColumn Width="190" Binding="{Binding Batch}" Header="Batch" />
+                        <DataGridTextColumn Width="120" Binding="{Binding CreatedBy}" Header="Flagged By" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Border>
 
 
         <!-- The QA folder contents. Each entry is a .dat file, worst first, and its name is

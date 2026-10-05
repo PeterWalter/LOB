@@ -9029,6 +9029,163 @@ namespace CETAP_LOB.Model
             return found;
         }
 
+        /// <summary>
+        /// Returns the supplied barcodes that have been flagged in Process.QA_Flagged. A
+        /// flagged record has been handed to the administrators, so QA leaves it alone and
+        /// it is never marked with errors.
+        /// </summary>
+        public List<long> FindFlaggedBarcodes(IEnumerable<long> barcodes)
+        {
+            List<long> found = new List<long>();
+            if (barcodes == null || !ApplicationSettings.Default.DBAvailable)
+                return found;
+
+            List<long> keys = barcodes.Distinct().ToList();
+            if (keys.Count == 0)
+                return found;
+
+            const int chunkSize = 200;
+            using (var context = new CETAPEntities())
+            {
+                for (int i = 0; i < keys.Count; i += chunkSize)
+                {
+                    List<long> chunk = keys.GetRange(i, Math.Min(chunkSize, keys.Count - i));
+                    // The values are numbers, so joining them into the IN list cannot inject SQL.
+                    string list = string.Join(",", chunk.ConvertAll(value => value.ToString()).ToArray());
+                    found.AddRange(context.Database
+                        .SqlQuery<QAFlaggedBDO>("SELECT Barcode FROM [Process].[QA_Flagged] WHERE Barcode IN (" + list + ")")
+                        .Select(row => row.Barcode)
+                        .ToList());
+                }
+            }
+
+            return found;
+        }
+
+        /// <summary>
+        /// Writes a QA record to Process.QA_Flagged so the administrators can trace the
+        /// writer, or refreshes the row when the barcode has been flagged before. The batch
+        /// is the file name without its extension.
+        /// </summary>
+        public bool FlagQARecord(QADatRecord record, string batch, string user, ref string message)
+        {
+            message = "";
+            if (record == null)
+            {
+                message = "There is no record to flag.";
+                return false;
+            }
+
+            long barcode;
+            if (!long.TryParse((record.Barcode ?? "").Trim(), out barcode))
+            {
+                message = "The barcode is not a number, so the record cannot be flagged.";
+                return false;
+            }
+
+            long nbt;
+            if (!long.TryParse((record.Reference ?? "").Trim(), out nbt))
+                nbt = 0;
+
+            long said;
+            long? southAfricanId = long.TryParse((record.SAID ?? "").Trim(), out said) ? (long?)said : null;
+            int venueId;
+            int.TryParse((record.VenueCode ?? "").Trim(), out venueId);
+
+            string flagUser = string.IsNullOrWhiteSpace(user) ? "QA" : user.Trim();
+            DateTime now = DateTime.Now;
+            string foreignId = (record.ForeignID ?? "").Trim();
+
+            using (var context = new CETAPEntities())
+            {
+                var connection = context.Database.Connection;
+                bool opened = connection.State != System.Data.ConnectionState.Open;
+                if (opened)
+                    connection.Open();
+
+                try
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText =
+                            "UPDATE [Process].[QA_Flagged] SET NBT = @nbt, Surname = @surname, Name = @name, SAID = @said, " +
+                            "ForeignID = @foreignId, DOB = @dob, VenueID = @venueId, DOT = @dot, Batch = @batch, " +
+                            "ModifiedBy = @user, DateModified = @now WHERE Barcode = @barcode";
+                        AddFlagParameter(command, "@barcode", barcode);
+                        AddFlagParameter(command, "@nbt", nbt);
+                        AddFlagParameter(command, "@surname", (record.Surname ?? "").Trim());
+                        AddFlagParameter(command, "@name", (record.FirstName ?? "").Trim());
+                        AddFlagParameter(command, "@said", southAfricanId.HasValue ? (object)southAfricanId.Value : DBNull.Value);
+                        AddFlagParameter(command, "@foreignId", foreignId.Length == 0 ? (object)DBNull.Value : foreignId);
+                        AddFlagParameter(command, "@dob", record.DOB);
+                        AddFlagParameter(command, "@venueId", venueId);
+                        AddFlagParameter(command, "@dot", record.DOT);
+                        AddFlagParameter(command, "@batch", batch ?? "");
+                        AddFlagParameter(command, "@user", flagUser);
+                        AddFlagParameter(command, "@now", now);
+
+                        int updated = command.ExecuteNonQuery();
+                        if (updated == 0)
+                        {
+                            command.Parameters.Clear();
+                            command.CommandText =
+                                "INSERT INTO [Process].[QA_Flagged] (Barcode, NBT, Surname, Name, SAID, ForeignID, DOB, VenueID, DOT, Batch, CreatedBy, DateCreated, ModifiedBy, DateModified) " +
+                                "VALUES (@barcode, @nbt, @surname, @name, @said, @foreignId, @dob, @venueId, @dot, @batch, @user, @now, @user, @now)";
+                            AddFlagParameter(command, "@barcode", barcode);
+                            AddFlagParameter(command, "@nbt", nbt);
+                            AddFlagParameter(command, "@surname", (record.Surname ?? "").Trim());
+                            AddFlagParameter(command, "@name", (record.FirstName ?? "").Trim());
+                            AddFlagParameter(command, "@said", southAfricanId.HasValue ? (object)southAfricanId.Value : DBNull.Value);
+                            AddFlagParameter(command, "@foreignId", foreignId.Length == 0 ? (object)DBNull.Value : foreignId);
+                            AddFlagParameter(command, "@dob", record.DOB);
+                            AddFlagParameter(command, "@venueId", venueId);
+                            AddFlagParameter(command, "@dot", record.DOT);
+                            AddFlagParameter(command, "@batch", batch ?? "");
+                            AddFlagParameter(command, "@user", flagUser);
+                            AddFlagParameter(command, "@now", now);
+                            command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                finally
+                {
+                    if (opened)
+                        connection.Close();
+                }
+            }
+
+            message = "Record flagged for the administrators.";
+            return true;
+        }
+
+        private static void AddFlagParameter(System.Data.Common.DbCommand command, string name, object value)
+        {
+            var parameter = command.CreateParameter();
+            parameter.ParameterName = name;
+            parameter.Value = value ?? DBNull.Value;
+            command.Parameters.Add(parameter);
+        }
+
+        /// <summary>
+        /// The records flagged for one date of test, oldest surname first, for the flagged
+        /// list and its export.
+        /// </summary>
+        public List<QAFlaggedBDO> GetFlaggedRecords(DateTime testDate)
+        {
+            List<QAFlaggedBDO> flagged = new List<QAFlaggedBDO>();
+            if (!ApplicationSettings.Default.DBAvailable)
+                return flagged;
+
+            using (var context = new CETAPEntities())
+            {
+                flagged = context.Database.SqlQuery<QAFlaggedBDO>(
+                    "SELECT Barcode, NBT, Surname, Name, SAID, ForeignID, DOB, VenueID, DOT, Batch, CreatedBy, DateCreated, ModifiedBy, DateModified " +
+                    "FROM [Process].[QA_Flagged] WHERE DOT = @p0 ORDER BY Surname, Name", testDate.Date).ToList();
+            }
+
+            return flagged;
+        }
+
         public List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords)
         {
 
