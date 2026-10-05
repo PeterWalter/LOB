@@ -729,6 +729,12 @@
                     <Button
                         Margin="8,0,0,0"
                         Padding="8,2"
+                        Click="RemoveFlagged_Click"
+                        Content="Remove from QA_Flagged"
+                        ToolTip="Removes the selected records from the flagged table" />
+                    <Button
+                        Margin="8,0,0,0"
+                        Padding="8,2"
                         Command="{Binding QA.CloseFlaggedRecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
                         Content="Close" />
                 </WrapPanel>
@@ -737,10 +743,13 @@
                     Margin="6,4,6,6"
                     Text="{Binding QA.FlaggedRecordsCaption, Source={StaticResource Locator}}" />
                 <DataGrid
+                    x:Name="FlaggedGrid"
                     Grid.Row="2"
                     AutoGenerateColumns="False"
                     CanUserAddRows="False"
                     IsReadOnly="True"
+                    SelectionMode="Extended"
+                    SelectionUnit="FullRow"
                     ItemsSource="{Binding QA.FlaggedRecords, Source={StaticResource Locator}}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Width="110" Binding="{Binding Barcode}" Header="Barcode" />

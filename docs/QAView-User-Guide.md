@@ -392,11 +392,19 @@ candidate grid:
 | **Date of Test** | The date whose flagged records are reported |
 | **Load** | Reads the records flagged for that date from `QA_Flagged` |
 | **Export to Excel** | Writes them to `Flagged QA records <yyyy-MM-dd>.xlsx` in the QA folder |
+| **Remove from QA_Flagged** | Removes the **selected** records from the table - select one row, or several with Ctrl and Shift. A record that is open in the grid stops being flagged |
 | **Close** | Closes the panel and returns to the candidate grid |
 
 The list shows the barcode, NBT reference, name, surname, SA ID, foreign ID, date of birth,
 venue, date of test, batch and who flagged each record, so the administrators have what they
 need to trace the writer.
+
+**Removing a flag.** Select the rows the administrators have finished with and click
+**Remove from QA_Flagged**; the application asks for confirmation and then deletes those
+barcodes from the table. If one of the records is **open in the grid**, it stops being flagged
+and the application offers to reload that file, because the errors the flag was hiding only come
+back when the file is read again - reloading discards unsaved changes to that file, so the
+question says so. If you answer no, reopen the file (or **Refresh Directory**) when convenient.
 
 ---
 
@@ -604,6 +612,7 @@ formats are `667`, `761`, `886` and `909`.
 | **Flag record** is greyed out | The record has already been flagged - the entry then reads *"Record is flagged - the administrators are tracing this writer"* |
 | The flagged list is empty for a date | No record has been flagged for that date of test. Check the **Date of Test** in the panel, then **Load** again |
 | **Export to Excel** does nothing | Load a date first: the button only becomes available once there is a flagged list to write |
+| A record I removed from QA_Flagged is still clean in the grid | The errors the flag was hiding only come back when the file is read again. Answer **Yes** to the reload question, or reopen the file later |
 
 ---
 

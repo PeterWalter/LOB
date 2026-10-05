@@ -205,6 +205,9 @@ namespace CETAP_LOB.Model
     /// <summary>The records flagged for one date of test.</summary>
     List<QAFlaggedBDO> GetFlaggedRecords(DateTime testDate);
 
+    /// <summary>Removes the supplied barcodes from Process.QA_Flagged and reports how many were removed.</summary>
+    int RemoveFlaggedRecords(IList<long> barcodes, ref string message);
+
     /// <summary>
     /// Writes one accepted field from a QA record into the matching WriterList row -
     /// the reverse of copying a WriterList value into the record.

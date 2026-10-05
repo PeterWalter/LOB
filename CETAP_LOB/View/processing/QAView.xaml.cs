@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using CETAP_LOB.BDO;
 using CETAP_LOB.Model.QA;
 using CETAP_LOB.ViewModel.processing;
 
@@ -261,6 +262,20 @@ namespace CETAP_LOB.View.processing
             if (viewModel == null)
                 return;
             viewModel.FlagRecord(_menuRecord);
+        }
+
+        /// <summary>
+        /// Removes the flagged rows selected in the flagged panel from
+        /// [Process].[QA_Flagged] - the records the administrators have finished with.
+        /// </summary>
+        private void RemoveFlagged_Click(object sender, RoutedEventArgs e)
+        {
+            QAViewModel viewModel = QAGrid == null ? null : QAGrid.DataContext as QAViewModel;
+            if (viewModel == null || FlaggedGrid == null)
+                return;
+
+            List<QAFlaggedBDO> selected = FlaggedGrid.SelectedItems.Cast<QAFlaggedBDO>().ToList();
+            viewModel.RemoveFlaggedRecords(selected);
         }
 
         /// <summary>Maps the grid column header to the field name used by ApplyWriterValue.</summary>

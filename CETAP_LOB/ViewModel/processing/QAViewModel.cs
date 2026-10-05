@@ -1475,6 +1475,83 @@ public IntakeYearsBDO Intake_Year
       ShowFlaggedRecords = false;
     }
 
+    /// <summary>
+    /// Removes the flagged records selected in the panel from [Process].[QA_Flagged]. A
+    /// record that is open in the grid stops being flagged, and the file can be reloaded so
+    /// the errors its flag was hiding come back.
+    /// </summary>
+    public void RemoveFlaggedRecords(IList<QAFlaggedBDO> selected)
+    {
+      if (selected == null || selected.Count == 0)
+      {
+        ModernDialog.ShowMessage("Select the flagged records to remove first.", "Flagged records", MessageBoxButton.OK);
+        return;
+      }
+
+      List<long> barcodes = selected.Select(row => row.Barcode).Distinct().ToList();
+      MessageBoxResult answer = MessageBox.Show(
+        "Remove " + (barcodes.Count == 1 ? "this flagged record" : "these " + barcodes.Count + " flagged records")
+        + " from QA_Flagged?" + Environment.NewLine + Environment.NewLine
+        + "The administrators will no longer see them and the records they belong to are checked normally again.",
+        "Flagged records", MessageBoxButton.YesNo, MessageBoxImage.Question);
+      if (answer != MessageBoxResult.Yes)
+        return;
+
+      string message = "";
+      int removed;
+      try
+      {
+        removed = _service.RemoveFlaggedRecords(barcodes, ref message);
+      }
+      catch (Exception ex)
+      {
+        removed = 0;
+        message = ex.Message;
+      }
+
+      if (removed == 0)
+      {
+        ModernDialog.ShowMessage(message, "Flagged records", MessageBoxButton.OK);
+        return;
+      }
+
+      // Drop the removed rows from the panel.
+      FlaggedRecords = new ObservableCollection<QAFlaggedBDO>(
+        FlaggedRecords.Where(row => !barcodes.Contains(row.Barcode)).ToList());
+      FlaggedRecordsCaption = FlaggedRecords.Count + (FlaggedRecords.Count == 1 ? " record is" : " records are")
+        + " flagged for " + FlaggedRecordsDate.ToString("yyyy-MM-dd") + ".";
+
+      // A record held in the grid is no longer flagged.
+      bool open = false;
+      if (QARecords != null)
+      {
+        foreach (QADatRecord record in QARecords)
+        {
+          long? barcode = record == null ? null : ConvertBarcode(record.Barcode);
+          if (barcode.HasValue && barcodes.Contains(barcode.Value) && record.Flagged)
+          {
+            record.ClearFlagged();
+            open = true;
+          }
+        }
+      }
+
+      Status = message;
+      if (open && SelectedFile != null)
+      {
+        MessageBoxResult reload = MessageBox.Show(
+          "The record is open in the grid. Reload " + SelectedFile.SName + " so the error markings it was hiding come back?"
+          + Environment.NewLine + Environment.NewLine + "Unsaved changes to that file in the grid will be lost.",
+          "Flagged records", MessageBoxButton.YesNo, MessageBoxImage.Question);
+        if (reload == MessageBoxResult.Yes)
+          _ = LoadSelectedFileAsync(SelectedFile);
+        else
+          Status = message + " Reopen the file to see its errors again.";
+      }
+
+      ModernDialog.ShowMessage(Status, "Flagged records", MessageBoxButton.OK);
+    }
+
     /// <summary>Writes the flagged list for the chosen test date to an Excel file in the QA folder.</summary>
     private void ExportFlaggedRecords()
     {

@@ -9189,6 +9189,62 @@ namespace CETAP_LOB.Model
             return flagged;
         }
 
+        /// <summary>
+        /// Removes the supplied barcodes from Process.QA_Flagged - the flagged records the
+        /// administrators have finished with. Returns how many rows were removed.
+        /// </summary>
+        public int RemoveFlaggedRecords(IList<long> barcodes, ref string message)
+        {
+            message = "";
+            if (barcodes == null || barcodes.Count == 0)
+            {
+                message = "Select the flagged records to remove first.";
+                return 0;
+            }
+
+            if (!ApplicationSettings.Default.DBAvailable)
+            {
+                message = "The database is not available.";
+                return 0;
+            }
+
+            List<long> keys = barcodes.Distinct().ToList();
+            int removed = 0;
+            const int chunkSize = 200;
+            using (var context = new CETAPEntities())
+            {
+                var connection = context.Database.Connection;
+                bool opened = connection.State != System.Data.ConnectionState.Open;
+                if (opened)
+                    connection.Open();
+
+                try
+                {
+                    for (int i = 0; i < keys.Count; i += chunkSize)
+                    {
+                        List<long> chunk = keys.GetRange(i, Math.Min(chunkSize, keys.Count - i));
+                        // Numbers only, so joining them into the IN list cannot inject SQL.
+                        string list = string.Join(",", chunk.ConvertAll(value => value.ToString()).ToArray());
+                        using (var command = connection.CreateCommand())
+                        {
+                            command.CommandText = "DELETE FROM [Process].[QA_Flagged] WHERE Barcode IN (" + list + ")";
+                            removed += command.ExecuteNonQuery();
+                        }
+                    }
+                }
+                finally
+                {
+                    if (opened)
+                        connection.Close();
+                }
+            }
+
+            message = removed == 1
+                ? "1 flagged record was removed."
+                : removed + " flagged records were removed.";
+            return removed;
+        }
+
         public List<ForDuplicatesBarcodesBDO> FindDuplicatesFromDB(ObservableCollection<ForDuplicatesBarcodesBDO> BatchRecords)
         {
 

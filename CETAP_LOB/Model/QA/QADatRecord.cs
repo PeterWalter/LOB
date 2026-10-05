@@ -1663,6 +1663,17 @@ namespace CETAP_LOB.Model.QA
       ClearErrors();
     }
 
+    /// <summary>
+    /// Takes the flag off a record - used when its row is removed from QA_Flagged while the
+    /// record is open in the grid. Validation applies again from that point; reopen the file
+    /// to see the errors it was hiding.
+    /// </summary>
+    public void ClearFlagged()
+    {
+      Flagged = false;
+      checkerrors();
+    }
+
     /// <summary>Removes every error marking, telling the grid about each field.</summary>
     public void ClearErrors()
     {
