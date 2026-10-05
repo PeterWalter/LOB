@@ -227,6 +227,9 @@ namespace CETAP_LOB.Model.QA
                     if (_surname == value) return;
                     _surname = value;
                     _surname = _surname.Trim();
+                    // The scanner writes the names in capitals and the scoring software expects them
+                    // that way, so a surname typed into the grid is held - and saved - in capitals.
+                    _surname = _surname.ToUpperInvariant();
                     if (string.IsNullOrEmpty(_surname))
                         AddError("Surname", "Surname cannot be empty");
                     else
@@ -272,6 +275,8 @@ namespace CETAP_LOB.Model.QA
           return;
         _myname = value;
         _myname = _myname.Trim();
+        // Capitals, as the scanner writes them and the scoring software expects them.
+        _myname = _myname.ToUpperInvariant();
         MatchCollection matchCollection = new Regex("\\s").Matches(_myname);
         if (string.IsNullOrEmpty(_myname))
           AddError("FirstName", "FirstName cannot be empty");

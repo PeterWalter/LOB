@@ -145,11 +145,6 @@ One row per candidate. Rows are sorted by error count, highest first.
 Validation runs as each record is loaded and again after every edit. Each failing
 field adds an error; the **Errors** column is the number of failing fields.
 
-**Surname and First Name are held in capital letters.** The scanner writes them that way and
-the scoring software expects it, so a name typed into the grid is stored - and saved with the
-file - in capitals. The comparison against the WriterList and Composit ignores case either
-way, so a database record holding `Noda` is not a difference from `NODA`.
-
 ### 7.1 Field rules
 
 | Field | Checked |
