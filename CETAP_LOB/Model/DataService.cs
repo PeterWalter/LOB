@@ -6066,6 +6066,19 @@ namespace CETAP_LOB.Model
                 }
             }
 
+            // The records left out of that file, written beside it for the administrators. It
+            // is written every run, like the composite itself, so it always matches the session
+            // that was just compiled.
+            string flaggedPath = Path.Combine(ApplicationSettings.Default.FilesForScoring, "Composit_Flagged.csv");
+            using (var flaggedStreamWriter = new StreamWriter(flaggedPath))
+            {
+                using (var flaggedWriter = new CsvWriter(flaggedStreamWriter))
+                {
+                    flaggedWriter.Configuration.HasHeaderRecord = true;
+                    flaggedWriter.WriteRecords(flaggedRecords);
+                }
+            }
+
             var logistics_Compo = from w in Compo
                                   select new
                                   {
