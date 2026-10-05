@@ -5985,7 +5985,14 @@ namespace CETAP_LOB.Model
             string path1 = ApplicationSettings.Default.FilesForScoring;
             string ExcelFileName = "NBT_Composite";
 
-            var Compo = from C in Composite
+            // A record whose barcode is in QA_Flagged is still being traced by the
+            // administrators, so it must not reach the university, the website or the composite
+            // itself. Those records are compiled into Process.Composit_flagged instead.
+            HashSet<long> flaggedBarcodes = new HashSet<long>(FindFlaggedBarcodes(Composite.Select(record => record.Barcode)) ?? new List<long>());
+            List<CompositBDO> flaggedRecords = Composite.Where(record => record != null && flaggedBarcodes.Contains(record.Barcode)).ToList();
+            List<CompositBDO> includedRecords = Composite.Where(record => record == null || !flaggedBarcodes.Contains(record.Barcode)).ToList();
+
+            var Compo = from C in includedRecords
                         select new
                         {
                             SessionID = C.Barcode,
@@ -6052,7 +6059,8 @@ namespace CETAP_LOB.Model
                 using (var writer = new CsvWriter(streamWriter))
                 {
                     writer.Configuration.HasHeaderRecord = true;
-                    IEnumerable<CompositBDO> records = Composite.ToList();
+                    // Only the records that are not flagged go into the composite file.
+                    IEnumerable<CompositBDO> records = includedRecords;
                     writer.WriteRecords(records);
 
                 }
@@ -6414,7 +6422,14 @@ namespace CETAP_LOB.Model
             //}
 
             #endregion
-            
+
+            // The records left out of those files are compiled for the administrators.
+            string flaggedMessage = "";
+            if (!WriteFlaggedCompositToDB(flaggedRecords, Composite.Where(record => record != null).Select(record => record.DOT).ToList(), ref flaggedMessage))
+                log.Warn(flaggedMessage);
+            else
+                log.Info(flaggedMessage);
+
             return session;
             
         }
@@ -9167,6 +9182,133 @@ namespace CETAP_LOB.Model
             parameter.ParameterName = name;
             parameter.Value = value ?? DBNull.Value;
             command.Parameters.Add(parameter);
+        }
+
+        /// <summary>
+        /// Compiles the flagged records into Process.Composit_flagged. The rows for the test
+        /// dates being compiled are replaced first, so a record that is no longer flagged
+        /// disappears from the table on the next run.
+        /// </summary>
+        public bool WriteFlaggedCompositToDB(IList<CompositBDO> records, IList<DateTime> testDates, ref string message)
+        {
+            message = "";
+            if (!ApplicationSettings.Default.DBAvailable)
+            {
+                message = "The database is not available, so the flagged records were not compiled.";
+                return false;
+            }
+
+            List<DateTime> dates = testDates == null ? new List<DateTime>() : testDates.Distinct().ToList();
+            if (dates.Count == 0)
+            {
+                message = "There is no date of test to compile the flagged records for.";
+                return false;
+            }
+
+            string user = string.IsNullOrWhiteSpace(ApplicationSettings.Default.LOBUser) ? "QA" : ApplicationSettings.Default.LOBUser.Trim();
+            DateTime now = DateTime.Now;
+            int written = 0;
+
+            using (var context = new CETAPEntities())
+            {
+                var connection = context.Database.Connection;
+                bool opened = connection.State != System.Data.ConnectionState.Open;
+                if (opened)
+                    connection.Open();
+
+                try
+                {
+                    // Replace the flagged rows for the dates being compiled.
+                    using (var command = connection.CreateCommand())
+                    {
+                        List<string> names = new List<string>();
+                        for (int i = 0; i < dates.Count; i++)
+                        {
+                            string name = "@date" + i;
+                            names.Add(name);
+                            AddFlagParameter(command, name, dates[i].Date);
+                        }
+
+                        command.CommandText = "DELETE FROM [Process].[Composit_flagged] WHERE DOT IN (" + string.Join(",", names.ToArray()) + ")";
+                        command.ExecuteNonQuery();
+                    }
+
+                    if (records != null)
+                    {
+                        foreach (CompositBDO record in records)
+                        {
+                            if (record == null)
+                                continue;
+
+                            using (var command = connection.CreateCommand())
+                            {
+                                command.CommandText =
+                                    "INSERT INTO [Process].[Composit_flagged] (RefNo, Barcode, Surname, Name, Initials, SAID, ForeignID, DOB, ID_Type, " +
+                                    "Citizenship, Classification, Gender, Faculty, DOT, VenueCode, VenueName, HomeLanguage, GR12Language, AQLLanguage, " +
+                                    "AQLCode, MatLanguage, MatCode, ALScore, ALLevel, QLScore, QLLevel, MATScore, MATLevel, WroteAL, WroteQL, WroteMat, " +
+                                    "Faculty2, Faculty3, Batch, ProvinceID, RowGuid, DateCreated, Created_By, DateModified, Modified_By) " +
+                                    "VALUES (@refNo, @barcode, @surname, @name, @initials, @said, @foreignId, @dob, @idType, @citizenship, @classification, " +
+                                    "@gender, @faculty, @dot, @venueCode, @venueName, @homeLanguage, @gr12Language, @aqlLanguage, @aqlCode, @matLanguage, " +
+                                    "@matCode, @alScore, @alLevel, @qlScore, @qlLevel, @matScore, @matLevel, @wroteAL, @wroteQL, @wroteMat, @faculty2, " +
+                                    "@faculty3, @batch, @provinceId, @rowGuid, @dateCreated, @createdBy, @dateModified, @modifiedBy)";
+
+                                AddFlagParameter(command, "@refNo", record.RefNo);
+                                AddFlagParameter(command, "@barcode", record.Barcode);
+                                AddFlagParameter(command, "@surname", record.Surname ?? "");
+                                AddFlagParameter(command, "@name", record.Name ?? "");
+                                AddFlagParameter(command, "@initials", record.Initials);
+                                AddFlagParameter(command, "@said", record.SAID.HasValue ? (object)record.SAID.Value : DBNull.Value);
+                                AddFlagParameter(command, "@foreignId", record.ForeignID);
+                                AddFlagParameter(command, "@dob", record.DOB);
+                                AddFlagParameter(command, "@idType", record.ID_Type);
+                                AddFlagParameter(command, "@citizenship", record.Citizenship.HasValue ? (object)record.Citizenship.Value : DBNull.Value);
+                                AddFlagParameter(command, "@classification", record.Classification);
+                                AddFlagParameter(command, "@gender", record.Gender);
+                                AddFlagParameter(command, "@faculty", record.Faculty);
+                                AddFlagParameter(command, "@dot", record.DOT);
+                                AddFlagParameter(command, "@venueCode", record.VenueCode);
+                                AddFlagParameter(command, "@venueName", record.VenueName);
+                                AddFlagParameter(command, "@homeLanguage", record.HomeLanguage);
+                                AddFlagParameter(command, "@gr12Language", record.GR12Language);
+                                AddFlagParameter(command, "@aqlLanguage", record.AQLLanguage);
+                                AddFlagParameter(command, "@aqlCode", record.AQLCode.HasValue ? (object)record.AQLCode.Value : DBNull.Value);
+                                AddFlagParameter(command, "@matLanguage", record.MatLanguage);
+                                AddFlagParameter(command, "@matCode", record.MatCode.HasValue ? (object)record.MatCode.Value : DBNull.Value);
+                                AddFlagParameter(command, "@alScore", record.ALScore.HasValue ? (object)record.ALScore.Value : DBNull.Value);
+                                AddFlagParameter(command, "@alLevel", record.ALLevel);
+                                AddFlagParameter(command, "@qlScore", record.QLScore.HasValue ? (object)record.QLScore.Value : DBNull.Value);
+                                AddFlagParameter(command, "@qlLevel", record.QLLevel);
+                                AddFlagParameter(command, "@matScore", record.MATScore.HasValue ? (object)record.MATScore.Value : DBNull.Value);
+                                AddFlagParameter(command, "@matLevel", record.MATLevel);
+                                AddFlagParameter(command, "@wroteAL", record.WroteAL ?? "");
+                                AddFlagParameter(command, "@wroteQL", record.WroteQL ?? "");
+                                AddFlagParameter(command, "@wroteMat", record.WroteMat ?? "");
+                                AddFlagParameter(command, "@faculty2", record.Faculty2);
+                                AddFlagParameter(command, "@faculty3", record.Faculty3);
+                                AddFlagParameter(command, "@batch", record.Batch ?? "");
+                                AddFlagParameter(command, "@provinceId", record.ProvinceId.HasValue ? (object)record.ProvinceId.Value : DBNull.Value);
+                                AddFlagParameter(command, "@rowGuid", Guid.NewGuid());
+                                AddFlagParameter(command, "@dateCreated", now);
+                                AddFlagParameter(command, "@createdBy", user);
+                                AddFlagParameter(command, "@dateModified", now);
+                                AddFlagParameter(command, "@modifiedBy", user);
+
+                                written += command.ExecuteNonQuery();
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    if (opened)
+                        connection.Close();
+                }
+            }
+
+            message = written == 1
+                ? "1 flagged record was compiled into Composit_flagged."
+                : written + " flagged records were compiled into Composit_flagged.";
+            return true;
         }
 
         /// <summary>

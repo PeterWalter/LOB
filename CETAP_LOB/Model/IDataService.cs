@@ -209,6 +209,12 @@ namespace CETAP_LOB.Model
     int RemoveFlaggedRecords(IList<long> barcodes, ref string message);
 
     /// <summary>
+    /// Compiles the flagged records into Process.Composit_flagged, replacing the rows for the
+    /// test dates being compiled.
+    /// </summary>
+    bool WriteFlaggedCompositToDB(IList<CompositBDO> records, IList<DateTime> testDates, ref string message);
+
+    /// <summary>
     /// Writes one accepted field from a QA record into the matching WriterList row -
     /// the reverse of copying a WriterList value into the record.
     /// </summary>

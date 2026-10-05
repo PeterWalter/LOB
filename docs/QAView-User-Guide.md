@@ -384,6 +384,13 @@ application says so instead of writing a row it could not identify.
 errors, on this visit or any later one. Right-clicking such a record shows the entry reading
 *"Record is flagged - the administrators are tracing this writer"*, greyed out.
 
+**What a flag does downstream.** When a session is compiled in the scoring module
+(**Generate Composit**), a record whose barcode is in `QA_Flagged` is left out of the composite
+file, the UCT upload and the website upload. Those records are compiled into
+`[Process].[Composit_flagged]` instead, for the administrators, so an unconfirmed writer never
+reaches the university or the website. Removing the flag from `QA_Flagged` puts the record back
+into the next compile.
+
 **The flagged list.** The **Flagged records for a test date** button opens a panel over the
 candidate grid:
 
