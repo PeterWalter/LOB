@@ -31,6 +31,19 @@
             </Style.Triggers>
         </Style>
 
+        <!-- The Errors cell: it carries the record's whole error list in its tooltip, and turns
+             purple when the record differs from the WriterList. That way a bio difference is
+             visible on the row itself, even when its field is scrolled out of view - the field
+             itself is purple as well. -->
+        <Style x:Key="ErrorCountTextStyle" TargetType="{x:Type TextBlock}" BasedOn="{StaticResource TextBlockStyle}">
+            <Style.Triggers>
+                <DataTrigger Binding="{Binding BioInfoMismatch}" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource QAMismatchBrush}" />
+                    <Setter Property="FontWeight" Value="Bold" />
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- WriterList difference highlight: only the biography fields that differ
              from the matching WriterList record are coloured, and they use purple
              so they are never confused with the red used for validation errors.
@@ -318,7 +331,7 @@
                 <DataGridTemplateColumn Header="Errors" SortMemberPath="errorCount">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding ErrorSummary}" />
+                            <TextBlock Style="{StaticResource ResourceKey=ErrorCountTextStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding ErrorSummary}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
