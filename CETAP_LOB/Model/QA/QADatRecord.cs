@@ -1791,10 +1791,12 @@ namespace CETAP_LOB.Model.QA
       switch (field)
       {
         case "Name":
-          FirstName = _writerRecord.Name;
+          if (FitsInField("Name", _writerRecord.Name))
+            FirstName = _writerRecord.Name;
           break;
         case "Surname":
-          Surname = _writerRecord.Surname;
+          if (FitsInField("Surname", _writerRecord.Surname))
+            Surname = _writerRecord.Surname;
           break;
         case "Reference":
           string writerReference = _writerRecord.NBT.ToString();
@@ -1907,9 +1909,11 @@ namespace CETAP_LOB.Model.QA
       switch (field)
       {
         case "Name":
-          return !string.IsNullOrWhiteSpace(_writerRecord.Name) && NormaliseText(_myname) != NormaliseText(_writerRecord.Name);
+          return !string.IsNullOrWhiteSpace(_writerRecord.Name) && FitsInField("Name", _writerRecord.Name)
+            && NormaliseText(_myname) != NormaliseText(_writerRecord.Name);
         case "Surname":
-          return !string.IsNullOrWhiteSpace(_writerRecord.Surname) && NormaliseText(_surname) != NormaliseText(_writerRecord.Surname);
+          return !string.IsNullOrWhiteSpace(_writerRecord.Surname) && FitsInField("Surname", _writerRecord.Surname)
+            && NormaliseText(_surname) != NormaliseText(_writerRecord.Surname);
         case "Reference":
           string writerReference = _writerRecord.NBT.ToString();
           return writerReference.Length == 14 && NormaliseText(_nbt) != NormaliseText(writerReference);
@@ -2058,6 +2062,55 @@ namespace CETAP_LOB.Model.QA
       if (a.Length == 0 || b.Length == 0)
         return true;
       return a == b;
+    }
+
+    /// <summary>The most characters the first name column of the record holds.</summary>
+    public const int NameFieldLength = 18;
+
+    /// <summary>The most characters a surname may have and still fit its column.</summary>
+    public const int SurnameFieldLength = 19;
+
+    /// <summary>
+    /// True when a value fits its column of the fixed width record. A longer value would have
+    /// to be cut when the file is written, which silently changes the name, so a value from the
+    /// WriterList or Composit is never taken when it does not fit.
+    /// </summary>
+    private static bool FitsInField(string field, string value)
+    {
+      string text = (value ?? "").Trim();
+      switch (field)
+      {
+        case "Name":
+          return text.Length <= NameFieldLength;
+        case "Surname":
+          return text.Length <= SurnameFieldLength;
+        default:
+          return true;
+      }
+    }
+
+    /// <summary>
+    /// Why the WriterList value for a field cannot be used - empty when it can. The context
+    /// menu shows this instead of leaving a disabled entry unexplained.
+    /// </summary>
+    public string WriterValueRejection(string field)
+    {
+      if (_writerRecord == null)
+        return "";
+
+      string value = field == "Name" ? _writerRecord.Name : (field == "Surname" ? _writerRecord.Surname : null);
+      if (value == null)
+        return "";
+
+      return FitsInField(field, value) ? "" : TooLongMessage(field, value);
+    }
+
+    private static string TooLongMessage(string field, string value)
+    {
+      int limit = field == "Name" ? NameFieldLength : SurnameFieldLength;
+      return "The database value is " + ((value ?? "").Trim().Length) + " characters; the "
+        + (field == "Name" ? "first name" : "surname") + " column holds " + limit
+        + ", so it is not offered - a longer value would have to be cut when the file is saved.";
     }
 
     private static long? ToLong(string value)
