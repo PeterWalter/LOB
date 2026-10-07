@@ -9004,7 +9004,8 @@ namespace CETAP_LOB.Model
                         writer.DOB = record.DOB;
                         break;
                     case "Gender":
-                        writer.Gender = (record.Gender ?? "").Trim();
+                        string genderText = QADatRecord.GenderText(record.Gender);
+                        writer.Gender = genderText.Length == 0 ? (record.Gender ?? "").Trim() : genderText;
                         break;
                     default:
                         message = "The " + field + " field cannot be written to the WriterList.";

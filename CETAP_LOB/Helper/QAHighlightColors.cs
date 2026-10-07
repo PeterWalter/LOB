@@ -32,17 +32,17 @@ namespace CETAP_LOB.Helper
     /// <summary>Barcode problem, on the selected row.</summary>
     public const string BarcodeSelectedKey = "QABarcodeSelectedBrush";
 
-    private const string LightMismatch = "#FF7B1FA2";
+    private const string LightMismatch = "#FFE53935";
     private const string LightWalkIn = "#FF1565C0";
     private const string LightBarcode = "#FFA15C00";
 
-    private const string DarkMismatch = "#FFCE93D8";
+    private const string DarkMismatch = "#FFFF5252";
     private const string DarkWalkIn = "#FF90CAF9";
     private const string DarkBarcode = "#FFFFD54F";
 
     // The selected row is filled with the accent colour in both themes, so the lighter
     // shades that read on it are kept for both.
-    private const string SelectedMismatch = "#FFE1BEE7";
+    private const string SelectedMismatch = "#FFFFCDD2";
     private const string SelectedWalkIn = "#FFBBDEFB";
     private const string SelectedBarcode = "#FFFFE082";
 

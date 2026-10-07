@@ -1813,7 +1813,9 @@ namespace CETAP_LOB.Model.QA
           DOB = _writerRecord.DOB;
           break;
         case "Gender":
-          Gender = _writerRecord.Gender;
+          string writerGender = GenderForRecord(_writerRecord.Gender);
+          if (writerGender.Length > 0)
+            Gender = writerGender;
           break;
         case "DOT":
           DOT = _writerRecord.DOT;
@@ -1884,7 +1886,9 @@ namespace CETAP_LOB.Model.QA
           RaisePropertyChanged("WriterDOB");
           break;
         case "Gender":
-          _writerRecord.Gender = _gender;
+          string genderText = GenderText(_gender);
+          if (genderText.Length > 0)
+            _writerRecord.Gender = genderText;
           RaisePropertyChanged("WriterGender");
           break;
         default:
@@ -2139,6 +2143,41 @@ namespace CETAP_LOB.Model.QA
       if (!mine.HasValue)
         return true;
       return mine.Value == writerNBT;
+    }
+
+    /// <summary>
+    /// The gender as the WriterList holds it, Male or Female, from the 1/2 (or M/F) code the
+    /// .dat file carries. Empty when the value is not a gender.
+    /// </summary>
+    public static string GenderText(string value)
+    {
+      string code = GenderCode(value);
+      if (code == "M")
+        return "Male";
+      if (code == "F")
+        return "Female";
+      return "";
+    }
+
+    /// <summary>
+    /// The gender as this record holds it, in the encoding the file uses. The .dat files carry
+    /// 1 for male and 2 for female while the WriterList holds Male and Female, so the value is
+    /// converted rather than copied, which would leave a single F in the one character column.
+    /// A file that already uses M and F keeps that encoding; an empty field follows the .dat
+    /// convention of 1 and 2.
+    /// </summary>
+    private string GenderForRecord(string writerGender)
+    {
+      string code = GenderCode(writerGender);
+      if (code.Length == 0)
+        return "";
+
+      string mine = NormaliseText(_gender);
+      bool letters = mine == "M" || mine == "F";
+      if (letters)
+        return code;
+
+      return code == "M" ? "1" : "2";
     }
 
     private static string GenderCode(string value)
