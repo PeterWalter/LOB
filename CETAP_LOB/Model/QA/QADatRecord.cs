@@ -2152,6 +2152,26 @@ namespace CETAP_LOB.Model.QA
       CSX_Number = DatFile.CSX.ToString();
     }
 
+    /// <summary>
+    /// Every error on the record, one line per field, so the grid's Errors cell can list what
+    /// is wrong even when the field itself has nothing on screen to colour (an empty required
+    /// field, or an error reported under a name with no column).
+    /// </summary>
+    public string ErrorSummary
+    {
+      get
+      {
+        if (_errors.Count == 0)
+          return "";
+
+        List<string> lines = new List<string>();
+        foreach (KeyValuePair<string, List<string>> pair in _errors)
+          lines.Add(pair.Key + ": " + string.Join("; ", pair.Value.ToArray()));
+
+        return string.Join(Environment.NewLine, lines.ToArray());
+      }
+    }
+
     private void checkerrors()
     {
       ValidateBioInfo();
@@ -2162,6 +2182,8 @@ namespace CETAP_LOB.Model.QA
         errorCount = _errors.Count;
       else
         errorCount = 0;
+
+      RaisePropertyChanged("ErrorSummary");
     }
 
     public void CheckDOB()

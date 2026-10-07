@@ -79,14 +79,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="6043136">
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="CETAP_LOB.exe" size="6044672">
       <assemblyIdentity name="CETAP_LOB" version="1.1.0.1" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>AReaZltEYqrahosLeeS0Wcr2JXmVRcSDgf86G2XIRgs=</dsig:DigestValue>
+        <dsig:DigestValue>kJYbz4aijhfkbJ/ipNBsBstdjP6XM5Ub2y3agMPDaDE=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -259,18 +259,6 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LinqStatistics.dll" size="79872">
-      <assemblyIdentity name="LinqStatistics" version="2.1.0.0" language="neutral" processorArchitecture="msil" />
-      <hash>
-        <dsig:Transforms>
-          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-        </dsig:Transforms>
-        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>HA4wPd5tuR9OfUz0igsUt0ZeAy4seBsL/iy449UBoK4=</dsig:DigestValue>
-      </hash>
-    </dependentAssembly>
-  </dependency>
-  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LINQtoCSV.dll" size="28672">
       <assemblyIdentity name="LINQtoCSV" version="1.5.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -283,14 +271,14 @@
     </dependentAssembly>
   </dependency>
   <dependency>
-    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="log4net.dll" size="276480">
-      <assemblyIdentity name="log4net" version="2.0.8.0" publicKeyToken="669E0DDF0BB1AA2A" language="neutral" processorArchitecture="msil" />
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="LinqStatistics.dll" size="79872">
+      <assemblyIdentity name="LinqStatistics" version="2.1.0.0" language="neutral" processorArchitecture="msil" />
       <hash>
         <dsig:Transforms>
           <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
         </dsig:Transforms>
         <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-        <dsig:DigestValue>r1YQxRXSJE25jGYmNiZMgXfomxr+QH+I/RikHWb25+I=</dsig:DigestValue>
+        <dsig:DigestValue>HA4wPd5tuR9OfUz0igsUt0ZeAy4seBsL/iy449UBoK4=</dsig:DigestValue>
       </hash>
     </dependentAssembly>
   </dependency>
@@ -679,6 +667,18 @@
     </dependentAssembly>
   </dependency>
   <dependency>
+    <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="log4net.dll" size="276480">
+      <assemblyIdentity name="log4net" version="2.0.8.0" publicKeyToken="669E0DDF0BB1AA2A" language="neutral" processorArchitecture="msil" />
+      <hash>
+        <dsig:Transforms>
+          <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+        </dsig:Transforms>
+        <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+        <dsig:DigestValue>r1YQxRXSJE25jGYmNiZMgXfomxr+QH+I/RikHWb25+I=</dsig:DigestValue>
+      </hash>
+    </dependentAssembly>
+  </dependency>
+  <dependency>
     <dependentAssembly dependencyType="install" allowDelayedBinding="true" codebase="xunit.abstractions.dll" size="13824">
       <assemblyIdentity name="xunit.abstractions" version="2.0.0.0" publicKeyToken="8D05B1BB7A6FDB6C" language="neutral" processorArchitecture="msil" />
       <hash>
@@ -702,15 +702,6 @@
       </hash>
     </dependentAssembly>
   </dependency>
-  <file name="c_logo.ico" size="370070">
-    <hash>
-      <dsig:Transforms>
-        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
-      </dsig:Transforms>
-      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
-      <dsig:DigestValue>CLY6Zlzq+C439UEfkDIEYj/7NgNakJDX6p2VqFpbQ/k=</dsig:DigestValue>
-    </hash>
-  </file>
   <file name="CETAP_LOB.exe.config" size="10569">
     <hash>
       <dsig:Transforms>
@@ -736,6 +727,15 @@
       </dsig:Transforms>
       <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
       <dsig:DigestValue>dT7Tfg30ox8kHxvp/9na/6xNVYKgdmTvQ0Rel6+4yW0=</dsig:DigestValue>
+    </hash>
+  </file>
+  <file name="c_logo.ico" size="370070">
+    <hash>
+      <dsig:Transforms>
+        <dsig:Transform Algorithm="urn:schemas-microsoft-com:HashTransforms.Identity" />
+      </dsig:Transforms>
+      <dsig:DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha256" />
+      <dsig:DigestValue>CLY6Zlzq+C439UEfkDIEYj/7NgNakJDX6p2VqFpbQ/k=</dsig:DigestValue>
     </hash>
   </file>
   <file name="x64\SqlServerSpatial160.dll" size="681904">

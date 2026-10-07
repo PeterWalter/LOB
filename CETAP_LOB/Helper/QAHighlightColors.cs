@@ -27,6 +27,8 @@ namespace CETAP_LOB.Helper
     public const string WalkInSelectedKey = "QAWalkInSelectedBrush";
     /// <summary>Barcode that is duplicated or unknown to the database (amber).</summary>
     public const string BarcodeKey = "QABarcodeBrush";
+    /// <summary>A field that failed validation (red).</summary>
+    public const string ErrorKey = "QAErrorBrush";
     /// <summary>Barcode problem, on the selected row.</summary>
     public const string BarcodeSelectedKey = "QABarcodeSelectedBrush";
 
@@ -64,6 +66,9 @@ namespace CETAP_LOB.Helper
       Publish(WalkInSelectedKey, SelectedWalkIn);
       Publish(BarcodeKey, dark ? DarkBarcode : LightBarcode);
       Publish(BarcodeSelectedKey, SelectedBarcode);
+
+      // Validation errors: red on the light theme, a lighter red on the dark one.
+      Publish(ErrorKey, dark ? "#FFFF8A80" : "#FFD32F2F");
     }
 
     /// <summary>

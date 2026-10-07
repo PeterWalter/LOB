@@ -22,6 +22,11 @@
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
                     <Setter Property="ToolTip" Value="{Binding (Validation.Errors)[0].ErrorContent, RelativeSource={RelativeSource self}}" />
+                    <!-- Red, so an errored field can be seen without hovering it. Some errors
+                         (an empty required field, or one reported under a name with no column)
+                         have nothing on screen to colour, which is why the Errors cell also
+                         carries the whole list in its tooltip. -->
+                    <Setter Property="Foreground" Value="{DynamicResource QAErrorBrush}" />
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -313,7 +318,7 @@
                 <DataGridTemplateColumn Header="Errors" SortMemberPath="errorCount">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding ErrorSummary}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 

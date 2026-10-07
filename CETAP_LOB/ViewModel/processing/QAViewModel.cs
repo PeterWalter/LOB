@@ -119,6 +119,9 @@ namespace CETAP_LOB.ViewModel.processing
         public RelayCommand ProcessSummaryCommand { get; private set; }
         public RelayCommand FindDuplicatesCommand {  get; private set; }
 
+    /// <summary>Removes the selected record from the file (right-click Delete Record).</summary>
+    public RelayCommand DeleteRowCommand { get; private set; }
+
     /// <summary>Shows the records flagged for a test date (section: QA_Flagged).</summary>
     public RelayCommand FlaggedRecordsCommand { get; private set; }
 
@@ -465,6 +468,7 @@ public IntakeYearsBDO Intake_Year
       // use the service at the same time.
       DuplicatesCommand = new RelayCommand(() => FindDuplicates(), () => !IsLoading && IsDataClean());
       ProcessSummaryCommand = new RelayCommand(() => GenerateSummary(),() => !IsLoading && IsDataClean());
+      DeleteRowCommand = new RelayCommand(() => DeleteQARecord(), () => SelectedQARecord != null);
       FlaggedRecordsCommand = new RelayCommand(() => LoadFlaggedRecords());
       ExportFlaggedRecordsCommand = new RelayCommand(() => ExportFlaggedRecords(), () => FlaggedRecords != null && FlaggedRecords.Count > 0);
       CloseFlaggedRecordsCommand = new RelayCommand(() => CloseFlaggedRecords());
@@ -1434,6 +1438,30 @@ public IntakeYearsBDO Intake_Year
         if (barcode.HasValue && known.Contains(barcode.Value))
           record.MarkFlagged();
       }
+    }
+
+    /// <summary>
+    /// Removes the selected record from the file - the right-click Delete Record entry. The
+    /// record is dropped from the service's copy of the file as well, so saving leaves it out;
+    /// this is how a duplicate row is taken out.
+    /// </summary>
+    private void DeleteQARecord()
+    {
+      QADatRecord record = SelectedQARecord;
+      if (record == null)
+        return;
+
+      string message = "";
+      if (!_service.DeleteQARecord(record, ref message))
+      {
+        ModernDialog.ShowMessage(message, "Delete record", MessageBoxButton.OK);
+        return;
+      }
+
+      QARecords.Remove(record);
+      SelectedQARecord = null;
+      Status = message;
+      RaiseRecordCounts();
     }
 
     /// <summary>Keeps the file's error count and the toolbar in step after a record was flagged.</summary>

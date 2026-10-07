@@ -9345,6 +9345,35 @@ namespace CETAP_LOB.Model
         }
 
         /// <summary>
+        /// Removes a record from the QA file being worked on, so it is left out when the file
+        /// is saved. The QA module asks for this when a record is deleted on the grid.
+        /// </summary>
+        public bool DeleteQARecord(QADatRecord record, ref string message)
+        {
+            message = "";
+            if (record == null)
+            {
+                message = "Select the record to delete first.";
+                return false;
+            }
+
+            if (QaData == null)
+            {
+                message = "No QA file is loaded, so there is nothing to delete from.";
+                return false;
+            }
+
+            if (!QaData.Remove(record))
+            {
+                message = "The record is not part of the loaded file.";
+                return false;
+            }
+
+            message = "Record deleted from the file. Save the file to write the change.";
+            return true;
+        }
+
+        /// <summary>
         /// Removes the supplied barcodes from Process.QA_Flagged - the flagged records the
         /// administrators have finished with. Returns how many rows were removed.
         /// </summary>
