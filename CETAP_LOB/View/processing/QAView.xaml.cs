@@ -89,7 +89,12 @@ namespace CETAP_LOB.View.processing
                 {
                     _writerValueMenuItem.Header = "Use WriterList value: " + WriterValueFor(record, field);
                     _writerValueMenuItem.Tag = field;
-                    _writerValueMenuItem.ToolTip = "Copy the value recorded in the WriterList for this column";
+                    // A disabled entry explains itself: when the WriterList value is too long to
+                    // fit the record the reason is shown instead of the usual hint.
+                    string writerRejection = record.WriterValueRejection(field);
+                    _writerValueMenuItem.ToolTip = writerRejection.Length == 0
+                        ? "Copy the value recorded in the WriterList for this column"
+                        : writerRejection;
                     _writerValueMenuItem.IsEnabled = record.CanApplyWriterValue(field);
                     entries.Add(_writerValueMenuItem);
 
