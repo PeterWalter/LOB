@@ -185,10 +185,12 @@ way, so a database record holding `Noda` is not a difference from `NODA`.
 
 ### 7.3 How errors are shown
 
-- The **Errors** column and the file-list colour give the count.
-- A field that fails validation is outlined with a red validation border and the
-  message appears as a tooltip on the field - **red always means a validation error**.
-- Bio-information differences against the WriterList are shown in **purple** on the
+- The **Errors** column and the file-list colour give the count. Hovering the count lists
+  **every error on that record**, one line per field, so an error can be found even when the
+  field itself has nothing on screen to colour - a blank required value, for instance.
+- A field that fails validation is shown in **red** (`#D32F2F`, `#FF8A80` on the dark theme)
+  and the message appears as a tooltip on the field - **red always means a validation error**.
+- Bio-information differences against the WriterList are shown in **bright red** on the
   affected fields (section 9), so they are never confused with validation errors.
 - A walk-in reference that already exists in Composit under a different reference is
   shown in **blue** on the **NBT Reference** field (section 9.5).
@@ -197,7 +199,7 @@ way, so a database record holding `Noda` is not a difference from `NODA`.
 - Correcting a field clears its marking immediately: a field is only coloured while its
   value still fails validation, still differs from the matching WriterList record, or is
   still a conflicting walk-in reference.
-- The purple, blue and amber shades are chosen for the **theme** that is applied. They are
+- The red, blue and amber shades are chosen for the **theme** that is applied. They are
   dark enough to read on the light theme, so on the dark theme (including the custom
   themes that build on it) lighter, more saturated shades are used instead. Switching
   theme repaints the grid immediately; nothing has to be reopened. The lighter shade of
@@ -284,25 +286,38 @@ produced false mismatches.
 
 ### 9.3 How a mismatch is shown
 
-- Only the fields that actually differ are shown in **purple text** - the rest of the
+- Only the fields that actually differ are shown in **bright red text** - the rest of the
   record keeps its normal appearance, and the normal validation borders are not
-  affected. Purple is used so a WriterList difference is never mistaken for the red
-  validation errors (section 7.3).
-- Hovering a purple field shows which fields differ.
+  affected. A WriterList difference uses the **brighter red** (`#E53935`, `#FF5252` on the
+  dark theme) while a validation error keeps the deeper red (`#D32F2F`, `#FF8A80`), so the
+  two can still be told apart (section 7.3).
+- Hovering a bright red field shows which fields differ.
 - The record's error count includes the mismatch.
 
 ### 9.4 Correcting a mismatch
 
-Right-click the purple field. The grid's context menu opens with a
+Right-click the bright red field. The grid's context menu opens with a
 **Use WriterList value: <value>** entry at the top, for example
 `Use WriterList value: MOKOENA`. Clicking it copies the WriterList value into that
-field; the field re-validates and the purple marking clears if it now agrees.
+field; the field re-validates and the bright red marking clears if it now agrees.
 
 The entry is offered only for the seven comparable columns and only when the candidate
 has a WriterList match. It is enabled for a field whenever using the WriterList value
 would actually change it - including when the scanned value is missing or unreadable
 (for example a Reference of `*`). This is how a blank or invalid **NBT Reference** is
 filled in from the WriterList. For all other columns the menu is unchanged.
+
+#### What is never taken from the WriterList
+
+A first name column holds **18** characters and a surname **20**, so a WriterList value that
+does not fit is **not offered** - it would have to be cut when the file is saved, which
+silently changes the name. Such an entry is greyed out and its tooltip says how long the
+database value is and how many characters the column holds.
+
+Gender is **converted, not copied**: the WriterList holds `Male` and `Female`, while the
+`.dat` file holds `1` for male and `2` for female in a single character. Taking the
+WriterList value writes the code the file uses, and **Accept scanned value** writes back
+`Male`/`Female`, so the record and the register each keep their own encoding.
 
 #### The other direction - accepting the scanned value
 
@@ -317,7 +332,7 @@ candidate.
   and only when that field actually differs.
 - The **NBT Reference is never written back** - it is the identifier used to find the
   WriterList row.
-- Once the register is updated the purple marking clears, because the two now agree.
+- Once the register is updated the bright red marking clears, because the two now agree.
 - If no WriterList row matches the candidate, or the database is unavailable, a message
   is shown and nothing is changed.
 
@@ -370,7 +385,7 @@ application then:
    (the file name without its extension), who flagged it and when. The venue is stored as the
    venue code, which is how the database identifies a venue. The barcode identifies the
    row, so flagging the same record twice refreshes it instead of adding another.
-2. **Takes the error markings off the record** - the red borders go away, the purple/blue/amber
+2. **Takes the error markings off the record** - the red borders go away, the bright red/blue/amber
    text goes away, the record's **Errors** count drops to zero and it stops counting towards the
    file. The record cannot be coloured again while it is flagged, so editing it afterwards does
    not bring the errors back.
@@ -534,7 +549,7 @@ Right-click a candidate row (or any non-bio cell) to reach:
 
 | Menu item | Action |
 |---|---|
-| **Delete Record** | *Not currently available* — see section 15. |
+| **Delete Record** | Deletes the selected record from the file; saving the file then leaves it out. This is how a duplicate or unwanted row is removed. |
 | **Get NBT Number from DataBase** | Looks up the NBT for the selected candidate by SA ID (or Foreign ID when there is no SA ID). |
 | **Get Name and Surname from DataBase** | Fills first name and surname from the database for the record's NBT. |
 | **Get ID using NBT from DataBase** | Fills SA ID and Foreign ID from the database for the record's NBT. Only applies when the reference has `9` as its 8th character; otherwise it does nothing. |
@@ -563,7 +578,6 @@ top of the menu, followed by a separator and the items above:
 | Item | Status |
 |---|---|
 | Toolbar **Find Duplicates** | The button is present but has no action attached. Use **Duplicate Barcodes** instead. |
-| Right-click **Delete Record** | The menu item is present but has no action attached. |
 | Right-click **Clear Math Area** | The menu item is present but has no action attached. |
 | **Bio QA** page | A separate page exists but is not fully implemented; use the **QA** page. |
 
@@ -606,7 +620,9 @@ formats are `667`, `761`, `886` and `909`.
 | Many fields show `Wrong Language` / `Wrong AQL Code` | The file name's test code and profile decide the expected language and code - check the file name against section 16. |
 | Every row shows the same venue/date/language error | The file-level value is wrong (or the file name is wrong). Correct it once on any row; it applies to the whole file. |
 | Database commands do nothing | The database is unavailable. Check connectivity and restart; `DBAvailable` is set at start-up. |
-| A purple bio field will not clear | The WriterList value and the scanned value may both be wrong, or the candidate is genuinely different. Use the right-click **Use WriterList value** entry or edit the field; check the database record. |
+| A record shows an error but no field looks wrong | Hover the **Errors** count: its tooltip lists every error and names the field, including an error on a blank value that has nothing to colour. |
+| A **Use WriterList value** entry is greyed out | The WriterList value is the same as the scanned one, or it is too long for the column (first name 18, surname 20) - the tooltip says which. |
+| A bright red (WriterList difference) field will not clear | The WriterList value and the scanned value may both be wrong, or the candidate is genuinely different. Use the right-click **Use WriterList value** entry or edit the field; check the database record. |
 | An **NBT Reference** is shown in blue | The walk-in reference already exists in Composit under a different reference (section 9.5). Right-click it to compare the two records and, if the Composit reference is the right one, click **Use Composit reference**. |
 | **Allocate new walk-in reference** reports that no numbers are available | Every row in `NewNBTNumbers` has been used (`OriginalNBT` filled). A new batch of walk-in numbers has to be loaded into that table before more can be issued. |
 | **Allocate new walk-in reference** is not on the menu | It only appears for a *proper* reference (8th character not `9`) whose name, surname, SA ID or foreign ID differs from the WriterList (section 9.6). |

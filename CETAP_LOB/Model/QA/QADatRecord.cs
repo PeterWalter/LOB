@@ -2249,23 +2249,34 @@ namespace CETAP_LOB.Model.QA
     /// is wrong even when the field itself has nothing on screen to colour (an empty required
     /// field, or an error reported under a name with no column).
     /// </summary>
+    private string _errorSummary;
+
     public string ErrorSummary
     {
       get
       {
-        if (_errors.Count == 0)
-          return "";
+        if (_errorSummary == null)
+          _errorSummary = BuildErrorSummary();
 
-        List<string> lines = new List<string>();
-        foreach (KeyValuePair<string, List<string>> pair in _errors)
-          lines.Add(pair.Key + ": " + string.Join("; ", pair.Value.ToArray()));
-
-        return string.Join(Environment.NewLine, lines.ToArray());
+        return _errorSummary;
       }
+    }
+
+    private string BuildErrorSummary()
+    {
+      if (_errors.Count == 0)
+        return "";
+
+      List<string> lines = new List<string>();
+      foreach (KeyValuePair<string, List<string>> pair in _errors)
+        lines.Add(pair.Key + ": " + string.Join("; ", pair.Value.ToArray()));
+
+      return string.Join(Environment.NewLine, lines.ToArray());
     }
 
     private void checkerrors()
     {
+      int previous = errorCount;
       ValidateBioInfo();
       ValidateWalkInReference();
       if (Flagged)
@@ -2275,7 +2286,11 @@ namespace CETAP_LOB.Model.QA
       else
         errorCount = 0;
 
-      RaisePropertyChanged("ErrorSummary");
+      // The tooltip is rebuilt on the next read, and only announced when the count really
+      // changed - raising it on every validation made the grid re-read it for every cell.
+      _errorSummary = null;
+      if (errorCount != previous)
+        RaisePropertyChanged("ErrorSummary");
     }
 
     public void CheckDOB()

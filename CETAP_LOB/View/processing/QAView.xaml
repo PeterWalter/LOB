@@ -306,6 +306,8 @@
             CanUserResizeColumns="True"
             CanUserSortColumns="True"
             EnableColumnVirtualization="True"
+            VirtualizingPanel.VirtualizationMode="Recycling"
+            VirtualizingPanel.IsVirtualizing="True"
             EnableRowVirtualization="True"
             HorizontalScrollBarVisibility="Visible"
             ItemsSource="{Binding QARecords}"
