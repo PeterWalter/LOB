@@ -302,6 +302,7 @@
             AutoGenerateColumns="False"
             Background="Transparent"
             BorderThickness="1"
+            CanUserAddRows="False"
             CanUserDeleteRows="True"
             CanUserResizeColumns="True"
             CanUserSortColumns="True"
