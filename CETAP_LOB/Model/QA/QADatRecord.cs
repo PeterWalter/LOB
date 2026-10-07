@@ -2068,7 +2068,7 @@ namespace CETAP_LOB.Model.QA
     public const int NameFieldLength = 18;
 
     /// <summary>The most characters a surname may have and still fit its column.</summary>
-    public const int SurnameFieldLength = 19;
+    public const int SurnameFieldLength = 20;
 
     /// <summary>
     /// True when a value fits its column of the fixed width record. A longer value would have
@@ -2107,7 +2107,7 @@ namespace CETAP_LOB.Model.QA
 
     private static string TooLongMessage(string field, string value)
     {
-      int limit = field == "Name" ? NameFieldLength : SurnameFieldLength;
+      int limit = field == "Name" ? NameFieldLength : SurnameFieldLength;   // 18 and 20
       return "The database value is " + ((value ?? "").Trim().Length) + " characters; the "
         + (field == "Name" ? "first name" : "surname") + " column holds " + limit
         + ", so it is not offered - a longer value would have to be cut when the file is saved.";
