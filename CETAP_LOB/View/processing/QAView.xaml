@@ -264,6 +264,16 @@
                     IconWidth="30"
                     ToolTip="Flagged records for a test date" />
                 <mui:ModernButton
+                    Height="81"
+                    Margin="5,1,3,0"
+                    BorderThickness="5,1,0,0"
+                    Command="{Binding QA.ExportQARecordsCommand, Mode=OneWay, Source={StaticResource Locator}}"
+                    EllipseDiameter="50"
+                    IconData="M 20,20L 60,20L 60,28L 20,28z M 20,32L 38,32L 38,40L 20,40z M 42,32L 60,32L 60,40L 42,40z M 20,44L 38,44L 38,52L 20,52z M 42,44L 60,44L 60,52L 42,52z"
+                    IconHeight="30"
+                    IconWidth="30"
+                    ToolTip="Export all records in this file to Excel" />
+                <mui:ModernButton
                     Height="67"
                     Margin="5,20,3,0"
                     Click="ModernButton_Click"

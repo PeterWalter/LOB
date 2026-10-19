@@ -128,6 +128,9 @@ namespace CETAP_LOB.ViewModel.processing
     /// <summary>Writes the flagged list to Excel.</summary>
     public RelayCommand ExportFlaggedRecordsCommand { get; private set; }
 
+    /// <summary>Writes every record of the loaded file to an Excel file in the QA folder.</summary>
+    public RelayCommand ExportQARecordsCommand { get; private set; }
+
     /// <summary>Closes the flagged records panel.</summary>
     public RelayCommand CloseFlaggedRecordsCommand { get; private set; }
 
@@ -470,6 +473,7 @@ public IntakeYearsBDO Intake_Year
       ProcessSummaryCommand = new RelayCommand(() => GenerateSummary(),() => !IsLoading && IsDataClean());
       DeleteRowCommand = new RelayCommand(() => DeleteQARecord(), () => SelectedQARecord != null);
       FlaggedRecordsCommand = new RelayCommand(() => LoadFlaggedRecords());
+      ExportQARecordsCommand = new RelayCommand(() => ExportQARecords(), () => QARecords != null && QARecords.Count > 0);
       ExportFlaggedRecordsCommand = new RelayCommand(() => ExportFlaggedRecords(), () => FlaggedRecords != null && FlaggedRecords.Count > 0);
       CloseFlaggedRecordsCommand = new RelayCommand(() => CloseFlaggedRecords());
     }
@@ -1308,6 +1312,7 @@ public IntakeYearsBDO Intake_Year
         _flaggedRecords = value;
         RaisePropertyChanged("FlaggedRecords");
         ExportFlaggedRecordsCommand.RaiseCanExecuteChanged();
+      ExportQARecordsCommand.RaiseCanExecuteChanged();
       }
     }
 
@@ -1578,6 +1583,83 @@ public IntakeYearsBDO Intake_Year
       }
 
       ModernDialog.ShowMessage(Status, "Flagged records", MessageBoxButton.OK);
+    }
+
+    /// <summary>
+    /// Writes every record of the loaded file - the whole grid, not just the rows on screen - to
+    /// an Excel file in the QA folder, with the columns the QA grid shows.
+    /// </summary>
+    private void ExportQARecords()
+    {
+      if (QARecords == null || QARecords.Count == 0)
+      {
+        ModernDialog.ShowMessage("Open a QA file first - there are no records to export.", "Export to Excel", MessageBoxButton.OK);
+        return;
+      }
+
+      string name = SelectedFile == null ? "QA records" : Path.GetFileNameWithoutExtension(SelectedFile.SName);
+      string file = Path.Combine(Folder, "QA records " + name + " " + DateTime.Now.ToString("yyyy-MM-dd HHmm") + ".xlsx");
+
+      try
+      {
+        var workbook = new XLWorkbook();
+        var sheet = workbook.Worksheets.Add("QA records");
+        string[] headers =
+        {
+          "Barcode", "NBT Reference", "Surname", "First Name", "Initials", "SA ID", "Foreign ID",
+          "Date of Birth", "ID Type", "Citizenship", "Classification", "Gender", "Home Language",
+          "School Language", "AQL Language", "AQL Code", "Mat Language", "Mat Code", "Venue Code",
+          "Date of Test", "Faculty 1", "Faculty 2", "Faculty 3", "Errors", "Flagged"
+        };
+        for (int i = 0; i < headers.Length; i++)
+          sheet.Cell(1, i + 1).Value = headers[i];
+        sheet.Row(1).Style.Font.Bold = true;
+
+        int line = 2;
+        foreach (QADatRecord record in QARecords)
+        {
+          if (record == null)
+            continue;
+
+          sheet.Cell(line, 1).Value = record.Barcode;
+          sheet.Cell(line, 2).Value = record.Reference;
+          sheet.Cell(line, 3).Value = record.Surname;
+          sheet.Cell(line, 4).Value = record.FirstName;
+          sheet.Cell(line, 5).Value = record.initials;
+          sheet.Cell(line, 6).Value = record.SAID;
+          sheet.Cell(line, 7).Value = record.ForeignID;
+          sheet.Cell(line, 8).Value = record.DOB == default(DateTime) ? "" : record.DOB.ToString("yyyy-MM-dd");
+          sheet.Cell(line, 9).Value = record.IDType;
+          sheet.Cell(line, 10).Value = record.Citizenship;
+          sheet.Cell(line, 11).Value = record.Classification;
+          sheet.Cell(line, 12).Value = record.Gender;
+          sheet.Cell(line, 13).Value = record.HomeLanguage;
+          sheet.Cell(line, 14).Value = record.SchoolLanguage;
+          sheet.Cell(line, 15).Value = record.AQL_Language;
+          sheet.Cell(line, 16).Value = record.AQL_Code;
+          sheet.Cell(line, 17).Value = record.Mat_Language;
+          sheet.Cell(line, 18).Value = record.MatCode;
+          sheet.Cell(line, 19).Value = record.VenueCode;
+          sheet.Cell(line, 20).Value = record.DOT == default(DateTime) ? "" : record.DOT.ToString("yyyy-MM-dd");
+          sheet.Cell(line, 21).Value = record.Faculty1;
+          sheet.Cell(line, 22).Value = record.Faculty2;
+          sheet.Cell(line, 23).Value = record.Faculty3;
+          sheet.Cell(line, 24).Value = record.errorCount;
+          sheet.Cell(line, 25).Value = record.Flagged ? "Yes" : "No";
+          line++;
+        }
+
+        sheet.Columns().AdjustToContents();
+        workbook.SaveAs(file);
+      }
+      catch (Exception ex)
+      {
+        ModernDialog.ShowMessage(ex.Message, "Export to Excel", MessageBoxButton.OK, (Window) null);
+        return;
+      }
+
+      Status = "All records of the file were written to " + file;
+      ModernDialog.ShowMessage(Status, "Export to Excel", MessageBoxButton.OK);
     }
 
     /// <summary>Writes the flagged list for the chosen test date to an Excel file in the QA folder.</summary>
