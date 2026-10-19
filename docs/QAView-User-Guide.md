@@ -228,6 +228,7 @@ column and corrupts the file.
 | 6 | **Update Dat Tracker** | Reconciles each file's record count with the scan tracker. |
 | 7 | **Find Duplicates** | *Not currently available* — see section 15. |
 | 8 | **Flagged records for a test date** | Opens the flagged records panel: pick a **Date of Test**, load the records flagged for that day and export them to Excel (section 9.7). |
+| 9 | **Export all records to Excel** | Writes every record of the open file — the whole grid, not only the rows on screen — to `QA records <file name> <date> <time>.xlsx` in the QA folder, with the columns the grid shows plus the error count and whether the record is flagged. |
 
 ### 8.1 AutoClean — what it repairs
 
@@ -408,7 +409,6 @@ university or the website. Removing the flag from `QA_Flagged` puts the record b
 into the next compile.
 
 **The flagged list.** The **Flagged records for a test date** button opens a panel over the
-| **Export all records to Excel** | Writes every record of the open file - the whole grid, not only the rows on screen - to `QA records <file name> <date> <time>.xlsx` in the QA folder, with the columns the grid shows plus the error count and whether the record is flagged. |
 candidate grid:
 
 | Control | What it does |
