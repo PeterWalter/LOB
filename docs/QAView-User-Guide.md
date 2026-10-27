@@ -166,7 +166,7 @@ way, so a database record holding `Noda` is not a difference from `NODA`.
 | **Citizenship** | Must be present and less than 5 |
 | **Classification** | Numeric, present, and less than 6 |
 | **Venue Code** | Must equal the venue encoded in the file name |
-| **Date of Test** | Must equal the batch test date |
+| **Date of Test** | Must equal the profile's test date, and must be within **100 days** of today - before or after |
 | **Home Language** | Must be present; a numeric value must be below 13 |
 | **School Language** | Must be present; a numeric value must be 01, 02 or 03 |
 | **AQL Language** | Must equal the file's AQL language |

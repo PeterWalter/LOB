@@ -620,6 +620,8 @@ namespace CETAP_LOB.Model.QA
         _dot = value;
         if (_dot != _testDate)
           AddError("DOT", "Wrong Test date");
+        else if (Math.Abs((_dot.Date - DateTime.Today).TotalDays) > TestDateWindowDays)
+          AddError("DOT", "Test date must be within " + TestDateWindowDays + " days of today");
         else
           RemoveError("DOT");
         checkerrors();
@@ -2067,6 +2069,12 @@ namespace CETAP_LOB.Model.QA
         return true;
       return a == b;
     }
+
+    /// <summary>
+    /// How far the date of test may sit from today - before or after - and still be accepted.
+    /// A session is sat on one date, so anything further out is a typo or the wrong file.
+    /// </summary>
+    public const int TestDateWindowDays = 100;
 
     /// <summary>The most characters the first name column of the record holds.</summary>
     public const int NameFieldLength = 18;
