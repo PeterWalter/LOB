@@ -2074,7 +2074,7 @@ namespace CETAP_LOB.Model.QA
     /// How far the date of test may sit from today - before or after - and still be accepted.
     /// A session is sat on one date, so anything further out is a typo or the wrong file.
     /// </summary>
-    public const int TestDateWindowDays = 100;
+    public const int TestDateWindowDays = 30;
 
     /// <summary>The most characters the first name column of the record holds.</summary>
     public const int NameFieldLength = 18;
