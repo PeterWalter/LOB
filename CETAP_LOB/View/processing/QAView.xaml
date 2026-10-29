@@ -18,6 +18,100 @@
     mc:Ignorable="d ignore">
     <UserControl.Resources>
         <Converters:NumberToColorConverter x:Key="NumberToColorConverter" />
+
+        <!-- ============================================================
+             Design tokens. Neutral, alpha blended so they read correctly
+             on both the light and the dark theme; the accent is used for
+             selection and focus only.
+             ============================================================ -->
+        <SolidColorBrush x:Key="QaHairline" Color="#22808080" />
+        <SolidColorBrush x:Key="QaHeaderFill" Color="#12808080" />
+        <SolidColorBrush x:Key="QaRowAlternate" Color="#0A000000" />
+        <SolidColorBrush x:Key="QaRowHover" Color="#14000000" />
+        <SolidColorBrush x:Key="QaRowSelected" Color="#241565C0" />
+        <SolidColorBrush x:Key="QaFocus" Color="#FF1565C0" />
+        <SolidColorBrush x:Key="QaSecondaryText" Color="#B35B6472" />
+
+        <Style x:Key="QaColumnHeader" TargetType="{x:Type DataGridColumnHeader}">
+            <Setter Property="Height" Value="36" />
+            <Setter Property="Padding" Value="10,0" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Background" Value="{StaticResource QaHeaderFill}" />
+            <Setter Property="BorderBrush" Value="{StaticResource QaHairline}" />
+            <Setter Property="BorderThickness" Value="0,0,1,1" />
+        </Style>
+
+        <Style x:Key="QaCell" TargetType="{x:Type DataGridCell}">
+            <Setter Property="Padding" Value="9,0" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="VerticalContentAlignment" Value="Center" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type DataGridCell}">
+                        <Border
+                            Background="{TemplateBinding Background}"
+                            BorderBrush="{TemplateBinding BorderBrush}"
+                            BorderThickness="{TemplateBinding BorderThickness}"
+                            SnapsToDevicePixels="True">
+                            <ContentPresenter
+                                Margin="{TemplateBinding Padding}"
+                                VerticalAlignment="Center"
+                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="Transparent" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="QaRow" TargetType="{x:Type DataGridRow}">
+            <Setter Property="Background" Value="Transparent" />
+            <Setter Property="SnapsToDevicePixels" Value="True" />
+            <Style.Triggers>
+                <Trigger Property="AlternationIndex" Value="1">
+                    <Setter Property="Background" Value="{StaticResource QaRowAlternate}" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource QaRowHover}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource QaRowSelected}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="QaFileItem" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Padding" Value="12,7" />
+            <Setter Property="FontSize" Value="12.5" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="BorderThickness" Value="2,0,0,0" />
+            <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource QaRowHover}" />
+                </Trigger>
+                <Trigger Property="IsSelected" Value="True">
+                    <Setter Property="Background" Value="{StaticResource QaRowSelected}" />
+                    <Setter Property="BorderBrush" Value="{StaticResource QaFocus}" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Card header used above the file list and the section panels. -->
+        <Style x:Key="QaCardHeader" TargetType="{x:Type TextBlock}">
+            <Setter Property="Margin" Value="12,10,12,8" />
+            <Setter Property="FontSize" Value="11" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="{StaticResource QaSecondaryText}" />
+        </Style>
         <Style x:Key="TextBlockStyle" TargetType="{x:Type TextBlock}">
             <Style.Triggers>
                 <Trigger Property="Validation.HasError" Value="True">
@@ -196,6 +290,7 @@
             <RowDefinition Height="55*" />
             <RowDefinition Height="10" />
             <RowDefinition Height="25*" />
+            <RowDefinition Height="26" />
         </Grid.RowDefinitions>
 
         <!-- Toolbar. Every button is bound to a RelayCommand on QAViewModel, from the
@@ -312,8 +407,19 @@
             AutoGenerateColumns="False"
             Background="Transparent"
             BorderThickness="1"
+            AlternationCount="2"
             CanUserAddRows="False"
             CanUserDeleteRows="True"
+            CanUserResizeRows="False"
+            CellStyle="{StaticResource QaCell}"
+            ColumnHeaderStyle="{StaticResource QaColumnHeader}"
+            GridLinesVisibility="Horizontal"
+            HeadersVisibility="Column"
+            HorizontalGridLinesBrush="{StaticResource QaHairline}"
+            RowHeaderWidth="0"
+            RowHeight="30"
+            RowStyle="{StaticResource QaRow}"
+            SelectionUnit="FullRow"
             CanUserResizeColumns="True"
             CanUserSortColumns="True"
             EnableColumnVirtualization="True"
@@ -331,7 +437,7 @@
                 <DataGridTemplateColumn Header="Errors" SortMemberPath="errorCount">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding ErrorSummary}" />
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" HorizontalAlignment="Stretch" TextAlignment="Right" Text="{Binding errorCount, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding ErrorSummary}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
@@ -340,7 +446,7 @@
                 <DataGridTemplateColumn Header="ScanNo" SortMemberPath="ScanNo">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding ScanNo, UpdateSourceTrigger=PropertyChanged}" />
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" HorizontalAlignment="Stretch" TextAlignment="Right" Text="{Binding ScanNo, UpdateSourceTrigger=PropertyChanged}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
 
@@ -468,7 +574,7 @@
                 <DataGridTemplateColumn Header="Date of Birth" SortMemberPath="DOB">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=DOBMismatchTextStyle}" Text="{Binding DOB, NotifyOnValidationError=True, StringFormat=\{0:d\}, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
+                            <TextBlock Style="{StaticResource ResourceKey=DOBMismatchTextStyle}" Text="{Binding DOB, NotifyOnValidationError=True, StringFormat=\{0:dd/MM/yyyy\}, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -521,7 +627,7 @@
                 <DataGridTemplateColumn Header="Date of Test" SortMemberPath="DOT">
                     <DataGridTemplateColumn.CellTemplate>
                         <DataTemplate>
-                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding DOT, NotifyOnValidationError=True, StringFormat=\{0:d\}, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
+                            <TextBlock Style="{StaticResource ResourceKey=TextBlockStyle}" Text="{Binding DOT, NotifyOnValidationError=True, StringFormat=\{0:dd/MM/yyyy\}, UpdateSourceTrigger=PropertyChanged, ValidatesOnDataErrors=True, ValidatesOnExceptions=True}" />
                         </DataTemplate>
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
@@ -798,17 +904,16 @@
                 <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
             </Border.BorderBrush>
             <StackPanel Margin="0,0,0,0">
-                <Label
-                    HorizontalAlignment="Center"
-                    HorizontalContentAlignment="Center"
-                    Content="QA Files"
-                    FontFamily="Segoe WP Black"
-                    FontSize="14" />
+                <TextBlock Style="{StaticResource QaCardHeader}" Text="QA FILES" />
+                <Border BorderBrush="{StaticResource QaHairline}" BorderThickness="0,1,0,0" />
                 <ListBox
-                    Height="500"
-                    BorderThickness="1"
+                    Margin="0,4,0,0"
+                    Background="Transparent"
+                    BorderThickness="0"
+                    ItemContainerStyle="{StaticResource QaFileItem}"
                     ItemsSource="{Binding DirList}"
-                    ScrollViewer.VerticalScrollBarVisibility="Visible"
+                    ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                    ScrollViewer.VerticalScrollBarVisibility="Auto"
                     SelectedItem="{Binding SelectedFile}">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
@@ -861,8 +966,8 @@
                             Margin="0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="1" />
                         <ListBox Margin="0" ItemsSource="{Binding QA.SelectedQARecord.Section1, Mode=TwoWay, Source={StaticResource Locator}}">
                             <ListBox.ItemsPanel>
@@ -886,8 +991,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="2" />
 
                         <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section2, Source={StaticResource Locator}}">
@@ -911,8 +1016,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="3" />
 
                         <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section3, Source={StaticResource Locator}}">
@@ -937,8 +1042,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="4" />
 
                         <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section4, Source={StaticResource Locator}}">
@@ -962,8 +1067,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="5" />
 
                         <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section5, Source={StaticResource Locator}}">
@@ -988,8 +1093,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="6" />
 
                         <ListBox Margin="10,0" ItemsSource="{Binding QA.SelectedQARecord.Section6, Source={StaticResource Locator}}">
@@ -1014,8 +1119,8 @@
                             Margin="5,0"
                             HorizontalAlignment="Center"
                             VerticalAlignment="Center"
-                            FontSize="20"
-                            FontWeight="ExtraBold"
+                            FontSize="13"
+                            FontWeight="SemiBold"
                             Text="7" />
 
                         <ListBox Margin="10,0,20,0" ItemsSource="{Binding QA.SelectedQARecord.Section7, Source={StaticResource Locator}}">
@@ -1043,13 +1148,7 @@
                     <SolidColorBrush Color="{Binding SettingsAppearance.SelectedAccentColor, Source={StaticResource Locator}}" />
                 </Border.BorderBrush>
                 <StackPanel Height="70">
-                    <TextBlock
-                        Margin="5,0"
-                        HorizontalAlignment="Left"
-                        VerticalAlignment="Center"
-                        FontSize="20"
-                        FontWeight="ExtraBold"
-                        Text="MAT SECTION" />
+                    <TextBlock Style="{StaticResource QaCardHeader}" Text="MAT SECTION" />
 
                     <ListBox Margin="20,0,0,0" ItemsSource="{Binding QA.SelectedQARecord.MathSection, Source={StaticResource Locator}}">
                         <ListBox.ItemsPanel>
@@ -1070,5 +1169,19 @@
         </StackPanel>
 
 
+        <Border
+            Grid.Row="3"
+            Grid.ColumnSpan="3"
+            BorderBrush="{StaticResource QaHairline}"
+            BorderThickness="0,1,0,0"
+            ToolTip="{Binding Status}">
+            <TextBlock
+                Margin="12,0"
+                VerticalAlignment="Center"
+                FontSize="11"
+                Text="{Binding Status}"
+                TextTrimming="CharacterEllipsis"
+                Foreground="{StaticResource QaSecondaryText}" />
+        </Border>
     </Grid>
 </UserControl>
