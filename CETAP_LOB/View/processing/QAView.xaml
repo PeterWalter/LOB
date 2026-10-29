@@ -410,11 +410,39 @@
              the purple/blue/amber text from the styles above; this grid only lays out
              the columns. QAGrid is named so the code-behind can add its record-specific
              context menu entries, which need the right clicked record and column. -->
-        <DataGrid
-            x:Name="QAGrid"
-            ContextMenuOpening="QAGrid_ContextMenuOpening"
+        <Grid
             Grid.Column="2"
-            Margin="10,10,12,8"
+            Margin="10,10,12,8">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+            <StackPanel
+                Grid.Row="0"
+                Margin="2,0,2,8"
+                Orientation="Horizontal">
+                <TextBlock
+                    FontSize="15"
+                    FontWeight="SemiBold"
+                    Text="{Binding SelectedFile.SName}"
+                    TextTrimming="CharacterEllipsis" />
+                <Border
+                    Width="1"
+                    Height="14"
+                    Margin="12,0"
+                    VerticalAlignment="Center"
+                    Background="{StaticResource QaHairline}" />
+                <TextBlock
+                    VerticalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{StaticResource QaSecondaryText}">
+                    <Run Text="{Binding QARecords.Count, Mode=OneWay}" /><Run Text=" records" />
+                </TextBlock>
+            </StackPanel>
+            <DataGrid
+                Grid.Row="1"
+                x:Name="QAGrid"
+            ContextMenuOpening="QAGrid_ContextMenuOpening"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             AutoGenerateColumns="False"
@@ -821,6 +849,7 @@
                 </ContextMenu>
             </DataGrid.ContextMenu>
         </DataGrid>
+        </Grid>
 
         <!-- Records flagged in [Process].[QA_Flagged] for one test date. Shown over the
              candidate grid so the flagged list can be read and exported without leaving the
