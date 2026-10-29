@@ -69,6 +69,10 @@
                 <Trigger Property="IsSelected" Value="True">
                     <Setter Property="Background" Value="Transparent" />
                 </Trigger>
+                <Trigger Property="IsKeyboardFocusWithin" Value="True">
+                    <Setter Property="BorderBrush" Value="{StaticResource QaFocus}" />
+                    <Setter Property="BorderThickness" Value="2" />
+                </Trigger>
             </Style.Triggers>
         </Style>
 
@@ -287,9 +291,9 @@
         </Grid.ColumnDefinitions>
 
         <Grid.RowDefinitions>
-            <RowDefinition Height="55*" />
+            <RowDefinition Height="68*" />
             <RowDefinition Height="10" />
-            <RowDefinition Height="25*" />
+            <RowDefinition Height="17*" />
             <RowDefinition Height="26" />
         </Grid.RowDefinitions>
 
@@ -297,8 +301,17 @@
              top: save the file, refresh the folder, AutoClean, the duplicate barcode
              check, the Excel summary, the scan tracker reconciliation, and Find
              Duplicates (present but not wired - use Duplicate Barcodes instead). -->
-        <Border Grid.Column="1" BorderThickness="0,0,0,0">
-            <StackPanel Margin="0,0,0,0" Orientation="Vertical">
+        <Border
+            Grid.Column="1"
+            Margin="2,10,2,10"
+            Background="{StaticResource QaHeaderFill}"
+            BorderBrush="{StaticResource QaHairline}"
+            BorderThickness="1"
+            CornerRadius="10">
+            <StackPanel
+                Margin="0,8,0,8"
+                HorizontalAlignment="Center"
+                Orientation="Vertical">
                 <mui:ModernButton
                     Height="80"
                     Margin="5,0,3,0"
@@ -401,7 +414,7 @@
             x:Name="QAGrid"
             ContextMenuOpening="QAGrid_ContextMenuOpening"
             Grid.Column="2"
-            Margin="0,0,0,0"
+            Margin="10,10,12,8"
             HorizontalContentAlignment="Stretch"
             VerticalContentAlignment="Stretch"
             AutoGenerateColumns="False"
@@ -889,6 +902,35 @@
                         <DataGridTextColumn Width="120" Binding="{Binding CreatedBy}" Header="Flagged By" />
                     </DataGrid.Columns>
                 </DataGrid>
+        <Border
+            Grid.Column="2"
+            Margin="10,10,12,8"
+            Background="Transparent"
+            IsHitTestVisible="False">
+            <Border.Style>
+                <Style TargetType="{x:Type Border}">
+                    <Setter Property="Visibility" Value="Collapsed" />
+                    <Style.Triggers>
+                        <DataTrigger Binding="{Binding QARecords.Count}" Value="0">
+                            <Setter Property="Visibility" Value="Visible" />
+                        </DataTrigger>
+                    </Style.Triggers>
+                </Style>
+            </Border.Style>
+            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center">
+                <TextBlock
+                    HorizontalAlignment="Center"
+                    FontSize="14"
+                    FontWeight="SemiBold"
+                    Text="No QA file is open" />
+                <TextBlock
+                    Margin="0,6,0,0"
+                    HorizontalAlignment="Center"
+                    FontSize="12"
+                    Foreground="{StaticResource QaSecondaryText}"
+                    Text="Choose a file from the list on the left to review its records." />
+            </StackPanel>
+        </Border>
             </Grid>
         </Border>
 
